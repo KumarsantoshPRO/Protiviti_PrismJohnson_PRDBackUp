@@ -1880,7 +1880,7 @@ sap.ui.define(
                   results: [],
                 },
               };
-              // Validation to check header titles
+              // Validation to check header titles against uploaded excel
               var excelHeader = [
                 "Customer_Code",
                 "Payment_Term",
