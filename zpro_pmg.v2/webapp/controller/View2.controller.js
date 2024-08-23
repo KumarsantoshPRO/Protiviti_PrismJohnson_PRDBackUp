@@ -17,7 +17,21 @@ sap.ui.define(
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, JSONModel, Core, Dialog, Button, Label, mobileLibrary, TextArea, formatter, MessageBox, PDFViewer, Fragment, MessageToast) {
+  function (
+    Controller,
+    JSONModel,
+    Core,
+    Dialog,
+    Button,
+    Label,
+    mobileLibrary,
+    TextArea,
+    formatter,
+    MessageBox,
+    PDFViewer,
+    Fragment,
+    MessageToast
+  ) {
     "use strict";
     var ButtonType = mobileLibrary.ButtonType;
     var DialogType = mobileLibrary.DialogType;
@@ -31,15 +45,22 @@ sap.ui.define(
         var oSouceModel = new JSONModel();
         this.getView().setModel(oSouceModel, "SouceModel");
 
-        this.getOwnerComponent().getRouter().attachRoutePatternMatched(this.onRouteMatched, this);
+        this.getOwnerComponent()
+          .getRouter()
+          .attachRoutePatternMatched(this.onRouteMatched, this);
         // this.getData();
         this.pafNoTemp;
         this._Posnr;
         this._rowIndex;
 
         //Start: Upload, View and Download Attachment
-        var dataModelForAttachments = this.getOwnerComponent().getModel("attachments").getData();
-        this.getView().setModel(new JSONModel(dataModelForAttachments), "LocalJSONModelForAttachment");
+        var dataModelForAttachments = this.getOwnerComponent()
+          .getModel("attachments")
+          .getData();
+        this.getView().setModel(
+          new JSONModel(dataModelForAttachments),
+          "LocalJSONModelForAttachment"
+        );
 
         this.opdfViewer = new PDFViewer();
         this.getView().addDependent(this.opdfViewer);
@@ -73,16 +94,24 @@ sap.ui.define(
                   if (Data.Nav_File_Upload.results.length > 0) {
                     this.getView().byId("idV2OPSAttach").setVisible(true);
                     var attachments = Data;
-                    this.getView().getModel("LocalJSONModelForAttachment").setData({ attachments: attachments });
-                    this.getView().getModel("LocalJSONModelForAttachment").refresh(true);
+                    this.getView()
+                      .getModel("LocalJSONModelForAttachment")
+                      .setData({ attachments: attachments });
+                    this.getView()
+                      .getModel("LocalJSONModelForAttachment")
+                      .refresh(true);
                   }
                 }.bind(this),
                 error: function (oError) {
                   this.getView().setBusy(false);
-                  MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
-                    actions: [sap.m.MessageBox.Action.OK],
-                    onClose: function (oAction) {},
-                  });
+                  MessageBox.error(
+                    JSON.parse(oError.responseText).error.innererror
+                      .errordetails[0].message,
+                    {
+                      actions: [sap.m.MessageBox.Action.OK],
+                      onClose: function (oAction) {},
+                    }
+                  );
                 }.bind(this),
               });
           }
@@ -107,8 +136,12 @@ sap.ui.define(
               // oData.Wgmper = 0;
               // oData.Wbuyingprice = 0;
               for (let index = 0; index < len; index++) {
-                var nGrossMargin = Number(oData.NAV_PMG_ITEM_PRODUCT.results[index].Grossmargper);
-                var nBuyingpricesqft = Number(oData.NAV_PMG_ITEM_PRODUCT.results[index].Buyingpricesqft);
+                var nGrossMargin = Number(
+                  oData.NAV_PMG_ITEM_PRODUCT.results[index].Grossmargper
+                );
+                var nBuyingpricesqft = Number(
+                  oData.NAV_PMG_ITEM_PRODUCT.results[index].Buyingpricesqft
+                );
                 // oData.Wgmper = Number(oData.Wgmper) + nGrossMargin;
                 // oData.Wbuyingprice = Number(oData.Wbuyingprice) + nBuyingpricesqft;
               }
@@ -117,7 +150,9 @@ sap.ui.define(
 
               oData.Discb = ((oData.Wexfacsqft / 100) * oData.Disc).toFixed(2);
               if (oData.Worcper !== "0.00") {
-                oData.Worc = ((oData.Wexfacsqft / 100) * oData.Worcper).toFixed(2);
+                oData.Worc = ((oData.Wexfacsqft / 100) * oData.Worcper).toFixed(
+                  2
+                );
               }
               // oData.Discb = oData.Discb;
               oModel.setData(oData);
@@ -127,9 +162,13 @@ sap.ui.define(
 
               oPrdModel.setData(oData.NAV_PMG_ITEM_PRODUCT.results);
               if (oData.Vtweg === "19") {
-                this.getView().byId("id.discount.column.Label").setText("Discount(%)");
+                this.getView()
+                  .byId("id.discount.column.Label")
+                  .setText("Discount(%)");
               } else {
-                this.getView().byId("id.discount.column.Label").setText("Discount(Box)");
+                this.getView()
+                  .byId("id.discount.column.Label")
+                  .setText("Discount(Box)");
               }
 
               this.getView().setModel(oPrdModel, "ProductModel");
@@ -137,10 +176,14 @@ sap.ui.define(
             }.bind(this),
             error: function (oError) {
               this.getView().setBusy(false);
-              MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
-                actions: [sap.m.MessageBox.Action.OK],
-                onClose: function (oAction) {},
-              });
+              MessageBox.error(
+                JSON.parse(oError.responseText).error.innererror.errordetails[0]
+                  .message,
+                {
+                  actions: [sap.m.MessageBox.Action.OK],
+                  onClose: function (oAction) {},
+                }
+              );
             }.bind(this),
           });
       },
@@ -170,7 +213,10 @@ sap.ui.define(
         newFilArray.push(oDomfilter3);
 
         //var oNewModel = ZCUSTOMER_AUTOMATIONDISCOUNT_SRV
-        var newValHelpModel = new sap.ui.model.odata.ODataModel("/sap/opu/odata/sap/ZCUSTOMER_AUTOMATIONDISCOUNT_SRV/", true);
+        var newValHelpModel = new sap.ui.model.odata.ODataModel(
+          "/sap/opu/odata/sap/ZCUSTOMER_AUTOMATIONDISCOUNT_SRV/",
+          true
+        );
         newValHelpModel.read("/ET_VALUE_HELPSSet", {
           filters: newFilArray,
           success: function (oData) {
@@ -182,34 +228,83 @@ sap.ui.define(
           }.bind(this),
           error: function (oError) {
             this.getView().setBusy(false);
-            MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
-              actions: [sap.m.MessageBox.Action.OK],
-              onClose: function (oAction) {},
-            });
+            MessageBox.error(
+              JSON.parse(oError.responseText).error.innererror.errordetails[0]
+                .message,
+              {
+                actions: [sap.m.MessageBox.Action.OK],
+                onClose: function (oAction) {},
+              }
+            );
           }.bind(this),
         });
       },
 
       onSourceHelp: function (oEvent) {
         this.deActivateActionButtons();
-        var pathIndex = Number(oEvent.getSource().getParent().getBindingContextPath().split("/")[1]);
+        var pathIndex = Number(
+          oEvent.getSource().getParent().getBindingContextPath().split("/")[1]
+        );
         this._rowIndex = pathIndex;
 
-        var path = oEvent.getSource().getParent().getBindingContextPath() + "/Posnr";
+        var path =
+          oEvent.getSource().getParent().getBindingContextPath() + "/Posnr";
 
         this._Posnr = this.getView().getModel("ProductModel").getProperty(path);
 
         if (!this._sourceFrag) {
-          this._sourceFrag = sap.ui.xmlfragment("pj.zpmg.view.fragments.source", this);
+          this._sourceFrag = sap.ui.xmlfragment(
+            "pj.zpmg.view.fragments.source",
+            this
+          );
           this.getView().addDependent(this._sourceFrag);
-          this._CustomerCodeTemp = sap.ui.getCore().byId("idSLSourceValueHelp").clone();
+          this._CustomerCodeTemp = sap.ui
+            .getCore()
+            .byId("idSLSourceValueHelp")
+            .clone();
           this._oTemp = sap.ui.getCore().byId("idSLSourceValueHelp").clone();
         }
         var aFilter = [],
-          oFilterDomname = new sap.ui.model.Filter([new sap.ui.model.Filter("Domname", sap.ui.model.FilterOperator.EQ, "SOURCE")], false),
-          oFilterDomname1 = new sap.ui.model.Filter([new sap.ui.model.Filter("Domname1", sap.ui.model.FilterOperator.EQ, "")], false),
-          oFilterDomname2 = new sap.ui.model.Filter([new sap.ui.model.Filter("Domname2", sap.ui.model.FilterOperator.EQ, this.pafID)], false),
-          oFilterDomname3 = new sap.ui.model.Filter([new sap.ui.model.Filter("Domname3", sap.ui.model.FilterOperator.EQ, this._Posnr)], false);
+          oFilterDomname = new sap.ui.model.Filter(
+            [
+              new sap.ui.model.Filter(
+                "Domname",
+                sap.ui.model.FilterOperator.EQ,
+                "SOURCE"
+              ),
+            ],
+            false
+          ),
+          oFilterDomname1 = new sap.ui.model.Filter(
+            [
+              new sap.ui.model.Filter(
+                "Domname1",
+                sap.ui.model.FilterOperator.EQ,
+                ""
+              ),
+            ],
+            false
+          ),
+          oFilterDomname2 = new sap.ui.model.Filter(
+            [
+              new sap.ui.model.Filter(
+                "Domname2",
+                sap.ui.model.FilterOperator.EQ,
+                this.pafID
+              ),
+            ],
+            false
+          ),
+          oFilterDomname3 = new sap.ui.model.Filter(
+            [
+              new sap.ui.model.Filter(
+                "Domname3",
+                sap.ui.model.FilterOperator.EQ,
+                this._Posnr
+              ),
+            ],
+            false
+          );
         aFilter.push(oFilterDomname);
         aFilter.push(oFilterDomname1);
         aFilter.push(oFilterDomname2);
@@ -247,15 +342,25 @@ sap.ui.define(
           .getModel()
           .create("/ET_PMG_REQUEST_ITEMSet", payload, {
             success: function (oData, response) {
-              var vSVC_BP = oData.NAV_PMG_ITEM_PRODUCT.results[0].Buyingpricesqft,
-                vGross_Margin = oData.NAV_PMG_ITEM_PRODUCT.results[0].Grossmargper,
+              var vSVC_BP =
+                  oData.NAV_PMG_ITEM_PRODUCT.results[0].Buyingpricesqft,
+                vGross_Margin =
+                  oData.NAV_PMG_ITEM_PRODUCT.results[0].Grossmargper,
                 vSource = oData.NAV_PMG_ITEM_PRODUCT.results[0].Source,
                 sName = oData.NAV_PMG_ITEM_PRODUCT.results[0].Sname;
 
-              this.getView().getModel("ProductModel").getData()[this._rowIndex].Buyingpricesqft = vSVC_BP;
-              this.getView().getModel("ProductModel").getData()[this._rowIndex].Grossmargper = vGross_Margin;
-              this.getView().getModel("ProductModel").getData()[this._rowIndex].Source = vSource;
-              this.getView().getModel("ProductModel").getData()[this._rowIndex].Sname = sName;
+              this.getView().getModel("ProductModel").getData()[
+                this._rowIndex
+              ].Buyingpricesqft = vSVC_BP;
+              this.getView().getModel("ProductModel").getData()[
+                this._rowIndex
+              ].Grossmargper = vGross_Margin;
+              this.getView().getModel("ProductModel").getData()[
+                this._rowIndex
+              ].Source = vSource;
+              this.getView().getModel("ProductModel").getData()[
+                this._rowIndex
+              ].Sname = sName;
               // var len = this.getView().getModel("ProductModel").getData().length;
               // this.getView().getModel("oRequestModel").getData().Wgmper = 0;
               // for (let index = 0; index < len; index++) {
@@ -271,10 +376,14 @@ sap.ui.define(
             }.bind(this),
             error: function (oError) {
               this.getView().setBusy(false);
-              MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
-                actions: [sap.m.MessageBox.Action.OK],
-                onClose: function (oAction) {},
-              });
+              MessageBox.error(
+                JSON.parse(oError.responseText).error.innererror.errordetails[0]
+                  .message,
+                {
+                  actions: [sap.m.MessageBox.Action.OK],
+                  onClose: function (oAction) {},
+                }
+              );
             }.bind(this),
           });
       },
@@ -299,10 +408,14 @@ sap.ui.define(
             }.bind(this),
             error: function (oError) {
               this.getView().setBusy(false);
-              MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
-                actions: [sap.m.MessageBox.Action.OK],
-                onClose: function (oAction) {},
-              });
+              MessageBox.error(
+                JSON.parse(oError.responseText).error.innererror.errordetails[0]
+                  .message,
+                {
+                  actions: [sap.m.MessageBox.Action.OK],
+                  onClose: function (oAction) {},
+                }
+              );
             }.bind(this),
           });
       },
@@ -372,40 +485,79 @@ sap.ui.define(
       },
 
       onForward: function () {
-        var nGM = Number(this.getView().getModel("oRequestModel").getProperty("/Wgmper"));
+        var nGM = Number(
+          this.getView().getModel("oRequestModel").getProperty("/Wgmper")
+        );
         var bEditable, sState;
 
-        var pafNo = this.getView().getModel("oRequestModel").getProperty("/Pafno"),
-          remarks = this.byId(sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")).getValue();
+        var pafNo = this.getView()
+            .getModel("oRequestModel")
+            .getProperty("/Pafno"),
+          remarks = this.byId(
+            sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
+          ).getValue();
 
         var payload = {
           Pafno: pafNo,
           Action: "FOR",
           PmgRemark: remarks,
         };
-        var sDivision = this.getView().getModel("oRequestModel").getProperty("/Spart");
+        var sDivision = this.getView()
+          .getModel("oRequestModel")
+          .getProperty("/Spart");
         debugger;
         var sPath = "ES_GM_RANGESet('" + sDivision + "')";
-        var newValHelpModel = new sap.ui.model.odata.ODataModel("/sap/opu/odata/sap/ZPMG_AUTOMATION_DISCOUNT_SRV/", true);
+        var newValHelpModel = new sap.ui.model.odata.ODataModel(
+          "/sap/opu/odata/sap/ZPMG_AUTOMATION_DISCOUNT_SRV/",
+          true
+        );
         newValHelpModel.read(sPath, {
           success: function (oData) {
             if (nGM < Number(oData.EdGmLow)) {
-              var sHeaderMessage = "Gross Margin is less than " + oData.EdGmHigh + "%";
-              var sInfoMessage = "Request will be forwarded to the Executive Director";
+              var sHeaderMessage =
+                "Gross Margin is less than " + oData.EdGmHigh + "%";
+              var sInfoMessage =
+                "Request will be forwarded to the Executive Director";
               bEditable = true;
               sState = "None";
-            } else if (nGM >= Number(oData.NshGmLow) && nGM <= Number(oData.NshGmHigh)) {
-              var sHeaderMessage = "Gross Margin is in between " + oData.NshGmLow + "%-" + oData.NshGmHigh + "%";
-              var sInfoMessage = "Request will be forwarded to the National Sales Head";
+            } else if (
+              nGM >= Number(oData.NshGmLow) &&
+              nGM <= Number(oData.NshGmHigh)
+            ) {
+              var sHeaderMessage =
+                "Gross Margin is in between " +
+                oData.NshGmLow +
+                "%-" +
+                oData.NshGmHigh +
+                "%";
+              var sInfoMessage =
+                "Request will be forwarded to the National Sales Head";
               bEditable = true;
               sState = "None";
-            } else if (nGM >= Number(oData.VhGmLow) && nGM <= Number(oData.VhGmHigh)) {
-              var sHeaderMessage = "Gross Margin is in between " + oData.VhGmLow + "%-" + oData.VhGmHigh + "%";
-              var sInfoMessage = "Request will be forwarded to the Vertical Head";
+            } else if (
+              nGM >= Number(oData.VhGmLow) &&
+              nGM <= Number(oData.VhGmHigh)
+            ) {
+              var sHeaderMessage =
+                "Gross Margin is in between " +
+                oData.VhGmLow +
+                "%-" +
+                oData.VhGmHigh +
+                "%";
+              var sInfoMessage =
+                "Request will be forwarded to the Vertical Head";
               bEditable = true;
               sState = "None";
-            } else if (nGM >= Number(oData.PmgGmLow) && nGM <= Number(oData.PmgGmHigh)) {
-              var sHeaderMessage = "Gross Margin is in between " + oData.PmgGmLow + "%-" + oData.PmgGmHigh + "%";
+            } else if (
+              nGM >= Number(oData.PmgGmLow) &&
+              nGM <= Number(oData.PmgGmHigh)
+            ) {
+              var sHeaderMessage =
+                "Gross Margin is in between " +
+                oData.PmgGmLow +
+                "%-" +
+                oData.PmgGmHigh +
+                "%";
               var sInfoMessage = "Request will be forwarded to the PMG";
               bEditable = true;
               sState = "None";
@@ -417,7 +569,10 @@ sap.ui.define(
             }
             MessageBox.information(sInfoMessage, {
               title: sHeaderMessage,
-              actions: [sap.m.MessageBox.Action.OK, sap.m.MessageBox.Action.CANCEL],
+              actions: [
+                sap.m.MessageBox.Action.OK,
+                sap.m.MessageBox.Action.CANCEL,
+              ],
               onClose: function (oAction) {
                 if (oAction === "OK") {
                   this._sendPayload(payload);
@@ -428,16 +583,24 @@ sap.ui.define(
           }.bind(this),
           error: function (oError) {
             this.getView().setBusy(false);
-            MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
-              actions: [sap.m.MessageBox.Action.OK],
-              onClose: function (oAction) {},
-            });
+            MessageBox.error(
+              JSON.parse(oError.responseText).error.innererror.errordetails[0]
+                .message,
+              {
+                actions: [sap.m.MessageBox.Action.OK],
+                onClose: function (oAction) {},
+              }
+            );
           }.bind(this),
         });
       },
       bpRenegotiation: function () {
-        var pafNo = this.getView().getModel("oRequestModel").getProperty("/Pafno"),
-          remarks = this.byId(sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")).getValue();
+        var pafNo = this.getView()
+            .getModel("oRequestModel")
+            .getProperty("/Pafno"),
+          remarks = this.byId(
+            sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
+          ).getValue();
 
         var payload = {
           Pafno: pafNo,
@@ -448,8 +611,12 @@ sap.ui.define(
         this._sendPayload(payload);
       },
       freightRenegotiation: function () {
-        var pafNo = this.getView().getModel("oRequestModel").getProperty("/Pafno"),
-          remarks = this.byId(sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")).getValue();
+        var pafNo = this.getView()
+            .getModel("oRequestModel")
+            .getProperty("/Pafno"),
+          remarks = this.byId(
+            sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
+          ).getValue();
 
         var payload = {
           Pafno: pafNo,
@@ -460,8 +627,12 @@ sap.ui.define(
         this._sendPayload(payload);
       },
       reject: function () {
-        var pafNo = this.getView().getModel("oRequestModel").getProperty("/Pafno"),
-          remarks = this.byId(sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")).getValue();
+        var pafNo = this.getView()
+            .getModel("oRequestModel")
+            .getProperty("/Pafno"),
+          remarks = this.byId(
+            sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
+          ).getValue();
 
         var payload = {
           Pafno: pafNo,
@@ -472,8 +643,12 @@ sap.ui.define(
         this._sendPayload(payload);
       },
       Approved: function () {
-        var pafNo = this.getView().getModel("oRequestModel").getProperty("/Pafno"),
-          remarks = this.byId(sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")).getValue();
+        var pafNo = this.getView()
+            .getModel("oRequestModel")
+            .getProperty("/Pafno"),
+          remarks = this.byId(
+            sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
+          ).getValue();
 
         var payload = {
           Pafno: pafNo,
@@ -485,9 +660,15 @@ sap.ui.define(
       },
       onGenerate: function () {
         var items = this.getView().getModel("ProductModel").getData(),
-          validity = this.byId(sap.ui.core.Fragment.createId("idFragment", "id.validity.Input")).getValue(),
-          pafNo = this.getView().getModel("oRequestModel").getProperty("/Pafno"),
-          headerRemark = this.byId(sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")).getValue(),
+          validity = this.byId(
+            sap.ui.core.Fragment.createId("idFragment", "id.validity.Input")
+          ).getValue(),
+          pafNo = this.getView()
+            .getModel("oRequestModel")
+            .getProperty("/Pafno"),
+          headerRemark = this.byId(
+            sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
+          ).getValue(),
           proj = this.getView().getModel("oRequestModel").getProperty("/Proj");
 
         var payload = {
@@ -535,11 +716,19 @@ sap.ui.define(
                 const element = aTablePayload[index]["Source"];
                 if (element === "") {
                   vValidation = 0;
-                  this.getView().byId("idTblProductDetails").getItems()[index].getAggregation("cells")[3].setValueState("Error");
+                  this.getView()
+                    .byId("idTblProductDetails")
+                    .getItems()
+                    [index].getAggregation("cells")[3]
+                    .setValueState("Error");
                   // this.getView().byId("idTblProductDetails").getItems()[index].getAggregation("cells")[3]
                 } else {
                   vValidation = 1;
-                  this.getView().byId("idTblProductDetails").getItems()[index].getAggregation("cells")[3].setValueState("None");
+                  this.getView()
+                    .byId("idTblProductDetails")
+                    .getItems()
+                    [index].getAggregation("cells")[3]
+                    .setValueState("None");
                 }
               }
             }
@@ -551,13 +740,20 @@ sap.ui.define(
             .getModel()
             .create("/ET_PMG_REQUEST_ITEMSet", payload, {
               success: function (oData, response) {
-                this.getView().getModel("ProductModel").setData(oData.NAV_PMG_ITEM_PRODUCT.results);
+                this.getView()
+                  .getModel("ProductModel")
+                  .setData(oData.NAV_PMG_ITEM_PRODUCT.results);
                 this.getView().getModel("ProductModel").refresh();
-                this.getView().getModel("oRequestModel").getData().Validity = oData.Validity;
-                this.getView().getModel("oRequestModel").getData().Pafvto = oData.Pafvto;
-                this.getView().getModel("oRequestModel").getData().PmgRemark = oData.PmgRemark;
-                this.getView().getModel("oRequestModel").getData().Wsd = oData.Wsd;
-                this.getView().getModel("oRequestModel").getData().Wgmper = oData.Wgmper;
+                this.getView().getModel("oRequestModel").getData().Validity =
+                  oData.Validity;
+                this.getView().getModel("oRequestModel").getData().Pafvto =
+                  oData.Pafvto;
+                this.getView().getModel("oRequestModel").getData().PmgRemark =
+                  oData.PmgRemark;
+                this.getView().getModel("oRequestModel").getData().Wsd =
+                  oData.Wsd;
+                this.getView().getModel("oRequestModel").getData().Wgmper =
+                  oData.Wgmper;
                 // this.getView().getModel("oRequestModel").getData().Grossmargper = oData.Grossmargper;
                 this.getView().getModel("oRequestModel").refresh(true);
                 if (payload.Action === "GENERATE") {
@@ -578,10 +774,16 @@ sap.ui.define(
               }.bind(this),
               error: function (oError) {
                 this.getView().setBusy(false);
-                MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
-                  actions: [sap.m.MessageBox.Action.OK],
-                  onClose: function (oAction) {},
-                });
+                MessageBox.error(
+                  JSON.parse(oError.responseText).error.innererror
+                    .errordetails[0].message,
+                  {
+                    actions: [sap.m.MessageBox.Action.OK],
+                    onClose: function (oAction) {
+                      window.location.reload();
+                    },
+                  }
+                );
               }.bind(this),
             });
         } else {
@@ -602,7 +804,9 @@ sap.ui.define(
         if (sFile.includes("PDF") || sFile.includes("pdf")) {
           var fileName = sFileName;
 
-          var decodedPdfContent = atob(sFile.split("data:application/pdf;base64,")[1]);
+          var decodedPdfContent = atob(
+            sFile.split("data:application/pdf;base64,")[1]
+          );
           var byteArray = new Uint8Array(decodedPdfContent.length);
           for (var i = 0; i < decodedPdfContent.length; i++) {
             byteArray[i] = decodedPdfContent.charCodeAt(i);
@@ -647,7 +851,9 @@ sap.ui.define(
       },
       imageDownload: function (oEvent) {
         const sURL = this.getView().getModel("oModelForImage").getData().ZRFILE;
-        const imageName = this.getView().getModel("oModelForImage").getData().ZRFNAME;
+        const imageName = this.getView()
+          .getModel("oModelForImage")
+          .getData().ZRFNAME;
         fetch(sURL)
           .then((oResponse) => oResponse.blob())
           .then((oBlob) => {
@@ -725,6 +931,9 @@ sap.ui.define(
           oEvent.getSource().setValue("");
         }
       },
+      onSbremarkTextAreaLiveChange: function (oEvent) {
+        this.deActivateActionButtons();
+      },
       onCommboxInputLiveChange: function (oEvent) {
         var sValue = oEvent.getSource().getValue();
         this.deActivateActionButtons();
@@ -758,43 +967,85 @@ sap.ui.define(
         // var wGrossMargin = 0;
 
         for (let index = 0; index < noItems; index++) {
-          if (this.getView().getModel("oRequestModel").getProperty("/Vtweg") === "19") {
-            wDiscount = wDiscount + (Number(tableData[index].Discount) / 100) * Number(tableData[index].Totalvolume);
-            wORCP = wORCP + (Number(tableData[index].Commboxp) / 100) * Number(tableData[index].Totalvolume);
+          if (
+            this.getView().getModel("oRequestModel").getProperty("/Vtweg") ===
+            "19"
+          ) {
+            wDiscount =
+              wDiscount +
+              (Number(tableData[index].Discount) / 100) *
+                Number(tableData[index].Totalvolume);
+            wORCP =
+              wORCP +
+              (Number(tableData[index].Commboxp) / 100) *
+                Number(tableData[index].Totalvolume);
           } else {
-            wDiscountb = wDiscountb + Number(tableData[index].Discountb) * Number(tableData[index].Totalvolume);
-            wORC = wORC + Number(tableData[index].Commbox) * Number(tableData[index].Totalvolume);
+            wDiscountb =
+              wDiscountb +
+              Number(tableData[index].Discountb) *
+                Number(tableData[index].Totalvolume);
+            wORC =
+              wORC +
+              Number(tableData[index].Commbox) *
+                Number(tableData[index].Totalvolume);
           }
-          wBuyingpricesqft = wBuyingpricesqft + Number(tableData[index].Buyingpricesqft) * Number(tableData[index].Totalvolume);
-          wNEF = wNEF + Number(tableData[index].Netexsqft) * Number(tableData[index].Totalvolume);
-          wFreight = wFreight + Number(tableData[index].Frghtsqft) * Number(tableData[index].Totalvolume);
+          wBuyingpricesqft =
+            wBuyingpricesqft +
+            Number(tableData[index].Buyingpricesqft) *
+              Number(tableData[index].Totalvolume);
+          wNEF =
+            wNEF +
+            Number(tableData[index].Netexsqft) *
+              Number(tableData[index].Totalvolume);
+          wFreight =
+            wFreight +
+            Number(tableData[index].Frghtsqft) *
+              Number(tableData[index].Totalvolume);
           vTotalValume = vTotalValume + Number(tableData[index].Totalvolume);
           // wGrossMargin = wGrossMargin + Number(tableData[index].Grossmargper);
         }
 
         this.getView()
           .getModel("oRequestModel")
-          .setProperty("/Wdisc", ((wDiscount / vTotalValume) * 100).toFixed(2).toString());
+          .setProperty(
+            "/Wdisc",
+            ((wDiscount / vTotalValume) * 100).toFixed(2).toString()
+          );
         this.getView()
           .getModel("oRequestModel")
-          .setProperty("/Wdiscb", (wDiscountb / vTotalValume).toFixed(2).toString());
+          .setProperty(
+            "/Wdiscb",
+            (wDiscountb / vTotalValume).toFixed(2).toString()
+          );
         this.getView()
           .getModel("oRequestModel")
-          .setProperty("/Wnefsqft", (wNEF / vTotalValume).toFixed(2).toString());
+          .setProperty(
+            "/Wnefsqft",
+            (wNEF / vTotalValume).toFixed(2).toString()
+          );
         this.getView()
           .getModel("oRequestModel")
-          .setProperty("/Wfrgtsqft", (wFreight / vTotalValume).toFixed(2).toString());
+          .setProperty(
+            "/Wfrgtsqft",
+            (wFreight / vTotalValume).toFixed(2).toString()
+          );
 
         this.getView()
           .getModel("oRequestModel")
           .setProperty("/Worc", (wORC / vTotalValume).toFixed(2).toString());
         this.getView()
           .getModel("oRequestModel")
-          .setProperty("/Worcper", ((wORCP / vTotalValume) * 100).toFixed(2).toString());
+          .setProperty(
+            "/Worcper",
+            ((wORCP / vTotalValume) * 100).toFixed(2).toString()
+          );
         // this.getView().getModel("oRequestModel").setProperty("/Wgmper", (wGrossMargin / noItems).toFixed(2).toString());
         this.getView()
           .getModel("oRequestModel")
-          .setProperty("/Wbuyingprice", (wBuyingpricesqft / vTotalValume).toFixed(2).toString());
+          .setProperty(
+            "/Wbuyingprice",
+            (wBuyingpricesqft / vTotalValume).toFixed(2).toString()
+          );
         this.getView().getModel("oRequestModel").refresh(true);
       },
 

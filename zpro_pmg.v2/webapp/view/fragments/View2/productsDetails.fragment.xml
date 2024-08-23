@@ -12,7 +12,6 @@
             class="sapUiMediumMarginBeginEnd sapUiTinyMarginTop"
             id="idTblProductDetails"
             items="{ProductModel>/}"
-             
         >
             <headerToolbar>
                 <Toolbar>
@@ -207,7 +206,7 @@
                         text="SVC/BP(Sqft)"
                     />
                 </Column>
-                    <Column
+                <Column
                     minScreenWidth="Desktop"
                     demandPopin="true"
                     hAlign="Center"
@@ -217,7 +216,6 @@
                         design="Bold"
                         wrapping="true"
                         text="BP Remarks"
-                         
                     />
                 </Column>
                 <Column
@@ -249,7 +247,7 @@
                         tooltip="Gross Margin(%)"
                     />
                 </Column>
-                 <Column
+                <Column
                     minScreenWidth="Desktop"
                     demandPopin="true"
                     hAlign="End"
@@ -259,7 +257,7 @@
                         design="Bold"
                         wrapping="true"
                         text="Desired BP"
-                    /> 
+                    />
                 </Column>
                 <Column
                     minScreenWidth="Desktop"
@@ -274,7 +272,7 @@
                         tooltip="Remarks"
                     />
                 </Column>
-                      <Column
+                <Column
                     minScreenWidth="Desktop"
                     demandPopin="true"
                     hAlign="Center"
@@ -349,8 +347,7 @@
                         />
                         <TextArea
                             value="{ProductModel>Sbremark}"
-                            
-                            
+                            liveChange="onSbremarkTextAreaLiveChange"
                         />
                         <Text
                             visible="false"
@@ -367,7 +364,7 @@
                             liveChange="onBuyingpricesqftInputLiveChange"
                         />
                         <Text text="{path:'ProductModel>Remark'}" />
-                         <Text text="{path:'ProductModel>Zprodh4'}" />
+                        <Text text="{path:'ProductModel>Zprodh4'}" />
                     </cells>
                 </ColumnListItem>
             </items>
