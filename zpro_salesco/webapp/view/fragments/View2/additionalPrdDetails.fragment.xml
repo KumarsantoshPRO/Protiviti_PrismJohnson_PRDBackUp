@@ -355,7 +355,6 @@
                         demandPopin="true"
                         hAlign="Center"
                         width="12rem"
-                     
                     >
                         <Label
                             id="idV2TxtTblClmRemarks"
@@ -385,16 +384,20 @@
                             <!-- 0 -->
                             <Input
                                 id="idV2TblCLIInpMatFreGrp"
+                                value="{path:'JSONModelPayload>Mfrgr'}"
                                 showValueHelp="true"
                                 valueHelpRequest="onMaterialFreightGroupsHelp"
                                 class="sapUiSmallMarginEnd"
                                 placeholder="Material Freight Groups"
-                                value="{path:'JSONModelPayload>Mfrgr'}"
                                 editable="{GlobalEditableModel>/Editable}"
+                                textFormatMode="ValueKey"
                                 showSuggestion="true"
+                                showTableSuggestionValueHelp="false"
                                 suggest=".onSuggest_MaterialFreightGroups"
                                 suggestionItems="{JSONModelForSuggest>/}"
+                                suggestionItemSelected="onMaterialFreightInputSuggestionSelect"
                                 submit="onMaterialFreightGroupInputSubmit"
+                                change="onMaterialFreightInputChange"
                                 liveChange="onMaterialFreightGroupsLiveChange"
                             >
                                 <suggestionItems>
@@ -422,10 +425,9 @@
                                 showSuggestion="true"
                                 suggest=".onSuggest_Designs"
                                 suggestionItems="{JSONModelForSuggest>/}"
-                               
                                 liveChange="onDesignsLiveChange"
                             >
-                             <!-- submit="onDesignsInputSubmit" -->
+                                <!-- submit="onDesignsInputSubmit" -->
                                 <suggestionItems>
                                     <core:Item
                                         text="{JSONModelForSuggest>Ddtext}"
@@ -496,7 +498,7 @@
                                 items="{LocalJSONModels>/quality}"
                                 selectedKey="{JSONModelPayload>Zzprodh4}"
                                 editable="{GlobalEditableModel>/Editable}"
-                                  change="onQualitySelectChange"
+                                change="onQualitySelectChange"
                             >
                                 <core:Item
                                     key="{LocalJSONModels>key}"
@@ -509,7 +511,7 @@
                                 items="{LocalJSONModels>/part}"
                                 selectedKey="{JSONModelPayload>Mvgr5}"
                                 editable="{GlobalEditableModel>/Editable}"
-                                change="onPartSelectChange" 
+                                change="onPartSelectChange"
                             >
                                 <core:Item
                                     key="{LocalJSONModels>key}"
@@ -582,7 +584,7 @@
                                 liveChange="onFrgtValidation"
                                 value="{JSONModelPayload>Frgtsqft}"
                                 editable="{GlobalEditableModel>/Editable}"
-                            /> 
+                            />
 
                             <!-- 17 non editable-->
 

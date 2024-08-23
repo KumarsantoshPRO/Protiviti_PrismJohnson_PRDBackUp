@@ -2,7 +2,7 @@ sap.ui.define(["sap/m/MessageBox"], function (MessageBox) {
   "use strict";
   var oItemFieldsNColumnHeaders = {
     Mfrgr: "Material Freight Groups",
-    Szmm: "Sizes",
+    // Szmm: "Sizes",
     Mvgr2: "Designs",
     Werks: "Supplying Plant",
     Prodh1: "Manufacturing Plant",
@@ -27,6 +27,7 @@ sap.ui.define(["sap/m/MessageBox"], function (MessageBox) {
   };
   var oHeadeFieldsNIds = {
     Kunnr: "idV2InpCustCode",
+    // Name: "idV2InpCustName",
     Zterm: "idV2SLPaymentTerm",
     Validity: "idV2InpValidity",
     Aufnr: "idV2InpOrderNo",
@@ -52,6 +53,16 @@ sap.ui.define(["sap/m/MessageBox"], function (MessageBox) {
         this.headerPayloadState(oControl, "Kunnr");
         return 0;
       }
+      // else if (
+      //   !oControl.getView().getModel("JSONModelPayload").getData().Name
+      // ) {
+      //   MessageBox.error(
+      //     "Please enter " +
+      //       oResourceModel.getText("view2.simpleForm.label.custName")
+      //   );
+      //   this.headerPayloadState(oControl, "Name");
+      //   return 0;
+      // }
       //else if(!oControl.getView().getModel("JSONModelPayload").getData().TI){
       //     MessageBox.error(" ");
       // }else if(!oControl.getView().getModel("JSONModelPayload").getData().GST){
@@ -242,8 +253,8 @@ sap.ui.define(["sap/m/MessageBox"], function (MessageBox) {
           i = aData.length;
         }
         // else if (!aData[i].Szmm) {
-        //     vTemp = 0;
-        //     this.itemsErrorMessage('Szmm', vLine, sAction);
+        //   vTemp = 0;
+        //   this.itemsErrorMessage("Szmm", vLine, sAction);
         // }
         else if (!aData[i].Mvgr2) {
           vTemp = 0;

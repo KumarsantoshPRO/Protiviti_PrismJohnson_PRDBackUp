@@ -38,14 +38,12 @@
                 class="sapUiSmallMarginEnd"
                 placeholder="{i18nV2>view2.simpleForm.label.custCode}"
                 editable="{GlobalModel>/Editable}"
-
                 textFormatMode="ValueKey"
                 showSuggestion="true"
                 showTableSuggestionValueHelp="false"
                 suggest=".onSuggest_custCode"
                 suggestionRows="{JSONModelForSuggest_custCode>/}"
                 suggestionItemSelected="onCustomerCodeInputSuggestionSelect"
-                
                 submit="onCustomerCodeInputSubmit"
                 change="onCustomerCodeInputChange"
                 liveChange="onCustomerCodeLiveChange"
@@ -99,7 +97,7 @@
                 selectedKey="{JSONModelPayload>/Vtweg}"
                 valueStateText="Select {i18nV2>view2.simpleForm.label.distChnl}"
                 editable="{GlobalModel>/Editable}"
-                change="onDistributionChannelChange" 
+                change="onDistributionChannelChange"
             >
                 <core:Item
                     id="idV2SLItemDistChannel"
@@ -126,10 +124,11 @@
                     text="{LocalJSONModels>text}"
                 />
             </Select> -->
-                   <Select
+            <Select
                 id="idV2SLPaymentTerm"
                 forceSelection="false"
                 items="{path:'/ET_VALUE_HELPSSet',
+            
         filters : [
             { path : 'Domname', operator : 'EQ', value1 : 'TVZBT'},
             { path : 'Domname1', operator : 'EQ', value1 : ''},
@@ -162,14 +161,12 @@
                 liveChange="onValidityNumber"
             />
             <!--Start: Divya's changes -->
-     <Label 
-                text="{i18nV2>view2.simpleForm.label.projectnameaddress}"
-            />
+            <Label text="{i18nV2>view2.simpleForm.label.projectnameaddress}" />
             <TextArea
                 value="{JSONModelPayload>/Proj}"
-                editable="{GlobalModel>/Editable}" 
+                editable="{GlobalModel>/Editable}"
             />
-             <!--End: Divya's changes -->
+            <!--End: Divya's changes -->
             <!-- <Label
                 id="idV2LblValidDay"
                 text="{i18nV2>view2.simpleForm.label.validDays}"
@@ -199,31 +196,28 @@
                 text="{i18nV2>view2.simpleForm.label.salOffice}"
                 required="true"
             />
-  
-                <Input
-                    id="idV2InpSalesOffice"
-                    showValueHelp="true"
-                    valueHelpRequest="onSalesOfficeHelp"
-                    class="sapUiSmallMarginEnd"
-                    placeholder="{i18nV2>view2.simpleForm.label.salOffice}"
-                    valueStateText="Enter {i18nV2>view2.simpleForm.label.salOffice}"
-                    value="{parts: ['JSONModelPayload>/Soname','JSONModelPayload>/Vkbur'], formatter:'sap.formatter.showSalesOffice'}"
-                    editable="{GlobalModel>/Editable}"
-                    showSuggestion="true"
-                    suggest=".onSuggest_salesOffice"
-                    suggestionItems="{JSONModelForSuggest>/}"
-                    submit="onSalesOfficeInputSubmit"
-                    liveChange="onSalesOfficeLiveChange"
-                 
-                >
-                    <!-- submit="onSalesOfficeInputSubmit" -->
-                    <suggestionItems>
-                        <core:Item text="{JSONModelForSuggest>DomvalueL}" />
-                    </suggestionItems>
-                </Input>
-      
-                
- 
+
+            <Input
+                id="idV2InpSalesOffice"
+                showValueHelp="true"
+                valueHelpRequest="onSalesOfficeHelp"
+                class="sapUiSmallMarginEnd"
+                placeholder="{i18nV2>view2.simpleForm.label.salOffice}"
+                valueStateText="Enter {i18nV2>view2.simpleForm.label.salOffice}"
+                value="{parts: ['JSONModelPayload>/Soname','JSONModelPayload>/Vkbur'], formatter:'sap.formatter.showSalesOffice'}"
+                editable="{GlobalModel>/Editable}"
+                showSuggestion="true"
+                suggest=".onSuggest_salesOffice"
+                suggestionItems="{JSONModelForSuggest>/}"
+                submit="onSalesOfficeInputSubmit"
+                liveChange="onSalesOfficeLiveChange"
+            >
+                <!-- submit="onSalesOfficeInputSubmit" -->
+                <suggestionItems>
+                    <core:Item text="{JSONModelForSuggest>DomvalueL}" />
+                </suggestionItems>
+            </Input>
+
             <Label
                 id="idV2LblVertical"
                 text="{i18nV2>view2.simpleForm.label.vertical}"

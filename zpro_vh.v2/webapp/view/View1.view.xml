@@ -96,7 +96,7 @@
                     />
                 </items>
                 <content>
-                <fb:FilterBar
+                    <fb:FilterBar
                         id="id.FilterBar"
                         persistencyKey="myPersKey"
                         useToolbar="false"
@@ -111,10 +111,8 @@
                                 label="Sales Office"
                                 groupName="Group1"
                                 visibleInFilterBar="true"
-                            
                             >
-                          
-                              <fb:control>
+                                <fb:control>
                                     <Input
                                         id="id.SalesOffice.Input"
                                         placeholder="Sales Office"
@@ -197,7 +195,7 @@
                                     </ComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
-                                                        </fb:filterGroupItems>
+                        </fb:filterGroupItems>
                     </fb:FilterBar>
                     <Table
                         id="productsTable"
@@ -245,8 +243,14 @@
                                 <Text text="PAF No" />
                             </Column>
                             <Column
-                                hAlign="End"
+                                hAlign="Center"
                                 width="5rem"
+                            >
+                                <Text text="Vertical" />
+                            </Column>
+                            <Column
+                                hAlign="End"
+                                width="6rem"
                             >
                                 <Text text="Sales Office" />
                             </Column>
@@ -321,6 +325,9 @@
                                 <cells>
                                     <Text
                                         text="{path:'JSONModelForTable>Pafno', formatter:'.formatter.removeLeadingZeros'}"
+                                    />
+                                    <Text
+                                        text="{path:'JSONModelForTable>Spart' , formatter: '.formatter.getVertical'}"
                                     />
                                     <Text text="{JSONModelForTable>Soname}" />
                                     <Text text="{JSONModelForTable>Name}" />

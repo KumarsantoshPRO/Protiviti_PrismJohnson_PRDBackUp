@@ -109,7 +109,11 @@ sap.ui.define(
 
           this.opdfViewer = new PDFViewer();
           this.getView().addDependent(this.opdfViewer);
+
           //End: Upload, View and Download Attachment
+
+          // setting response payload limit to 300
+          this.getOwnerComponent().getModel().setSizeLimit(300);
         },
 
         onRouteMatched: function (oEvent) {
@@ -836,6 +840,17 @@ sap.ui.define(
         // Submit action
         onMaterialFreightGroupInputSubmit: function (oEvent) {
           materialFreightGroup.onMaterialFreightGroupInputSubmit(oEvent, this);
+        },
+        // On change
+        onMaterialFreightInputChange: function (oEvent) {
+          materialFreightGroup.onMaterialFreightInputChange(oEvent, this);
+        },
+        // on Suggestion select
+        onMaterialFreightInputSuggestionSelect: function (oEvent) {
+          materialFreightGroup.onMaterialFreightInputSuggestionSelect(
+            oEvent,
+            this
+          );
         },
         // On live change
         onMaterialFreightGroupsLiveChange: function (oEvent) {

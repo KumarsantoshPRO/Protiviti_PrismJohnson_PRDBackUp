@@ -61,6 +61,29 @@ sap.ui.define([], function () {
         return sString;
       }
     },
+
+    getVertical: function (sString) {
+      if (sString) {
+        switch (sString) {
+          case "10":
+            return "Johnson";
+            break;
+          case "20":
+            return "Porselano";
+            break;
+          case "30":
+            return "Marbonite";
+            break;
+          case "40":
+            return "Endura";
+            break;
+          default:
+            break;
+        }
+      } else {
+        return sString;
+      }
+    },
     getPaymentTerm: function (sString) {
       if (sString) {
         switch (sString) {
