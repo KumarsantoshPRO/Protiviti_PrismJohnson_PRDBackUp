@@ -70,12 +70,11 @@
                 >
                     <Text text="Revised freight" />
                 </Column>
-               
+
                 <Column
                     minScreenWidth="Tablet"
                     demandPopin="true"
                     hAlign="Center"
-                    
                 >
                     <Text text="Discount" />
                 </Column>
@@ -159,13 +158,11 @@
 
                         <Text
                             text="{parts:['ProductModel>Discount', 'ProductModel>Discountb'], formatter:'.formatter.getDiscount' }"
-                             
                         />
-                       
 
                         <Text text="{ProductModel>Netexsqft}" />
                         <Text text="{ProductModel>Buyingpricesqft}" />
-                         <Text text="{ProductModel>Sbremark}" />
+                        <Text text="{ProductModel>Remark}" />
                         <Text
                             visible="false"
                             text="{ProductModel>Grossmarg}"
@@ -178,7 +175,7 @@
                             text="{path:'ProductModel>ApprovedBuyingprice'}"
                         />
                         <Text text="{path:'ProductModel>Grossmargper'}" />
-                        <Text text="{path:'ProductModel>Remark'}" />
+                        <Text text="{path:'ProductModel>Sbremark'}" />
                     </cells>
                 </ColumnListItem>
             </items>

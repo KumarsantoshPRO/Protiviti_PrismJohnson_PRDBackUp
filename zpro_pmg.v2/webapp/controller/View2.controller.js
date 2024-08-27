@@ -54,6 +54,7 @@ sap.ui.define(
         this._rowIndex;
 
         //Start: Upload, View and Download Attachment
+        this._mViewSettingsDialogs = {};
         var dataModelForAttachments = this.getOwnerComponent()
           .getModel("attachments")
           .getData();
@@ -70,6 +71,8 @@ sap.ui.define(
       // Attach route matched method
       onRouteMatched: function (oEvent) {
         this.getView().byId("idV2OPSAttach").setVisible(false);
+        this.getView().byId("idV2ITSAttachment").setVisible(false);
+
         var pafID = oEvent.getParameter("arguments").pafID;
         if (pafID !== "Page1" || pafID !== undefined) {
           if (pafID) {
@@ -92,7 +95,9 @@ sap.ui.define(
                 success: function (Data) {
                   this.getView().setBusy(false);
                   if (Data.Nav_File_Upload.results.length > 0) {
-                    this.getView().byId("idV2OPSAttach").setVisible(true);
+                    this.getView().byId("idV2OPSAttach").setVisible(false);
+                    this.getView().byId("idV2ITSAttachment").setVisible(false);
+
                     var attachments = Data;
                     this.getView()
                       .getModel("LocalJSONModelForAttachment")
@@ -792,6 +797,42 @@ sap.ui.define(
         }
       },
       //Start: View and Download Attachment
+      //Start: New pop up for attachments
+      onShowAttachmentsLinkPress: function () {
+        var that = this;
+        this.getViewSettingsDialog(
+          "pj.zpmg.view.fragments.View2.attachmentPopUp"
+        ).then(function (oViewSettingsDialog) {
+          oViewSettingsDialog.setModel(
+            that.getView().getModel("LocalJSONModelForAttachment"),
+            "LocalJSONModelForAttachment"
+          );
+          oViewSettingsDialog.open();
+        });
+      },
+      onAttachmentClosePress: function () {
+        this.getViewSettingsDialog(
+          "pj.zpmg.view.fragments.View2.attachmentPopUp"
+        ).then(function (oViewSettingsDialog) {
+          oViewSettingsDialog.close();
+        });
+      },
+      getViewSettingsDialog: function (sDialogFragmentName) {
+        var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
+
+        if (!pDialog) {
+          pDialog = Fragment.load({
+            id: this.getView().getId(),
+            name: sDialogFragmentName,
+            controller: this,
+          }).then(function (oDialog) {
+            return oDialog;
+          });
+          this._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+        }
+        return pDialog;
+      },
+      //Close: New pop up for attachments
       onViewAttachmentObjectStatusPress: function (oEvent) {
         var sFile = oEvent.getSource().getParent().getProperty("thumbnailUrl"),
           sFileName = oEvent.getSource().getParent().getProperty("fileName"),
@@ -801,7 +842,10 @@ sap.ui.define(
         var oModelForImage = new sap.ui.model.json.JSONModel(_imageSrc);
         this.getView().setModel(oModelForImage, "oModelForImage");
 
-        if (sFile.includes("PDF") || sFile.includes("pdf")) {
+        if (
+          sFile.includes("application/pdf") ||
+          sFile.includes("application/pdf")
+        ) {
           var fileName = sFileName;
 
           var decodedPdfContent = atob(

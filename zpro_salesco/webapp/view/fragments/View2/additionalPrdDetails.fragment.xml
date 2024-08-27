@@ -619,7 +619,7 @@
                             <!-- 21 non mandatory-->
                             <Input
                                 id="idV2TblCLInpRemarks"
-                                value="{JSONModelPayload>Remark}"
+                                value="{JSONModelPayload>Sbremark}"
                                 editable="{GlobalEditableModel>/Editable}"
                             />
                             <!-- 22 Button-->

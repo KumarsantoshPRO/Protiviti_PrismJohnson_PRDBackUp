@@ -463,7 +463,7 @@ sap.ui.define(
             Frgtsqft: null,
             Compname: null,
             Complanprice: null,
-            Remark: null,
+            Sbremark: null,
             Zzprodh4: "",
             Mvgr5: "",
             Isexdep: "",
@@ -523,7 +523,7 @@ sap.ui.define(
                   Frgtsqft: null,
                   Compname: null,
                   Complanprice: null,
-                  Remark: null,
+                  Sbremark: null,
                   Zzprodh4: "",
                   Mvgr5: "",
                   Isexdep: "",
@@ -694,7 +694,7 @@ sap.ui.define(
                 Frgtsqft: null,
                 Compname: null,
                 Complanprice: null,
-                Remark: null,
+                Sbremark: null,
                 Zzprodh4: "",
                 Mvgr5: "",
                 Isexdep: "",
@@ -1919,7 +1919,7 @@ sap.ui.define(
                 "Freight",
                 "Competitor_Name",
                 "Competitor_Landed_Price",
-                "Remark",
+                "Sbremark",
               ];
               var val = excelData[0];
               var validExcel = true;
@@ -1963,7 +1963,7 @@ sap.ui.define(
                     oTab.Frgtsqft = excelData[i].Freight;
                     oTab.Compname = excelData[i].Competitor_Name;
                     oTab.Complanprice = excelData[i].Competitor_Landed_Price;
-                    oTab.Remark = excelData[i].Remark;
+                    oTab.Sbremark = excelData[i].Sbremark;
                     payload.ET_SALES_COORD_ISET.results.push(oTab);
                   }
                 }
@@ -2358,7 +2358,7 @@ sap.ui.define(
             type: EdmType.Number,
           });
           aCols.push({
-            property: "Remark",
+            property: "Sbremark",
             type: EdmType.String,
           });
 

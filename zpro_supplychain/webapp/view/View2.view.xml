@@ -11,7 +11,7 @@
         id="ObjectPageLayout"
         upperCaseAnchorBar="false"
         showFooter="true"
-    > 
+    >
         <uxap:headerTitle>
             <uxap:ObjectPageDynamicHeaderTitle>
                 <uxap:expandedHeading>
@@ -211,7 +211,8 @@
                                             <ColumnListItem>
                                                 <cells>
                                                     <Text
-                                                        text="{oRequestModel>Mfrgr} ({oRequestModel>Mfrname})"                                                    />
+                                                        text="{oRequestModel>Mfrgr} ({oRequestModel>Mfrname})"
+                                                    />
                                                     <Text
                                                         text="{oRequestModel>Zsmm}"
                                                     />
@@ -242,7 +243,7 @@
                                                         liveChange="onApprovedFrightpriceInputLiveChange"
                                                     />
                                                     <Text
-                                                        text="{oRequestModel>Remark}"
+                                                        text="{oRequestModel>Sbremark}"
                                                     />
                                                 </cells>
                                             </ColumnListItem>

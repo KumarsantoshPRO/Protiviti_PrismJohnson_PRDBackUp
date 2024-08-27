@@ -120,13 +120,11 @@
                                                     text="{i18n.View2>View2.table.buyingPrice}"
                                                 />
                                             </Column>
-                                             <Column
+                                            <Column
                                                 demandPopin="true"
                                                 hAlign="Center"
                                             >
-                                                <Label
-                                                    text=" BP Remarks"
-                                                />
+                                                <Label text=" BP Remarks" />
                                             </Column>
                                             <!-- <Column
                                                 minScreenWidth="Tablet"
@@ -211,8 +209,8 @@
                                                     <Text
                                                         text="{oRequestModel>Buyingpricesqft}"
                                                     />
-                                                      <Text
-                                                        text="{oRequestModel>Sbremark}"
+                                                    <Text
+                                                        text="{oRequestModel>Remark}"
                                                     />
                                                     <Text
                                                         text="{oRequestModel>Desiredbp}"
@@ -225,7 +223,7 @@
                                                         liveChange="onApprovedBuyingpriceInputLiveChange"
                                                     />
                                                     <Text
-                                                        text="{oRequestModel>Remark}"
+                                                        text="{oRequestModel>Sbremark}"
                                                     />
                                                 </cells>
                                             </ColumnListItem>

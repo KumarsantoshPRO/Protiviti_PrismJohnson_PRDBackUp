@@ -20,6 +20,10 @@
                         text="Show hidden columns"
                         visible="false"
                     />
+                    <Link
+                        text="Show Attachments"
+                        press="onShowAttachmentsLinkPress"
+                    />
                     <ToolbarSpacer />
 
                     <Button
@@ -346,7 +350,7 @@
                             liveChange="onBuyingpricesqftInputLiveChange"
                         />
                         <TextArea
-                            value="{ProductModel>Sbremark}"
+                            value="{ProductModel>Remark}"
                             liveChange="onSbremarkTextAreaLiveChange"
                         />
                         <Text
@@ -363,7 +367,7 @@
                             textAlign="End"
                             liveChange="onBuyingpricesqftInputLiveChange"
                         />
-                        <Text text="{path:'ProductModel>Remark'}" />
+                        <Text text="{path:'ProductModel>Sbremark'}" />
                         <Text text="{path:'ProductModel>Zprodh4'}" />
                     </cells>
                 </ColumnListItem>

@@ -91,6 +91,21 @@
                         type="XML"
                     />
                 </IconTabFilter>
+                <IconTabSeparator
+                    id="idV2ITSAttachment"
+                    icon="  sap-icon://step"
+                />
+                <IconTabFilter
+                    id="idV2OPSAttach"
+                    text="Attachments"
+                    iconColor="Contrast"
+                >
+                    <core:Fragment
+                        id="idV2FragAttach"
+                        fragmentName="pj.zpmg.view.fragments.View2.attachments"
+                        type="XML"
+                    />
+                </IconTabFilter>
             </items>
         </IconTabBar>
 
@@ -102,13 +117,14 @@
         <Panel
             expandable="true"
             headerText="Attachments"
-            id="idV2OPSAttach"
+            id="idV2OPSAttach_"
             class="sapUiMediumMarginTop"
+            visible="false"
         >
             <content>
                 <VBox class="sapUiLargeMarginBeginEnd">
                     <core:Fragment
-                        id="idV2FragAttach"
+                        id="idV2FragAttach_"
                         fragmentName="pj.zpmg.view.fragments.View2.attachments"
                         type="XML"
                     />
@@ -117,7 +133,10 @@
         </Panel>
 
         <footer>
-            <Bar id="id.actionButtons.Bar" visible="false">
+            <Bar
+                id="id.actionButtons.Bar"
+                visible="false"
+            >
                 <contentRight>
                     <Button
                         id="id.forward.Button"

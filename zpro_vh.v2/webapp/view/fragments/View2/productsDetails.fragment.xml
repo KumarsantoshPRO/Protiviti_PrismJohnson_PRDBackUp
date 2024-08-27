@@ -59,14 +59,10 @@
                 >
                     <Text text="Volume" />
                 </Column>
-                 <Column
-                     hAlign="Center"
-                >
+                <Column hAlign="Center">
                     <Text text="Freight" />
                 </Column>
-                 <Column
-                      hAlign="Center"
-                >
+                <Column hAlign="Center">
                     <Text text="Revised freight" />
                 </Column>
                 <Column
@@ -130,7 +126,7 @@
                 >
                     <Text text="Gross Margin(%)" />
                 </Column>
-                   <Column
+                <Column
                     minScreenWidth="Desktop"
                     demandPopin="true"
                     hAlign="Center"
@@ -151,17 +147,16 @@
                             visible="false"
                             text="{ProductModel>Volume}"
                         />
-                          <Text text="{ProductModel>Frghtsqft}" />
+                        <Text text="{ProductModel>Frghtsqft}" />
                         <Text text="{ProductModel>ApprovedFrightprice}" />
-                      
+
                         <!-- <Text text="{ProductModel>Discount}" />  -->
-                           <Text
+                        <Text
                             text="{parts:['ProductModel>Discount', 'ProductModel>Discountb'], formatter:'.formatter.getDiscount' }"
-                             
                         />
                         <Text text="{ProductModel>Netexsqft}" />
                         <Text text="{ProductModel>Buyingpricesqft}" />
-                        <Text text="{ProductModel>Sbremark}" />
+                        <Text text="{ProductModel>Remark}" />
                         <Text
                             visible="false"
                             text="{ProductModel>Grossmarg}"
@@ -174,7 +169,7 @@
                             text="{path:'ProductModel>ApprovedBuyingprice'}"
                         />
                         <Text text="{path:'ProductModel>Grossmargper'}" />
-                        <Text text="{path:'ProductModel>Remark'}" />
+                        <Text text="{path:'ProductModel>Sbremark'}" />
                     </cells>
                 </ColumnListItem>
             </items>
