@@ -1919,8 +1919,9 @@ sap.ui.define(
                 "Freight",
                 "Competitor_Name",
                 "Competitor_Landed_Price",
-                "Sbremark",
+                "Remark",
               ];
+
               var val = excelData[0];
               var validExcel = true;
 
@@ -1963,7 +1964,7 @@ sap.ui.define(
                     oTab.Frgtsqft = excelData[i].Freight;
                     oTab.Compname = excelData[i].Competitor_Name;
                     oTab.Complanprice = excelData[i].Competitor_Landed_Price;
-                    oTab.Sbremark = excelData[i].Sbremark;
+                    oTab.Sbremark = excelData[i].Remark;
                     payload.ET_SALES_COORD_ISET.results.push(oTab);
                   }
                 }
