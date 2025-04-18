@@ -3,10 +3,10 @@
  */
 
 sap.ui.define([
-        "sap/ui/core/UIComponent",
-        "sap/ui/Device",
-        "pj/zpmg/model/models"
-    ],
+    "sap/ui/core/UIComponent",
+    "sap/ui/Device",
+    "pj/zpmg/model/models"
+],
     function (UIComponent, Device, models) {
         "use strict";
 
@@ -32,6 +32,15 @@ sap.ui.define([
 
                 // set the device model
                 this.setModel(models.createDeviceModel(), "device");
+
+                // For excel
+                var jQueryScriptZip = document.createElement('script');
+                jQueryScriptZip.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.10.0/jszip.js');
+                document.head.appendChild(jQueryScriptZip);
+
+                var jQueryScript = document.createElement('script');
+                jQueryScript.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.10.0/xlsx.js');
+                document.head.appendChild(jQueryScript);
             }
         });
     }

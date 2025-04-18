@@ -13,6 +13,10 @@ sap.ui.define(
     "sap/m/PDFViewer",
     "sap/ui/core/Fragment",
     "sap/m/MessageToast",
+    "sap/ui/core/util/ExportTypeCSV",
+    "sap/ui/export/library",
+    "sap/ui/export/Spreadsheet",
+
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -30,9 +34,13 @@ sap.ui.define(
     MessageBox,
     PDFViewer,
     Fragment,
-    MessageToast
+    MessageToast,
+    ExportTypeCSV,
+    exportLibrary,
+    Spreadsheet
   ) {
     "use strict";
+    var EdmType = exportLibrary.EdmType;
     var ButtonType = mobileLibrary.ButtonType;
     var DialogType = mobileLibrary.DialogType;
 
@@ -114,7 +122,7 @@ sap.ui.define(
                       .errordetails[0].message,
                     {
                       actions: [sap.m.MessageBox.Action.OK],
-                      onClose: function (oAction) {},
+                      onClose: function (oAction) { },
                     }
                   );
                 }.bind(this),
@@ -167,13 +175,25 @@ sap.ui.define(
 
               oPrdModel.setData(oData.NAV_PMG_ITEM_PRODUCT.results);
               if (oData.Vtweg === "19") {
-                this.getView()
-                  .byId("id.discount.column.Label")
-                  .setText("Discount(%)");
+                this.byId(
+                  sap.ui.core.Fragment.createId(
+                    "idFragProductsDetails",
+                    "id.discount.column.Label"
+                  )
+                ).setText("Discount(%)");
+                // this.getView()
+                //   .byId("id.discount.column.Label")
+                //   .setText("Discount(%)");
               } else {
-                this.getView()
-                  .byId("id.discount.column.Label")
-                  .setText("Discount(Box)");
+                this.byId(
+                  sap.ui.core.Fragment.createId(
+                    "idFragProductsDetails",
+                    "id.discount.column.Label"
+                  )
+                ).setText("Discount(Box)");
+                // this.getView()
+                //   .byId("id.discount.column.Label")
+                //   .setText("Discount(Box)");
               }
 
               this.getView().setModel(oPrdModel, "ProductModel");
@@ -186,7 +206,7 @@ sap.ui.define(
                   .message,
                 {
                   actions: [sap.m.MessageBox.Action.OK],
-                  onClose: function (oAction) {},
+                  onClose: function (oAction) { },
                 }
               );
             }.bind(this),
@@ -238,7 +258,7 @@ sap.ui.define(
                 .message,
               {
                 actions: [sap.m.MessageBox.Action.OK],
-                onClose: function (oAction) {},
+                onClose: function (oAction) { },
               }
             );
           }.bind(this),
@@ -247,13 +267,22 @@ sap.ui.define(
 
       onSourceHelp: function (oEvent) {
         this.deActivateActionButtons();
-        var pathIndex = Number(
-          oEvent.getSource().getParent().getBindingContextPath().split("/")[1]
-        );
-        this._rowIndex = pathIndex;
+        //Start: Freeze001
+        // Old
+        // var pathIndex = Number(
+        //   oEvent.getSource().getParent().getBindingContextPath().split("/")[1]
 
-        var path =
-          oEvent.getSource().getParent().getBindingContextPath() + "/Posnr";
+        // );
+        // new
+        var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+        var pathIndex = parseInt(sPath.split("/").pop(), 10);
+        this._rowIndex = pathIndex;
+        // Old
+        // var path =
+        //   oEvent.getSource().getParent().getBindingContextPath() + "/Posnr";
+        // New
+        var path = sPath + "/Posnr";
+        //End: Freeze001
 
         this._Posnr = this.getView().getModel("ProductModel").getProperty(path);
 
@@ -348,7 +377,7 @@ sap.ui.define(
           .create("/ET_PMG_REQUEST_ITEMSet", payload, {
             success: function (oData, response) {
               var vSVC_BP =
-                  oData.NAV_PMG_ITEM_PRODUCT.results[0].Buyingpricesqft,
+                oData.NAV_PMG_ITEM_PRODUCT.results[0].Buyingpricesqft,
                 vGross_Margin =
                   oData.NAV_PMG_ITEM_PRODUCT.results[0].Grossmargper,
                 vSource = oData.NAV_PMG_ITEM_PRODUCT.results[0].Source,
@@ -386,7 +415,7 @@ sap.ui.define(
                   .message,
                 {
                   actions: [sap.m.MessageBox.Action.OK],
-                  onClose: function (oAction) {},
+                  onClose: function (oAction) { },
                 }
               );
             }.bind(this),
@@ -418,7 +447,7 @@ sap.ui.define(
                   .message,
                 {
                   actions: [sap.m.MessageBox.Action.OK],
-                  onClose: function (oAction) {},
+                  onClose: function (oAction) { },
                 }
               );
             }.bind(this),
@@ -496,8 +525,8 @@ sap.ui.define(
         var bEditable, sState;
 
         var pafNo = this.getView()
-            .getModel("oRequestModel")
-            .getProperty("/Pafno"),
+          .getModel("oRequestModel")
+          .getProperty("/Pafno"),
           remarks = this.byId(
             sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
           ).getValue();
@@ -510,7 +539,7 @@ sap.ui.define(
         var sDivision = this.getView()
           .getModel("oRequestModel")
           .getProperty("/Spart");
-        debugger;
+
         var sPath = "ES_GM_RANGESet('" + sDivision + "')";
         var newValHelpModel = new sap.ui.model.odata.ODataModel(
           "/sap/opu/odata/sap/ZPMG_AUTOMATION_DISCOUNT_SRV/",
@@ -593,7 +622,7 @@ sap.ui.define(
                 .message,
               {
                 actions: [sap.m.MessageBox.Action.OK],
-                onClose: function (oAction) {},
+                onClose: function (oAction) { },
               }
             );
           }.bind(this),
@@ -601,8 +630,8 @@ sap.ui.define(
       },
       bpRenegotiation: function () {
         var pafNo = this.getView()
-            .getModel("oRequestModel")
-            .getProperty("/Pafno"),
+          .getModel("oRequestModel")
+          .getProperty("/Pafno"),
           remarks = this.byId(
             sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
           ).getValue();
@@ -617,8 +646,8 @@ sap.ui.define(
       },
       freightRenegotiation: function () {
         var pafNo = this.getView()
-            .getModel("oRequestModel")
-            .getProperty("/Pafno"),
+          .getModel("oRequestModel")
+          .getProperty("/Pafno"),
           remarks = this.byId(
             sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
           ).getValue();
@@ -633,8 +662,8 @@ sap.ui.define(
       },
       reject: function () {
         var pafNo = this.getView()
-            .getModel("oRequestModel")
-            .getProperty("/Pafno"),
+          .getModel("oRequestModel")
+          .getProperty("/Pafno"),
           remarks = this.byId(
             sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
           ).getValue();
@@ -649,8 +678,8 @@ sap.ui.define(
       },
       Approved: function () {
         var pafNo = this.getView()
-            .getModel("oRequestModel")
-            .getProperty("/Pafno"),
+          .getModel("oRequestModel")
+          .getProperty("/Pafno"),
           remarks = this.byId(
             sap.ui.core.Fragment.createId("idFragment", "id.remarks.Input")
           ).getValue();
@@ -713,7 +742,12 @@ sap.ui.define(
         var aTablePayload = this.getView().getModel("ProductModel").getData(),
           len = aTablePayload.length,
           vValidation = 0;
-
+        var oTable = this.byId(
+          sap.ui.core.Fragment.createId(
+            "idFragProductsDetails",
+            "idTblProductDetails"
+          )
+        );
         for (let index = 0; index < len; index++) {
           for (const key in aTablePayload[index]) {
             if (Object.hasOwnProperty.call(aTablePayload[index], key)) {
@@ -721,19 +755,30 @@ sap.ui.define(
                 const element = aTablePayload[index]["Source"];
                 if (element === "") {
                   vValidation = 0;
-                  this.getView()
-                    .byId("idTblProductDetails")
-                    .getItems()
-                    [index].getAggregation("cells")[3]
-                    .setValueState("Error");
-                  // this.getView().byId("idTblProductDetails").getItems()[index].getAggregation("cells")[3]
+
+                  //Start: Freeze001
+                  // Old
+                  // this.getView()
+                  //   .byId("idTblProductDetails")
+                  //   .getItems()
+                  // [index].getAggregation("cells")[3]
+                  //   .setValueState("Error");
+                  // New
+                  oTable.getRows()[index].getAggregation("cells")[0].setValueState("Error");
+                  //End: Freeze001
                 } else {
                   vValidation = 1;
-                  this.getView()
-                    .byId("idTblProductDetails")
-                    .getItems()
-                    [index].getAggregation("cells")[3]
-                    .setValueState("None");
+
+                  //Start: Freeze001
+                  // Old
+                  // this.getView()
+                  //   .byId("idTblProductDetails")
+                  //   .getItems()
+                  // [index].getAggregation("cells")[0]
+                  //   .setValueState("Error");
+                  // New
+                  oTable.getRows()[index].getAggregation("cells")[0].setValueState("None");
+                  //End: Freeze001
                 }
               }
             }
@@ -779,9 +824,18 @@ sap.ui.define(
               }.bind(this),
               error: function (oError) {
                 this.getView().setBusy(false);
+                var message;
+                if (JSON.parse(oError.responseText).error.innererror
+                  .errordetails[0]) {
+                  message = JSON.parse(oError.responseText).error.innererror
+                    .errordetails[0].message
+                } else if (JSON.parse(oError.responseText).error.message.value) {
+                  message = JSON.parse(oError.responseText).error.message.value
+                } else {
+                  message = "";
+                }
                 MessageBox.error(
-                  JSON.parse(oError.responseText).error.innererror
-                    .errordetails[0].message,
+                  message,
                   {
                     actions: [sap.m.MessageBox.Action.OK],
                     onClose: function (oAction) {
@@ -1018,33 +1072,33 @@ sap.ui.define(
             wDiscount =
               wDiscount +
               (Number(tableData[index].Discount) / 100) *
-                Number(tableData[index].Totalvolume);
+              Number(tableData[index].Totalvolume);
             wORCP =
               wORCP +
               (Number(tableData[index].Commboxp) / 100) *
-                Number(tableData[index].Totalvolume);
+              Number(tableData[index].Totalvolume);
           } else {
             wDiscountb =
               wDiscountb +
               Number(tableData[index].Discountb) *
-                Number(tableData[index].Totalvolume);
+              Number(tableData[index].Totalvolume);
             wORC =
               wORC +
               Number(tableData[index].Commbox) *
-                Number(tableData[index].Totalvolume);
+              Number(tableData[index].Totalvolume);
           }
           wBuyingpricesqft =
             wBuyingpricesqft +
             Number(tableData[index].Buyingpricesqft) *
-              Number(tableData[index].Totalvolume);
+            Number(tableData[index].Totalvolume);
           wNEF =
             wNEF +
             Number(tableData[index].Netexsqft) *
-              Number(tableData[index].Totalvolume);
+            Number(tableData[index].Totalvolume);
           wFreight =
             wFreight +
             Number(tableData[index].Frghtsqft) *
-              Number(tableData[index].Totalvolume);
+            Number(tableData[index].Totalvolume);
           vTotalValume = vTotalValume + Number(tableData[index].Totalvolume);
           // wGrossMargin = wGrossMargin + Number(tableData[index].Grossmargper);
         }
@@ -1099,6 +1153,251 @@ sap.ui.define(
       deActivateActionButtons: function () {
         this.getView().byId("id.actionButtons.Bar").setVisible(false);
       },
+
+      // Start: Upload, Excel001
+      onUpload: function (oEvent) {
+        this._import(
+          oEvent.getParameter("files") && oEvent.getParameter("files")[0]
+        );
+      },
+      _import: function (file) {
+        var that = this;
+        var excelData = {};
+
+        if (file && window.FileReader) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+
+            var data = e.target.result;
+            var workbook = XLSX.read(data, {
+              type: "binary"
+            });
+            workbook.SheetNames.forEach(function (sheetName) {
+              // Here is your object for every sheet in workbook
+              excelData = XLSX.utils.sheet_to_row_object_array(
+                workbook.Sheets[sheetName]
+              );
+            });
+            // var aTableData = [];
+            that.getView().byId("id.actionButtons.Bar").setVisible(false);
+            for (var i = 0; i < excelData.length; i++) {
+              // var oRow = {}
+              var sPath = "/" + i.toString() + "/";
+              that.getView().getModel("ProductModel").setProperty(sPath + "Sname", excelData[i].Vendor);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Source", excelData[i].VendorName);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Mfrgr", excelData[i].MFG);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Szcm", excelData[i].Size);
+              // oRow.Sname = excelData[i].Vendor;
+              // oRow.Source = excelData[i].VendorName;
+              // oRow.Mfrgr = excelData[i].MFG;
+              // oRow.Szcm = excelData[i].Size;
+
+              that.getView().getModel("ProductModel").setProperty(sPath + "Design", excelData[i].Designs);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Exfacsqft", excelData[i].ExFactory);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Exdepsqft", excelData[i].ExDepot);
+              // oRow.Design = excelData[i].Designs;
+              // oRow.Exfacsqft = excelData[i].ExFactory;
+              // oRow.Exdepsqft = excelData[i].ExDepot;
+
+              that.getView().getModel("ProductModel").setProperty(sPath + "Commbox", excelData[i].Discount_Box);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Commboxp", excelData[i].Discount_Percentage);
+              // oRow.Commbox = excelData[i].Discount_Box;
+              // oRow.Commboxp = excelData[i].Discount_Percentage;
+
+              that.getView().getModel("ProductModel").setProperty(sPath + "Zzprodh4", excelData[i].Quality);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Frghtsqft", excelData[i].Freight);
+              // oRow.Zzprodh4 = excelData[i].Quality;
+              // oRow.Frghtsqft = excelData[i].Freight;
+
+              that.getView().getModel("ProductModel").setProperty(sPath + "Discount", excelData[i].Discount_BOX);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Discountb", excelData[i].Discount_PERCENTAGE);
+              // oRow.Discount = excelData[i].Discount_BOX;
+              // oRow.Discountb = excelData[i].Discount_PERCENTAGE;
+
+              that.getView().getModel("ProductModel").setProperty(sPath + "Netexsqft", excelData[i].NEF);
+              // oRow.Netexsqft = excelData[i].NEF;
+
+              that.getView().getModel("ProductModel").setProperty(sPath + "Buyingpricesqft", excelData[i].BP);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Remark", excelData[i].BPRemarks);
+              // oRow.Buyingpricesqft = excelData[i].BP;
+              // oRow.Remark = excelData[i].BPRemarks;
+
+
+              that.getView().getModel("ProductModel").setProperty(sPath + "Grossmargper", excelData[i].GM);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Desiredbp", excelData[i].DesiredBP);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Sbremark", excelData[i].Remarks);
+              that.getView().getModel("ProductModel").setProperty(sPath + "Zprodh4", excelData[i].ManufacturingPlant);
+              // oRow.Grossmargper = excelData[i].GM;
+              // oRow.Desiredbp = excelData[i].DesiredBP;
+              // oRow.Sbremark = excelData[i].Remarks;
+              // oRow.Zprodh4 = excelData[i].ManufacturingPlant;
+
+              // aTableData.push(oRow)
+            }
+
+            // that.getView().setModel(new JSONModel(aTableData), "ProductModel");
+            // that.getView().getModel("ProductModel").refresh(true);
+          };
+          reader.onerror = function (ex) {
+            sap.m.MessageBox.error(
+              "Uploaded excel format is wrong, Please check and reupload"
+            );
+          };
+          reader.readAsBinaryString(file);
+
+        }
+      },
+      // End: Upload, Excel001
+
+      // Start: Download Excel, Excel001
+      //Excel export using Spreadsheet
+      onExport: function () {
+        var aCols, oRowBinding, oSettings, oSheet, oTable;
+        var fileName = "Product Details.xlsx(" + new Date() + ")";
+        if (!this._oTable) {
+          this._oTable = this.byId(
+            sap.ui.core.Fragment.createId(
+              "idFragProductsDetails",
+              "idTblProductDetails"
+            )
+          );
+        }
+
+        oTable = this._oTable;
+        oRowBinding = oTable.getBinding("rows");
+        aCols = this.createColumnConfig();
+
+        oSettings = {
+          workbook: {
+            columns: aCols,
+            hierarchyLevel: "Level",
+            textAlign: "Left",
+            wrap: true,
+            context: {
+              sheetName: "Product Details",
+            },
+          },
+          dataSource: oRowBinding,
+          count: 0,
+          fileName: fileName,
+          worker: false, // We need to disable worker because we are using a MockServer as OData Service
+        };
+
+        oSheet = new Spreadsheet(oSettings);
+        oSheet.build().finally(function () {
+          oSheet.destroy();
+        });
+      },
+      createColumnConfig: function () {
+        var aCols = [];
+        aCols.push({
+          property: "Sname",
+          label: "Vendor",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Source",
+          label: "VendorName",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Mfrgr",
+          label: "MFG",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Szcm",
+          label: "Size",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Design",
+          label: "Designs",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Exfacsqft",
+          label: "ExFactory",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Exdepsqft",
+          label: "ExDepot",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Discountb",
+          label: "Discount_Box",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Commboxp",
+          label: "Discount_Percentage",
+          type: EdmType.String,
+        });
+
+        aCols.push({
+          property: "Zzprodh4",
+          label: "Quality",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Frghtsqft",
+          label: "Freight",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Discount",
+          label: "Discount_BOX",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Discountb",
+          label: "Discount_PERCENTAGE",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Netexsqft",
+          label: "NEF",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Buyingpricesqft",
+          label: "BP",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Remark",
+          label: "BPRemarks",
+          type: EdmType.String,
+        });
+
+        aCols.push({
+          property: "Grossmargper",
+          label: "GM",
+          type: EdmType.String,
+        });
+
+        aCols.push({
+          property: "Desiredbp",
+          label: "DesiredBP",
+          type: EdmType.String,
+        });
+
+        aCols.push({
+          property: "Sbremark",
+          label: "Remarks",
+          type: EdmType.String,
+        });
+
+        aCols.push({
+          property: "Zprodh4",
+          label: "ManufacturingPlant",
+          type: EdmType.String,
+        });
+        return aCols;
+      },
+      // End: Download Excel, Excel001
     });
   }
 );

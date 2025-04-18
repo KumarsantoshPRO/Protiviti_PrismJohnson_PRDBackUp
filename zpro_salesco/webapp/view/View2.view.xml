@@ -71,14 +71,12 @@
                 </uxap:subSections>
             </uxap:ObjectPageSection>
 
-         <!-- Summary Detail -->
+            <!-- Summary Detail -->
             <uxap:ObjectPageSection
                 id="idV2OPSSumDetail"
                 titleUppercase="true"
                 title="{i18nV2>view2.sections.sumDetails.title}"
-               
             >
-              
                 <uxap:subSections>
                     <uxap:ObjectPageSubSection
                         id="idV2OPSubSumDetail"
@@ -101,9 +99,7 @@
                 id="idV2OPSAttach"
                 titleUppercase="true"
                 title="{i18nV2>view2.sections.attachments.title}"
-                 
             >
-                
                 <uxap:subSections>
                     <uxap:ObjectPageSubSection
                         id="idV2OPSubAttach"
@@ -120,14 +116,10 @@
                     </uxap:ObjectPageSubSection>
                 </uxap:subSections>
             </uxap:ObjectPageSection>
-     
         </uxap:sections>
 
         <uxap:footer>
-            <Bar
-                id="idV2Bar"
-                
-            >
+            <Bar id="idV2Bar">
                 <contentLeft>
                     <Button
                         id="idV2BtnMessages"
@@ -154,11 +146,11 @@
                         icon="sap-icon://browse-folder"
                         change="onUpload"
                         tooltip="Excel Upload"
-                       
+                        visible="{myProperties>/new}"
                         style="Emphasized"
                     />
                     <Button
-                        id="id.excelExport.Link"   
+                        id="id.excelExport.Link"
                         text="Download Excel Template"
                         press="onExport"
                         visible="false"

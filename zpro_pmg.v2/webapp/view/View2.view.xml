@@ -17,6 +17,7 @@
         titleAlignment="Center"
         titleLevel="H1"
         class="sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer sapUiResponsivePadding--floatingFooter"
+        enableScrolling="false"
     >
         <!-- <uxap:ObjectPageHeader
             id="idObjectHeader"
@@ -110,6 +111,7 @@
         </IconTabBar>
 
         <core:Fragment
+            id="idFragProductsDetails"
             fragmentName="pj.zpmg.view.fragments.View2.productsDetails"
             type="XML"
         />

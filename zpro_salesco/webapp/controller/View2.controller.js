@@ -273,14 +273,14 @@ sap.ui.define(
                   if (sErrorMessage) {
                     MessageBox.error(sErrorMessage, {
                       actions: [sap.m.MessageBox.Action.OK],
-                      onClose: function (oAction) {},
+                      onClose: function (oAction) { },
                     });
                   } else {
                     MessageBox.error(
                       "Something went wrong, Please refresh browser and try again",
                       {
                         actions: [sap.m.MessageBox.Action.OK],
-                        onClose: function (oAction) {},
+                        onClose: function (oAction) { },
                       }
                     );
                   }
@@ -316,14 +316,14 @@ sap.ui.define(
                   if (sErrorMessage) {
                     MessageBox.error(sErrorMessage, {
                       actions: [sap.m.MessageBox.Action.OK],
-                      onClose: function (oAction) {},
+                      onClose: function (oAction) { },
                     });
                   } else {
                     MessageBox.error(
                       "Something went wrong, Please refresh browser and try again",
                       {
                         actions: [sap.m.MessageBox.Action.OK],
-                        onClose: function (oAction) {},
+                        onClose: function (oAction) { },
                       }
                     );
                   }
@@ -720,7 +720,7 @@ sap.ui.define(
 
           var index = Number(
             oEvent.getSource().getParent().getBindingContextPath().split("/")[
-              vLen - 1
+            vLen - 1
             ]
           );
 
@@ -1084,14 +1084,14 @@ sap.ui.define(
                       if (sErrorMessage) {
                         MessageBox.error(sErrorMessage, {
                           actions: [sap.m.MessageBox.Action.OK],
-                          onClose: function (oAction) {},
+                          onClose: function (oAction) { },
                         });
                       } else {
                         MessageBox.error(
                           "Something went wrong, Please refresh browser and try again",
                           {
                             actions: [sap.m.MessageBox.Action.OK],
-                            onClose: function (oAction) {},
+                            onClose: function (oAction) { },
                           }
                         );
                       }
@@ -1174,8 +1174,8 @@ sap.ui.define(
 
                               MessageBox.success(
                                 "Request saved successfully with PAF Number:" +
-                                  oData.Pafno.replace(/^0+/, "") +
-                                  "",
+                                oData.Pafno.replace(/^0+/, "") +
+                                "",
                                 {
                                   actions: [sap.m.MessageBox.Action.OK],
                                   onClose: function (oAction) {
@@ -1194,14 +1194,14 @@ sap.ui.define(
                               if (sErrorMessage) {
                                 MessageBox.error(sErrorMessage, {
                                   actions: [sap.m.MessageBox.Action.OK],
-                                  onClose: function (oAction) {},
+                                  onClose: function (oAction) { },
                                 });
                               } else {
                                 MessageBox.error(
                                   "Something went wrong, Please refresh browser and try again",
                                   {
                                     actions: [sap.m.MessageBox.Action.OK],
-                                    onClose: function (oAction) {},
+                                    onClose: function (oAction) { },
                                   }
                                 );
                               }
@@ -1210,8 +1210,8 @@ sap.ui.define(
                       } else {
                         MessageBox.success(
                           "Request saved successfully with PAF Number:" +
-                            oData.Pafno.replace(/^0+/, "") +
-                            "",
+                          oData.Pafno.replace(/^0+/, "") +
+                          "",
                           {
                             actions: [sap.m.MessageBox.Action.OK],
                             onClose: function (oAction) {
@@ -1228,14 +1228,14 @@ sap.ui.define(
                       if (sErrorMessage) {
                         MessageBox.error(sErrorMessage, {
                           actions: [sap.m.MessageBox.Action.OK],
-                          onClose: function (oAction) {},
+                          onClose: function (oAction) { },
                         });
                       } else {
                         MessageBox.error(
                           "Something went wrong, Please refresh browser and try again",
                           {
                             actions: [sap.m.MessageBox.Action.OK],
-                            onClose: function (oAction) {},
+                            onClose: function (oAction) { },
                           }
                         );
                       }
@@ -1462,14 +1462,14 @@ sap.ui.define(
                                 if (sErrorMessage) {
                                   MessageBox.error(sErrorMessage, {
                                     actions: [sap.m.MessageBox.Action.OK],
-                                    onClose: function (oAction) {},
+                                    onClose: function (oAction) { },
                                   });
                                 } else {
                                   MessageBox.error(
                                     "Something went wrong, Please refresh browser and try again",
                                     {
                                       actions: [sap.m.MessageBox.Action.OK],
-                                      onClose: function (oAction) {},
+                                      onClose: function (oAction) { },
                                     }
                                   );
                                 }
@@ -1514,16 +1514,16 @@ sap.ui.define(
               ) {
                 MessageBox.error(
                   "At line number:" +
-                    j +
-                    ", Material Freigth Group:- '" +
-                    sSelectedValue +
-                    "' and Manufacturing Plant:-'" +
-                    sManufacturingPlant +
-                    "' and Part:-'" +
-                    sPart +
-                    "' and Quality:-'" +
-                    sSelectedValueQuality +
-                    "' combination already selected"
+                  j +
+                  ", Material Freigth Group:- '" +
+                  sSelectedValue +
+                  "' and Manufacturing Plant:-'" +
+                  sManufacturingPlant +
+                  "' and Part:-'" +
+                  sPart +
+                  "' and Quality:-'" +
+                  sSelectedValueQuality +
+                  "' combination already selected"
                 );
                 aModelData[j].Mfrgr = "";
                 aModelData[j].Mvgr5 = "";
@@ -1558,14 +1558,14 @@ sap.ui.define(
               vInvoiceDiscount =
                 vInvoiceDiscount +
                 Number(aItemsData[index].Disc) *
-                  Number(aItemsData[index].TotalVol);
+                Number(aItemsData[index].TotalVol);
               vInvoiceType = "Per Box";
             } else {
               vInvoiceDiscount =
                 vInvoiceDiscount +
                 (Number(aItemsData[index].Disc) *
                   Number(aItemsData[index].TotalVol)) /
-                  100;
+                100;
 
               vInvoiceType = "%";
             }
@@ -1579,13 +1579,13 @@ sap.ui.define(
                 vOrc +
                 (Number(aItemsData[index].Commboxp) *
                   Number(aItemsData[index].TotalVol)) /
-                  100;
+                100;
               vOrcType = "%";
             } else {
               vOrc =
                 vOrc +
                 Number(aItemsData[index].Commbox) *
-                  Number(aItemsData[index].TotalVol);
+                Number(aItemsData[index].TotalVol);
               vOrcType = "Per Box";
             }
 
@@ -1594,7 +1594,7 @@ sap.ui.define(
             vFreightDiscount =
               vFreightDiscount +
               Number(aItemsData[index].Frgtsqft) *
-                Number(aItemsData[index].TotalVol);
+              Number(aItemsData[index].TotalVol);
             vTotalValume = vTotalValume + Number(aItemsData[index].TotalVol);
           }
 
@@ -1771,9 +1771,9 @@ sap.ui.define(
         },
         onViewAttachmentObjectStatusPress: function (oEvent) {
           var sFile = oEvent
-              .getSource()
-              .getParent()
-              .getProperty("thumbnailUrl"),
+            .getSource()
+            .getParent()
+            .getProperty("thumbnailUrl"),
             sFileName = oEvent.getSource().getParent().getProperty("fileName"),
             oButton = oEvent.getSource();
 
@@ -1861,7 +1861,7 @@ sap.ui.define(
         _import: function (file) {
           var that = this;
           var excelData = {};
-
+          
           if (file && window.FileReader) {
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -1991,11 +1991,11 @@ sap.ui.define(
         fnResolve: function () {
           // get call - Get Customer Name using customer code
           var sTerm = this.byId(
-              sap.ui.core.Fragment.createId(
-                "idV2FragGenInfo",
-                "idV2InpCustCode"
-              )
-            ).getValue(),
+            sap.ui.core.Fragment.createId(
+              "idV2FragGenInfo",
+              "idV2InpCustCode"
+            )
+          ).getValue(),
             aFilters = [],
             oFilterDomname = new sap.ui.model.Filter(
               [
@@ -2038,7 +2038,7 @@ sap.ui.define(
                     this.getView().setBusy(false);
                   }
                   var bindingContextPath =
-                      "/ET_SALES_COORD_ISET/results/" + index + "",
+                    "/ET_SALES_COORD_ISET/results/" + index + "",
                     sValue1 = bindingContextPath + "/Mfrgr",
                     sValue2 = bindingContextPath + "/Szmm",
                     sTerm = this.getView()
