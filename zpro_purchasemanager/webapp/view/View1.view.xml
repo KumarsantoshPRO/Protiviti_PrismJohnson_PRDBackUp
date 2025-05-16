@@ -63,15 +63,13 @@
                         count="{count>/Delayed}"
                         text="{i18n.View1>View1.IconTabFilter.delay}"
                         key="Delay"
-                     
                     />
                 </items>
                 <content>
                     <Table
-                      id="productsTable"
+                        id="productsTable"
                         alternateRowColors="true"
                         class="sapUiResponsiveContentPadding sapUiLargeMarginBottom"
-                        
                         growing="true"
                         inset="false"
                         headerText="{i18n.View1>View1.Table.headerText}"
@@ -111,7 +109,7 @@
                         </headerToolbar>
                         <columns>
                             <Column
-                                
+                                id="Paf"
                                 hAlign="End"
                                 width="4rem"
                             >
@@ -120,6 +118,7 @@
                                 />
                             </Column>
                             <Column
+                                id="Vkbur"
                                 minScreenWidth="Tablet"
                                 demandPopin="true"
                                 hAlign="End"
@@ -128,6 +127,7 @@
                                 <Text text="{i18n.View1>View1.Column.region}" />
                             </Column>
                             <Column
+                                id="Name"
                                 minScreenWidth="Tablet"
                                 demandPopin="true"
                                 hAlign="Center"
@@ -138,6 +138,7 @@
                                 />
                             </Column>
                             <Column
+                                id="Kunnr"
                                 minScreenWidth="Desktop"
                                 demandPopin="true"
                                 hAlign="Center"
@@ -168,6 +169,7 @@
                                 />
                             </Column>
                             <Column
+                                id="Requestdate"
                                 minScreenWidth="Desktop"
                                 demandPopin="true"
                                 hAlign="Center"
@@ -177,7 +179,10 @@
                                     text="{i18n.View1>View1.Column.requestedDate}"
                                 />
                             </Column>
-                            <Column hAlign="Center" width="6rem">
+                            <Column
+                                hAlign="Center"
+                                width="6rem"
+                            >
                                 <Text text="{i18n.View1>View1.Column.status}" />
                             </Column>
                         </columns>
@@ -195,7 +200,7 @@
                                     />
                                     <Text
                                         id="idV1TblCLITxtRegion"
-                                        text="{ModelForTable>Soname}({ModelForTable>Vkbur})" 
+                                        text="{ModelForTable>Soname}({ModelForTable>Vkbur})"
                                     />
                                     <Text
                                         id="idV1TblCLITtCustomer"

@@ -5,7 +5,7 @@ sap.ui.define(['sap/m/MessageBox', "sap/ui/model/json/JSONModel", "sap/ui/model/
 
         // Selection change
         onQualitySelectChange: function (oEvent, that) {
-            debugger
+            
             var bindingContextPath = oEvent.getSource().getParent().getBindingContextPath(),
                 bindingContextPathMFG = bindingContextPath + "/Mfrgr",
                 bindingContextPathSize = bindingContextPath + "/Szmm",

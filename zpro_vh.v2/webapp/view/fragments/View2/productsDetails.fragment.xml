@@ -15,6 +15,14 @@
             <headerToolbar>
                 <Toolbar>
                     <Title text="Products Details" />
+                    <!-- Start: Attach001 -->
+                    <Link
+                        id="idShowAttachments"
+                        visible="false"
+                        text="Show Attachments"
+                        press="onShowAttachmentsLinkPress"
+                    />
+                    <!-- End: Attach001 -->
                 </Toolbar>
             </headerToolbar>
             <columns>
@@ -133,6 +141,15 @@
                 >
                     <Text text="Remarks" />
                 </Column>
+                <!-- Start: Remarkcol001 -->
+                <Column
+                    minScreenWidth="Desktop"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="PMG Remarks" />
+                </Column>
+                <!-- End: Remarkcol001 -->
             </columns>
 
             <items>
@@ -170,6 +187,9 @@
                         />
                         <Text text="{path:'ProductModel>Grossmargper'}" />
                         <Text text="{path:'ProductModel>Sbremark'}" />
+                        <!-- Start: Remarkcol001 -->
+                        <Text text="{path:'ProductModel>PREMARK'}" />
+                        <!-- End: Remarkcol001 -->
                     </cells>
                 </ColumnListItem>
             </items>

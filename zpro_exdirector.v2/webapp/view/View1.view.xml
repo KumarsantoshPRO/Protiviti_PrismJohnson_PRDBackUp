@@ -229,6 +229,7 @@
                         </headerToolbar>
                         <columns>
                             <Column
+                                id="Pafno"
                                 hAlign="End"
                                 width="4rem"
                             >
@@ -241,18 +242,21 @@
                                 <Text text="Vertical" />
                             </Column>
                             <Column
+                                id="Soname"
                                 hAlign="Center"
                                 width="5rem"
                             >
                                 <Text text="Sales Office" />
                             </Column>
                             <Column
+                                id="Name"
                                 hAlign="Center"
                                 width="14rem"
                             >
                                 <Text text="Customer" />
                             </Column>
                             <Column
+                                id="Kunnr"
                                 hAlign="Center"
                                 width="6rem"
                             >
@@ -280,6 +284,7 @@
                                 <Text text="Current Order" />
                             </Column>
                             <Column
+                                id="Erdat"
                                 hAlign="Center"
                                 demandPopin="true"
                                 width="6rem"
@@ -287,6 +292,7 @@
                                 <Text text="Request Date" />
                             </Column>
                             <Column
+                                id="Validity"
                                 hAlign="End"
                                 demandPopin="true"
                                 width="6rem"

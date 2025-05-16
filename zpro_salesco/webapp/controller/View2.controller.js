@@ -70,6 +70,7 @@ sap.ui.define(
       "zpj.pro.sk.sd.salescoordinator.zprosalesco.controller.View2",
       {
         onInit: function () {
+
           this.vTemp = 1;
           this.getOwnerComponent()
             .getRouter()
@@ -119,6 +120,9 @@ sap.ui.define(
         onRouteMatched: function (oEvent) {
           var oGlobalModel = {
             Editable: false,
+            Required: false,
+            createCopy: false,
+            editButton: false
           };
           var oEditableFields = {
             Editable: false,
@@ -141,6 +145,11 @@ sap.ui.define(
             this.getView()
               .getModel("GlobalEditableModel")
               .setProperty("/Editable", true);
+            // Start: createCopy001
+            this.getView()
+              .getModel("GlobalModel")
+              .setProperty("/createCopy", false);
+            // End: createCopy001
             this.getView().byId("idV2OPSSumDetail").setVisible(true);
 
             this.byId(
@@ -176,6 +185,11 @@ sap.ui.define(
             this.getView()
               .getModel("GlobalEditableModel")
               .setProperty("/Editable", false);
+            // Start: createCopy001
+            this.getView()
+              .getModel("GlobalModel")
+              .setProperty("/createCopy", true);
+            // End: createCopy001
             this.getView().byId("FileUploaderId").setVisible(false);
             // this.getView().byId("id.excelExport.Link").setVisible(false);
             this.getView().byId("idV2OPSSumDetail").setVisible(false);
@@ -216,9 +230,11 @@ sap.ui.define(
                 },
                 success: function (Data) {
                   if (Data.Status === "P" || Data.Status === "D") {
-                    that.getView().byId("idV2BtnEdit").setVisible(true);
+                    that.getView().getModel("GlobalModel").setProperty("/editButton", true);
+                    // that.getView().byId("idV2BtnEdit").setVisible(true);
                   } else {
-                    that.getView().byId("idV2BtnEdit").setVisible(true);
+                    that.getView().getModel("GlobalModel").setProperty("/editButton", true);
+                    // that.getView().byId("idV2BtnEdit").setVisible(true);
                   }
                   Data.Validity = Data.Validity.replace(/^0+/, "");
 
@@ -331,8 +347,32 @@ sap.ui.define(
               });
           }
         },
-
+        // Start: createCopy001
+        onCreateCopy: function () {
+          this.getView().getModel("JSONModelPayload").setProperty("/Pafno", "")
+          this.getView()
+            .getModel("GlobalModel")
+            .setProperty("/Editable", true);
+          this.getView()
+            .getModel("GlobalEditableModel")
+            .setProperty("/Editable", true);
+          this.getView().byId("FileUploaderId").setVisible(true);
+          this.getView().byId("idV2OPSSumDetail").setVisible(true);
+          this.getView().getModel("GlobalModel").setProperty("/editButton", false);
+          this.getView().getModel("GlobalModel").setProperty("/createCopy", false);
+          this.getView()
+            .byId("ObjectPageLayout")
+            .getHeaderTitle()
+            .setObjectTitle("Generate New Request");
+        },
+        // End: createCopy001
         onEdit: function () {
+          // Start: createCopy001
+          this.getView()
+            .getModel("GlobalModel")
+            .setProperty("/createCopy", false);
+          this.getView().getModel("GlobalModel").setProperty("/editButton", false);
+          // End: createCopy001
           if (this.sID !== "null") {
             this.getView()
               .getModel("GlobalModel")
@@ -362,6 +402,17 @@ sap.ui.define(
           oEvent.getSource().setValueState("None");
           this.getView().getModel("JSONModelPayload").setProperty("/Zterm", "");
           var vGetSelectedValue = oEvent.getSource().getSelectedKey();
+          // Start: Mandatefields001
+          if (vGetSelectedValue === "15" || vGetSelectedValue === "17" || vGetSelectedValue === "25" || vGetSelectedValue === "27") {
+            this.getView()
+              .getModel("GlobalModel")
+              .setProperty("/Required", true);
+          } else {
+            this.getView()
+              .getModel("GlobalModel")
+              .setProperty("/Required", false);
+          }
+          // End: Mandatefields001
           if (vGetSelectedValue === "11" || vGetSelectedValue === "17") {
             this.byId(
               sap.ui.core.Fragment.createId(
@@ -712,6 +763,7 @@ sap.ui.define(
         },
 
         onDelete: function (oEvent) {
+
           var vLen = oEvent
             .getSource()
             .getParent()
@@ -726,7 +778,12 @@ sap.ui.define(
 
           var JSONData = this.getView().getModel("JSONModelPayload").getData();
           if (JSONData.ET_SALES_COORD_ISET.results.length > 1) {
-            JSONData.ET_SALES_COORD_ISET.results.splice(index, 1);
+            // Start: Delete001
+            // New
+            JSONData.ET_SALES_COORD_ISET.results[index].Loekz = true;
+            // Old
+            // JSONData.ET_SALES_COORD_ISET.results.splice(index, 1);
+            // End: Delete001
           } else {
             MessageBox.error("Atlease one entry is required");
           }
@@ -734,6 +791,21 @@ sap.ui.define(
           this.getView()
             .getModel("JSONModelPayload")
             .setData(JSON.parse(JSON.stringify(JSONData)));
+
+          // Start: Delete001
+          var sPath = "Loekz";
+          var oTable = this.byId(
+            sap.ui.core.Fragment.createId(
+              "idV2FragAddPrdDetails",
+              "idV2TblProducts"
+            )
+          );
+          var aFilters = [];
+          var oBinding = oTable.getBinding("items");
+          var oFilter = new sap.ui.model.Filter(sPath, sap.ui.model.FilterOperator.NE, true);
+          aFilters.push(oFilter);
+          oBinding.filter(aFilters);
+          // End: Delete001
 
           // Date format corrector
           var data = this.getView().getModel("JSONModelPayload").getData();
@@ -972,6 +1044,22 @@ sap.ui.define(
         },
 
         onSave: function () {
+          // Start: Discount001
+          var aTableItems = this.getView()
+            .getModel("JSONModelPayload")
+            .getData().ET_SALES_COORD_ISET.results;
+          var nLen = aTableItems.length;
+          for (var i = 0; i < nLen; i++) {
+            if (aTableItems[i].Discb) {
+              if (Number(aTableItems[i].Discb) > 0) {
+                aTableItems[i].Disc = aTableItems[i].Discb;
+                aTableItems[i].Discb = null;
+              }
+
+            }
+
+          }
+          // End: Discount001
           this.onGenerateBeforeSave();
         },
         onGenerateBeforeSave: function () {
@@ -995,6 +1083,8 @@ sap.ui.define(
             this.getView().getModel("JSONModelPayload").refresh(true);
             var aData = this.getView().getModel("JSONModelPayload").getData()
               .ET_SALES_COORD_ISET.results;
+
+
 
             var itemValidationStatus = validation.itemsPayloadValidation(
               aData,
@@ -1020,6 +1110,7 @@ sap.ui.define(
                 this.getView().getModel("JSONModelPayload").getData().Vtweg ===
                 "19"
               ) {
+
               } else {
                 for (var i = 0; i < nLen; i++) {
                   aTableItems[i].Discb = aTableItems[i].Disc;
@@ -1028,76 +1119,110 @@ sap.ui.define(
               }
 
               var sPath = "/ET_SALES_COORD_HEADERSet";
-              this.getView().setBusy(true);
-
-              this.getView()
-                .getModel()
-                .create(
-                  sPath,
-                  this.getView().getModel("JSONModelPayload").getData(),
-                  {
-                    async: false,
-                    success: function (oData) {
-                      var aTableItems = oData.ET_SALES_COORD_ISET.results;
-                      var nLen = aTableItems.length;
-                      for (var j = 0; j < nLen; j++) {
-                        if (aTableItems[j].Isexdep === "") {
-                          aTableItems[j].Isexdep = " ";
-                        }
-                      }
-                      // Disc and Discb  conversion
-                      if (oData.Vtweg === "19") {
-                      } else {
+              //Start: Mandatefields001
+              var DistChannel = this.getView().getModel("JSONModelPayload").getProperty("/Vtweg");
+              var PONo = this.getView().getModel("JSONModelPayload").getProperty("/Aufnr")
+              var oppID = this.getView().getModel("JSONModelPayload").getProperty("/Oppu");
+              var aAttachmentsItems = this
+                .getView()
+                .getModel("LocalJSONModelForAttachment")
+                .getData().attachments.Nav_File_Upload.results;
+              var bStatus = true;
+              if (DistChannel === "15" || DistChannel === "17" || DistChannel === "25" || DistChannel === "27") {
+                if (!PONo) {
+                  MessageBox.error("Purchase Order No is mandatory selected distribution channel");
+                  bStatus = false;
+                } else if (!oppID) {
+                  MessageBox.error("Oppurtunity ID is mandatory selected distribution channel");
+                  bStatus = false;
+                } else if (aAttachmentsItems.length < 1) {
+                  MessageBox.error("Attachment is mandatory for selected distribution channel");
+                  bStatus = false;
+                }
+                else {
+                  bStatus = true;
+                }
+              }
+              if (bStatus) {
+                // old
+                this.getView().setBusy(true);
+                this.getView()
+                  .getModel()
+                  .create(
+                    sPath,
+                    this.getView().getModel("JSONModelPayload").getData(),
+                    {
+                      async: false,
+                      success: function (oData) {
                         var aTableItems = oData.ET_SALES_COORD_ISET.results;
                         var nLen = aTableItems.length;
-                        for (var i = 0; i < nLen; i++) {
-                          aTableItems[i].Disc = aTableItems[i].Discb;
-                          aTableItems[i].Discb = null;
-                        }
-                      }
-                      this.getView().setBusy(false);
-                      this.getView()
-                        .getModel("JSONModelPayload")
-                        .setData(oData);
-                      this.getView().getModel("JSONModelPayload").refresh(true);
-
-                      this.getView()
-                        .getModel("GlobalModel")
-                        .setProperty("/Editable", false);
-                      this.getView()
-                        .getModel("GlobalEditableModel")
-                        .setProperty("/Editable", false);
-
-                      this.getView().byId("idV2Bar").setVisible(true);
-                      this.getView().byId("idV2BtnSave").setVisible(true);
-                      this.getView().byId("FileUploaderId").setVisible(false);
-                      // this.getView().byId("id.excelExport.Link").setVisible(false);
-                      this.getView().byId("idV2OPSSumDetail").setVisible(true);
-                      this._displaySummaryDetails();
-                      this.onSaveAfterGenerate();
-                    }.bind(this),
-                    error: function (oError) {
-                      this.getView().setBusy(false);
-                      this.getView().byId("idV2BtnSave").setVisible(false);
-                      var sErrorMessage = JSON.parse(oError.responseText).error
-                        .innererror.errordetails[0].message;
-                      if (sErrorMessage) {
-                        MessageBox.error(sErrorMessage, {
-                          actions: [sap.m.MessageBox.Action.OK],
-                          onClose: function (oAction) { },
-                        });
-                      } else {
-                        MessageBox.error(
-                          "Something went wrong, Please refresh browser and try again",
-                          {
-                            actions: [sap.m.MessageBox.Action.OK],
-                            onClose: function (oAction) { },
+                        for (var j = 0; j < nLen; j++) {
+                          if (aTableItems[j].Isexdep === "") {
+                            aTableItems[j].Isexdep = " ";
                           }
-                        );
-                      }
-                    }.bind(this),
-                  }
-                );
+                        }
+                        // Disc and Discb  conversion
+                        if (oData.Vtweg === "19") {
+                        } else {
+                          var aTableItems = oData.ET_SALES_COORD_ISET.results;
+                          var nLen = aTableItems.length;
+                          for (var i = 0; i < nLen; i++) {
+                            aTableItems[i].Disc = aTableItems[i].Discb;
+                            aTableItems[i].Discb = null;
+                          }
+                        }
+                        this.getView().setBusy(false);
+                        this.getView()
+                          .getModel("JSONModelPayload")
+                          .setData(oData);
+                         
+                        this.getView().getModel("JSONModelPayload").refresh(true);
+
+                        this.getView()
+                          .getModel("GlobalModel")
+                          .setProperty("/Editable", false);
+                        this.getView()
+                          .getModel("GlobalEditableModel")
+                          .setProperty("/Editable", false);
+
+                        this.getView().byId("idV2Bar").setVisible(true);
+                        this.getView().byId("idV2BtnSave").setVisible(true);
+                        this.getView().byId("FileUploaderId").setVisible(false);
+                        // this.getView().byId("id.excelExport.Link").setVisible(false);
+                        this.getView().byId("idV2OPSSumDetail").setVisible(true);
+                        this._displaySummaryDetails();
+                        this.onSaveAfterGenerate();
+                      }.bind(this),
+                      error: function (oError) {
+
+
+                        this.getView().setBusy(false);
+                        this.getView().byId("idV2BtnSave").setVisible(false);
+                        var sErrorMessage = JSON.parse(oError.responseText).error
+                          .innererror.errordetails[0].message;
+                        if (sErrorMessage) {
+                          MessageBox.error(sErrorMessage, {
+                            actions: [sap.m.MessageBox.Action.OK],
+                            onClose: function (oAction) {
+
+                            },
+                          });
+                        } else {
+                          MessageBox.error(
+                            "Something went wrong, Please refresh browser and try again",
+                            {
+                              actions: [sap.m.MessageBox.Action.OK],
+                              onClose: function (oAction) {
+
+                              },
+                            }
+                          );
+                        }
+                      }.bind(this),
+                    }
+                  );
+              }
+              //Start: Mandatefields001
             }
           }
         },
@@ -1145,10 +1270,7 @@ sap.ui.define(
                   {
                     async: false,
                     success: function (oData) {
-                      var aAttachmentsItems = that
-                        .getView()
-                        .getModel("LocalJSONModelForAttachment")
-                        .getData().attachments.Nav_File_Upload.results;
+                      var aAttachmentsItems = that.getView().getModel("LocalJSONModelForAttachment").getData().attachments.Nav_File_Upload.results;
                       if (aAttachmentsItems.length > 0) {
                         that
                           .getView()
@@ -1215,7 +1337,10 @@ sap.ui.define(
                           {
                             actions: [sap.m.MessageBox.Action.OK],
                             onClose: function (oAction) {
-                              window.location.reload();
+                              // window.location.reload();
+                              that.getOwnerComponent().getRouter().navTo("page2", {
+                                ID: "null" // Parameters to be embedded in the hash
+                              });
                             },
                           }
                         );
@@ -1260,6 +1385,21 @@ sap.ui.define(
         },
 
         onGenerate: function () {
+          // Start: Discount001
+          var aTableItems = this.getView()
+            .getModel("JSONModelPayload")
+            .getData().ET_SALES_COORD_ISET.results;
+          var nLen = aTableItems.length;
+
+          for (var i = 0; i < nLen; i++) {
+            if (aTableItems[i].Discb) {
+              if (Number(aTableItems[i].Discb) > 0) {
+                aTableItems[i].Disc = aTableItems[i].Discb;
+                aTableItems[i].Discb = null;
+              }
+            }
+          }
+          // End: Discount001
           try {
             var vStatus = this.onValidate();
             if (vStatus != 0) {
@@ -1426,9 +1566,10 @@ sap.ui.define(
                               this.getView()
                                 .byId("idV2OPSSumDetail")
                                 .setVisible(true);
-                              this.getView()
-                                .byId("idV2BtnEdit")
-                                .setVisible(true);
+                              // this.getView()
+                              //   .byId("idV2BtnEdit")
+                              //   .setVisible(true);
+                              this.getView().getModel("GlobalModel").setProperty("/editButton", true)
                               this.byId(
                                 sap.ui.core.Fragment.createId(
                                   "idV2FragAddPrdDetails",
@@ -1861,7 +2002,7 @@ sap.ui.define(
         _import: function (file) {
           var that = this;
           var excelData = {};
-          
+
           if (file && window.FileReader) {
             var reader = new FileReader();
             reader.onload = function (e) {

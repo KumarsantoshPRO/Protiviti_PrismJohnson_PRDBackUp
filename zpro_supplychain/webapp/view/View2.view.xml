@@ -205,6 +205,15 @@
                                                     text="{i18n.View2>View2.table.remarks}"
                                                 />
                                             </Column>
+                                            <!-- Start: Remarkcol001 -->
+                                            <Column
+                                                minScreenWidth="Desktop"
+                                                demandPopin="true"
+                                                hAlign="Center"
+                                            >
+                                                <Text text="PMG Remarks" />
+                                            </Column>
+                                            <!-- End: Remarkcol001 -->
                                         </columns>
 
                                         <items>
@@ -245,6 +254,11 @@
                                                     <Text
                                                         text="{oRequestModel>Sbremark}"
                                                     />
+                                                    <!-- Start: Remarkcol001 -->
+                                                    <Text
+                                                        text="{path:'ProductModel>PREMARK'}"
+                                                    />
+                                                    <!-- End: Remarkcol001 -->
                                                 </cells>
                                             </ColumnListItem>
                                         </items>

@@ -3,21 +3,111 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "zpj/pro/sd/sk/zproexdirector/model/formatter",
-    'sap/m/MessageBox'
+    'sap/m/MessageBox',
+    "sap/ui/model/Sorter",
+    "sap/ui/core/Element",
+    "sap/m/table/columnmenu/MenuBase",
+    "sap/m/table/columnmenu/Menu",
+    "sap/m/table/columnmenu/QuickSort",
+    "sap/m/table/columnmenu/QuickSortItem",
+    "sap/m/Menu",
+    "sap/m/MenuItem"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel, formatter, MessageBox) {
-        "use strict";
+    function (Controller, JSONModel, formatter, MessageBox, Sorter, Element, MenuBase, ColumnMenu, QuickSort, QuickSortItem, Menu, MenuItem) {
+        "use strict"; 
+        // Start: Sort001
+        /**
+         * Constructor for a new Menu adapter that implements the IColumnHeaderMenu interface.
+         */
+        var CustomMenuAdapter = MenuBase.extend("MenuToColumnMenuAdapter", {
+            metadata: {
+                aggregations: {
+                    menu: { type: "sap.m.Menu", multiple: false }
+                }
+            }
+        });
 
+        /**
+         * Opens the menu at the specific target element.
+         *
+         * @param {sap.ui.core.Control | HTMLElement} oAnchor This is the control or HTMLElement where the menu is placed.
+         */
+        CustomMenuAdapter.prototype.openBy = function (oAnchor) {
+            const oMenu = this.getMenu();
+            const fnResetBlocked = () => {
+                if (this._blocked) {
+                    clearTimeout(this._blocked);
+                    this._blocked = null;
+                }
+            };
+
+            if (!oMenu || ((this.isOpen() || this._blocked) && oAnchor === this._oIsOpenBy)) {
+                fnResetBlocked();
+                return;
+            }
+
+            fnResetBlocked();
+
+            var oControl = oAnchor;
+            if (!(oAnchor instanceof Element)) {
+                oControl = Element.closestTo(oAnchor, true);
+            }
+
+            if (!this.fireBeforeOpen({ openBy: oControl })) {
+                return;
+            }
+
+            // On click outside the menu, the sap.m.Menu closes automatically
+            // to prevent reopening on column header click, we need to block the openBy call for a short time (200ms)
+            oMenu.attachEventOnce("closed", () => {
+                fnResetBlocked();
+                this._blocked = setTimeout(fnResetBlocked, 200);
+                this.fireAfterClose();
+            });
+
+            oMenu.openBy(oAnchor);
+            this._oIsOpenBy = oAnchor;
+        };
+
+        /**
+         * Determines whether the menu is open.
+         *
+         * @returns {boolean} Whether the menu is open.
+         */
+        CustomMenuAdapter.prototype.isOpen = function () {
+            return this.getMenu()?.isOpen() || false;
+        };
+
+        /**
+         * Closes the menu.
+         */
+        CustomMenuAdapter.prototype.close = function () {
+            this.getMenu()?.close();
+        };
+
+        /**
+         * Returns the type of the menu.
+         *
+         * @returns {sap.ui.core.aria.HasPopup} Type of the menu
+         * @public
+         */
+        CustomMenuAdapter.prototype.getAriaHasPopupType = function () {
+            return "Menu";
+        };
+        // End: Sort001
         return Controller.extend("zpj.pro.sd.sk.zproexdirector.controller.View1", {
             formatter: formatter,
             onInit: function () {
                 this.getOwnerComponent().getRouter().attachRoutePatternMatched(this._onRouteMatched, this);
+                // Start: Sort001
+                this.createHeaderMenus();
+                // End: Sort001
             },
             _onRouteMatched: function (oEvent) {
-                 
+
                 var sID = oEvent.getParameter("arguments").ID;
                 if (sID === "Page1" || sID === undefined || sID === "") {
                     this.onFilterBarClear();
@@ -33,13 +123,13 @@ sap.ui.define([
                 if (this.sVkbur) {
                     var n = new sap.ui.model.Filter([new sap.ui.model.Filter("Vkbur", sap.ui.model.FilterOperator.EQ, this.sVkbur)], false);
                     aFilter.push(n);
-                  }
+                }
                 this.getView().setBusy(true);
                 this.getView().getModel().read(sPath, {
                     filters: aFilter,
                     success: function (Data) {
                         var aFilter = [];
-                        debugger;
+
                         this.getView().setBusy(false);
                         if (sForWhat === "count") {
                             switch (sStatusText) {
@@ -47,7 +137,7 @@ sap.ui.define([
                                     this.getView().getModel("count").getData().Total = Data.results.length;
                                     break;
                                 case "P":
-                                    debugger;
+
                                     this.getView().getModel("count").getData().Pending = Data.results.length;
                                     break;
                                 case "D":
@@ -89,17 +179,17 @@ sap.ui.define([
             onSearch: function () {
                 this.sVkbur = this.getView().byId("id.SalesOffice.Input").getValue();
                 {
-                  this._getRequestData("P", "count");
-                  this._getRequestData("A", "count");
-                  this._getRequestData("R", "count");
-                  this._getRequestData("DL", "count");
-                  this._getRequestData("", "count");
-                  this._getRequestData("", "tableData");
+                    this._getRequestData("P", "count");
+                    this._getRequestData("A", "count");
+                    this._getRequestData("R", "count");
+                    this._getRequestData("DL", "count");
+                    this._getRequestData("", "count");
+                    this._getRequestData("", "tableData");
                 }
-              },
-              onFilterBarClear: function () {
+            },
+            onFilterBarClear: function () {
                 this.getView().byId("id.SalesOffice.Input").setValue("");
-              },
+            },
             _onFilterSelect: function (oEvent) {
 
                 var sKey = oEvent.getParameter("key");
@@ -192,7 +282,7 @@ sap.ui.define([
 
             },
             onValueHelpConfirm: function (oEvent) {
-                debugger;
+
                 var oSelectedItem = oEvent.getParameter("selectedItem");
                 var sSelectedValue = oSelectedItem.getProperty("title");
                 this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.SalesOffice.Input")).setValue(sSelectedValue);
@@ -308,7 +398,7 @@ sap.ui.define([
             onValueHelpConfirm: function (oEvent) {
                 var oSelectedItem = oEvent.getParameter("selectedItem");
                 var sSelectedValue = oSelectedItem.getProperty("title");
-                this.getView().byId("id.SalesOffice.Input").setValue(sSelectedValue); 
+                this.getView().byId("id.SalesOffice.Input").setValue(sSelectedValue);
             },
             onSuggest: function (oEvent) {
                 var sTerm = oEvent.getParameter("suggestValue"),
@@ -335,7 +425,7 @@ sap.ui.define([
                     oODataModel.read(sPath, {
                         filters: aFilters,
                         success: function (Data) {
-                          
+
                             if (Data.results.length > 0) {
                                 var JSONModelForSuggest = new JSONModel(Data.results);
                                 this.getView().setModel(JSONModelForSuggest, "JSONModelForSuggest");
@@ -356,7 +446,176 @@ sap.ui.define([
 
                 }
             },
+            // Start: Sort001
+            createHeaderMenus: function () {
+                const oTable = this.getView().byId("productsTable");
+                const aColumns = oTable.getColumns();
+                const oColumnPAFNo = aColumns[0];
+                const oColumnSO = aColumns[2];
+                const oColumnCustname = aColumns[3];
+                const oColumnCustid = aColumns[4];
+                const oColumnReqDate = aColumns[8];
+                const oColumnValidity = aColumns[9];
 
+                oColumnPAFNo.setHeaderMenu(new ColumnMenu({
+                    quickActions: [
+                        new QuickSort({
+                            items: new QuickSortItem({
+                                key: "Pafno",
+                                label: "Pafno"
+                            }),
+
+                            change: function (oEvent) {
+                                const oBinding = oTable.getBinding("items");
+                                const sSortOrder = oEvent.getParameter("item").getSortOrder();
+                                if (sSortOrder === "Ascending") {
+                                    oBinding.sort([new Sorter("Pafno", false)]);
+                                    oColumnPAFNo.setSortIndicator("Ascending");
+
+                                } else if (sSortOrder === "Descending") {
+                                    oBinding.sort([new Sorter("Pafno", true)]);
+                                    oColumnPAFNo.setSortIndicator("Descending");
+
+                                } else {
+                                    oColumnPAFNo.setSortIndicator("None");
+                                }
+                            }
+                        })
+                    ]
+                }));
+                oColumnSO.setHeaderMenu(new ColumnMenu({
+                    quickActions: [
+                        new QuickSort({
+                            items: new QuickSortItem({
+                                key: "Soname",
+                                label: "Soname"
+                            }),
+
+                            change: function (oEvent) {
+                                const oBinding = oTable.getBinding("items");
+                                const sSortOrder = oEvent.getParameter("item").getSortOrder();
+                                if (sSortOrder === "Ascending") {
+                                    oBinding.sort([new Sorter("Soname", false)]);
+                                    oColumnSO.setSortIndicator("Ascending");
+
+                                } else if (sSortOrder === "Descending") {
+                                    oBinding.sort([new Sorter("Soname", true)]);
+                                    oColumnSO.setSortIndicator("Descending");
+
+                                } else {
+                                    oColumnSO.setSortIndicator("None");
+                                }
+                            }
+                        })
+                    ]
+                }));
+                oColumnCustname.setHeaderMenu(new ColumnMenu({
+                    quickActions: [
+                        new QuickSort({
+                            items: new QuickSortItem({
+                                key: "Name",
+                                label: "Name"
+                            }),
+
+                            change: function (oEvent) {
+                                const oBinding = oTable.getBinding("items");
+                                const sSortOrder = oEvent.getParameter("item").getSortOrder();
+                                if (sSortOrder === "Ascending") {
+                                    oBinding.sort([new Sorter("Name", false)]);
+                                    oColumnCustname.setSortIndicator("Ascending");
+
+                                } else if (sSortOrder === "Descending") {
+                                    oBinding.sort([new Sorter("Name", true)]);
+                                    oColumnCustname.setSortIndicator("Descending");
+
+                                } else {
+                                    oColumnCustname.setSortIndicator("None");
+                                }
+                            }
+                        })
+                    ]
+                }));
+                oColumnCustid.setHeaderMenu(new ColumnMenu({
+                    quickActions: [
+                        new QuickSort({
+                            items: new QuickSortItem({
+                                key: "Kunnr",
+                                label: "Kunnr"
+                            }),
+
+                            change: function (oEvent) {
+                                const oBinding = oTable.getBinding("items");
+                                const sSortOrder = oEvent.getParameter("item").getSortOrder();
+                                if (sSortOrder === "Ascending") {
+                                    oBinding.sort([new Sorter("Kunnr", false)]);
+                                    oColumnCustid.setSortIndicator("Ascending");
+
+                                } else if (sSortOrder === "Descending") {
+                                    oBinding.sort([new Sorter("Kunnr", true)]);
+                                    oColumnCustid.setSortIndicator("Descending");
+
+                                } else {
+                                    oColumnCustid.setSortIndicator("None");
+                                }
+                            }
+                        })
+                    ]
+                }));
+                oColumnReqDate.setHeaderMenu(new ColumnMenu({
+                    quickActions: [
+                        new QuickSort({
+                            items: new QuickSortItem({
+                                key: "Erdat",
+                                label: "Erdat"
+                            }),
+
+                            change: function (oEvent) {
+                                const oBinding = oTable.getBinding("items");
+                                const sSortOrder = oEvent.getParameter("item").getSortOrder();
+                                if (sSortOrder === "Ascending") {
+                                    oBinding.sort([new Sorter("Erdat", false)]);
+                                    oColumnReqDate.setSortIndicator("Ascending");
+
+                                } else if (sSortOrder === "Descending") {
+                                    oBinding.sort([new Sorter("Erdat", true)]);
+                                    oColumnReqDate.setSortIndicator("Descending");
+
+                                } else {
+                                    oColumnReqDate.setSortIndicator("None");
+                                }
+                            }
+                        })
+                    ]
+                }));
+                oColumnValidity.setHeaderMenu(new ColumnMenu({
+                    quickActions: [
+                        new QuickSort({
+                            items: new QuickSortItem({
+                                key: "Validity",
+                                label: "Validity"
+                            }),
+
+                            change: function (oEvent) {
+                                const oBinding = oTable.getBinding("items");
+                                const sSortOrder = oEvent.getParameter("item").getSortOrder();
+                                if (sSortOrder === "Ascending") {
+                                    oBinding.sort([new Sorter("Validity", false)]);
+                                    oColumnValidity.setSortIndicator("Ascending");
+
+                                } else if (sSortOrder === "Descending") {
+                                    oBinding.sort([new Sorter("Validity", true)]);
+                                    oColumnValidity.setSortIndicator("Descending");
+
+                                } else {
+                                    oColumnValidity.setSortIndicator("None");
+                                }
+                            }
+                        })
+                    ]
+                }));
+
+            }
+            // End: Sort001
 
         });
     });

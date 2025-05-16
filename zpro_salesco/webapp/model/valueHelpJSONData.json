@@ -90,9 +90,9 @@
       "text": "Within 40 days from the date of goods receipt - P017"
     },
     {
-        "key": "DL45",
-        "text": "DL45"
-      },
+      "key": "DL45",
+      "text": "DL45"
+    },
     {
       "key": "ER07",
       "text": "East Rgn. Cash Discount- 3%- 7 Days - ER07 "
@@ -148,6 +148,11 @@
       "key": "11",
       "text": "Project - 11"
     },
+
+    {
+      "key": "15",
+      "text": "Dealer KAM Project - 15"
+    },
     {
       "key": "17",
       "text": "National Project - 17"
@@ -155,6 +160,18 @@
     {
       "key": "19",
       "text": "Dealer - 19"
+    },
+    {
+      "key": "25",
+      "text": "Dealer CBD Project - 25"
+    },
+    {
+      "key": "27",
+      "text": "National CBD Project - 27"
+    },
+    {
+      "key": "29",
+      "text": "Dealer Trade Project - 29"
     }
   ],
   "vertical": [

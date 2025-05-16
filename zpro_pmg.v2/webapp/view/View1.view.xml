@@ -104,7 +104,6 @@
                                     <Input
                                         id="id.SalesOffice.Input"
                                         placeholder="Sales Office"
-                                       
                                         showValueHelp="true"
                                         valueHelpRequest="onSalesOfficeHelp"
                                         change="onSalesOfficeInputSubmit"
@@ -193,7 +192,6 @@
                                     <Select
                                         id="id.Division.ComboBox"
                                         forceSelection="false"
-                                       
                                     >
                                         <core:Item
                                             key="10"
@@ -224,7 +222,6 @@
                                     <Input
                                         id="id.PafNo.Input"
                                         placeholder="PAF No."
-                                        
                                     />
                                 </fb:control>
                             </fb:FilterGroupItem>
@@ -236,13 +233,35 @@
                                 visibleInFilterBar="true"
                             >
                                 <fb:control>
-                                    <DatePicker
-                                        id="id.Date.DatePicker"
-                                        valueFormat="MM/dd/yyyy"
-                                        displayFormat="dd/MM/YYYY"
-                                     
-                                        placeholder="e.g: 31/12/2020"
+                                    <!-- Start: Date001 -->
+                                    <!-- Old -->
+                                    <!-- <DatePicker
+                                id="id.Date.DatePicker"
+                                valueFormat="MM/dd/yyyy"
+                                displayFormat="dd/MM/YYYY"
+                                change="onSearch"
+                                placeholder="e.g: 31/12/2020"
+                            /> -->
+                                    <!-- New -->
+                                    <DateRangeSelection
+                                        value="{
+				'type': 'sap.ui.model.type.DateInterval',
+				'formatOptions': {
+					'pattern': 'dd/MM/YYYY'
+				},
+				'parts': [
+					{
+						'type': 'sap.ui.model.type.Date',
+						'path': 'dateRange>/start'
+					},
+					{
+						'type': 'sap.ui.model.type.Date',
+						'path': 'dateRange>/end'
+					}
+				]
+			}"
                                     />
+                                    <!-- End: Date001 -->
                                 </fb:control>
                             </fb:FilterGroupItem>
                         </fb:filterGroupItems>
@@ -285,26 +304,31 @@
                                 </content>
                             </OverflowToolbar>
                         </headerToolbar>
+
                         <columns>
                             <Column
+                                id="Pafno"
                                 hAlign="End"
                                 width="5rem"
                             >
                                 <Text text="PAF No" />
                             </Column>
                             <Column
+                                id="Vkbur"
                                 hAlign="End"
                                 width="8rem"
                             >
                                 <Text text="Sales Office" />
                             </Column>
                             <Column
+                                id="Name"
                                 hAlign="Center"
                                 width="16rem"
                             >
                                 <Text text="Customer" />
                             </Column>
                             <Column
+                                id="Kunnr"
                                 hAlign="Center"
                                 width="6rem"
                             >
@@ -332,6 +356,7 @@
                                 <Text text="Current Order" />
                             </Column>
                             <Column
+                                id="Erdat"
                                 hAlign="Center"
                                 demandPopin="true"
                                 width="8rem"
@@ -339,6 +364,7 @@
                                 <Text text="Request Date" />
                             </Column>
                             <Column
+                                id="Validity"
                                 hAlign="End"
                                 demandPopin="true"
                                 width="4rem"
@@ -361,6 +387,7 @@
                                 <Text text="Status" />
                             </Column>
                         </columns>
+
                         <items>
                             <ColumnListItem
                                 vAlign="Middle"
@@ -372,7 +399,7 @@
                                         text="{path:'JSONModelForTable>Pafno', formatter:'.formatter.removeLeadingZeros'}"
                                     />
                                     <Text
-                                        text="{JSONModelForTable>Soname}({JSONModelForTable>Vkbur})"
+                                        text="{path:'JSONModelForTable>Soname'}({path:'JSONModelForTable>Vkbur'})"
                                     />
                                     <Text text="{JSONModelForTable>Name}" />
                                     <Text text="{JSONModelForTable>Kunnr}" />
@@ -385,9 +412,13 @@
                                     <Text
                                         text="{JSONModelForTable>WcurVolFt}"
                                     />
-                                    <Text
+                                    <!-- <Text
                                         text="{ parts: ['JSONModelForTable>Erdat'], formatter: '.formatter.getFormattedDate' }"
+                                    /> -->
+                                    <Text
+                                        text="{ path: 'JSONModelForTable>Erdat', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy', strictParsing: true,UTC: true}}"
                                     />
+
                                     <Text
                                         text="{path:'JSONModelForTable>Validity', formatter:'.formatter.removeLeadingZeros'}"
                                     />

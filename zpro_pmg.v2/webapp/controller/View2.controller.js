@@ -106,6 +106,13 @@ sap.ui.define(
                     this.getView().byId("idV2OPSAttach").setVisible(false);
                     this.getView().byId("idV2ITSAttachment").setVisible(false);
 
+                    this.byId(
+                      sap.ui.core.Fragment.createId(
+                        "idFragProductsDetails",
+                        "idShowAttachments"
+                      )
+                    ).setVisible(true);
+
                     var attachments = Data;
                     this.getView()
                       .getModel("LocalJSONModelForAttachment")
@@ -113,6 +120,13 @@ sap.ui.define(
                     this.getView()
                       .getModel("LocalJSONModelForAttachment")
                       .refresh(true);
+                  } else {
+                    this.byId(
+                      sap.ui.core.Fragment.createId(
+                        "idFragProductsDetails",
+                        "idShowAttachments"
+                      )
+                    ).setVisible(false);
                   }
                 }.bind(this),
                 error: function (oError) {
@@ -1180,59 +1194,57 @@ sap.ui.define(
             });
             // var aTableData = [];
             that.getView().byId("id.actionButtons.Bar").setVisible(false);
-            for (var i = 0; i < excelData.length; i++) {
-              // var oRow = {}
-              var sPath = "/" + i.toString() + "/";
-              that.getView().getModel("ProductModel").setProperty(sPath + "Sname", excelData[i].Vendor);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Source", excelData[i].VendorName);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Mfrgr", excelData[i].MFG);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Szcm", excelData[i].Size);
-              // oRow.Sname = excelData[i].Vendor;
-              // oRow.Source = excelData[i].VendorName;
-              // oRow.Mfrgr = excelData[i].MFG;
-              // oRow.Szcm = excelData[i].Size;
+            // Start: Excel003
+            var nLenTable = that.getView().getModel("ProductModel").getData().length,
+              nLenExcel = excelData.length;
+            // New
+            if (nLenTable === nLenExcel) {
+              // Old
 
-              that.getView().getModel("ProductModel").setProperty(sPath + "Design", excelData[i].Designs);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Exfacsqft", excelData[i].ExFactory);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Exdepsqft", excelData[i].ExDepot);
-              // oRow.Design = excelData[i].Designs;
-              // oRow.Exfacsqft = excelData[i].ExFactory;
-              // oRow.Exdepsqft = excelData[i].ExDepot;
+              var distributorChannel = that.getView().getModel("oRequestModel").getProperty("/Vtweg");
 
-              that.getView().getModel("ProductModel").setProperty(sPath + "Commbox", excelData[i].Discount_Box);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Commboxp", excelData[i].Discount_Percentage);
-              // oRow.Commbox = excelData[i].Discount_Box;
-              // oRow.Commboxp = excelData[i].Discount_Percentage;
+              for (var i = 0; i < excelData.length; i++) {
 
-              that.getView().getModel("ProductModel").setProperty(sPath + "Zzprodh4", excelData[i].Quality);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Frghtsqft", excelData[i].Freight);
-              // oRow.Zzprodh4 = excelData[i].Quality;
-              // oRow.Frghtsqft = excelData[i].Freight;
+                var sPath = "/" + i.toString() + "/";
+                // Editable columns
 
-              that.getView().getModel("ProductModel").setProperty(sPath + "Discount", excelData[i].Discount_BOX);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Discountb", excelData[i].Discount_PERCENTAGE);
-              // oRow.Discount = excelData[i].Discount_BOX;
-              // oRow.Discountb = excelData[i].Discount_PERCENTAGE;
+                if (distributorChannel === "19") {
+                  that.getView().getModel("ProductModel").setProperty(sPath + "Commboxp", excelData[i].ORC);
+                  that.getView().getModel("ProductModel").setProperty(sPath + "Discount", excelData[i].Discount);
+                } else {
+                  that.getView().getModel("ProductModel").setProperty(sPath + "Commbox", excelData[i].ORC);
+                  that.getView().getModel("ProductModel").setProperty(sPath + "Discountb", excelData[i].Discount);
+                }
+                that.getView().getModel("ProductModel").setProperty(sPath + "Buyingpricesqft", excelData[i].BP);
+                that.getView().getModel("ProductModel").setProperty(sPath + "Remark", excelData[i].BPRemarks);
+                that.getView().getModel("ProductModel").setProperty(sPath + "Desiredbp", excelData[i].DesiredBP);
+                that.getView().getModel("ProductModel").setProperty(sPath + "PREMARK", excelData[i].PGPRemarks);
 
-              that.getView().getModel("ProductModel").setProperty(sPath + "Netexsqft", excelData[i].NEF);
-              // oRow.Netexsqft = excelData[i].NEF;
+                // Non editable columns
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Sname", excelData[i].Vendor);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Source", excelData[i].VendorName);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Mfrgr", excelData[i].MFG);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Szcm", excelData[i].Size);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Design", excelData[i].Designs);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Exfacsqft", excelData[i].ExFactory);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Exdepsqft", excelData[i].ExDepot);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Zzprodh4", excelData[i].Quality);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Frghtsqft", excelData[i].Freight);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Netexsqft", excelData[i].NEF);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Grossmargper", excelData[i].GM);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Sbremark", excelData[i].Remarks);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Zprodh4", excelData[i].ManufacturingPlant);
+                // Start: NewCols001
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Prdgrp", excelData[i].Product);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Mvgr5", excelData[i].Part);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "Totalvolume", excelData[i].TotalVolunme);
+                // that.getView().getModel("ProductModel").setProperty(sPath + "CurVolFt", excelData[i].CurrentVolume);
+                // End: NewCols001
 
-              that.getView().getModel("ProductModel").setProperty(sPath + "Buyingpricesqft", excelData[i].BP);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Remark", excelData[i].BPRemarks);
-              // oRow.Buyingpricesqft = excelData[i].BP;
-              // oRow.Remark = excelData[i].BPRemarks;
-
-
-              that.getView().getModel("ProductModel").setProperty(sPath + "Grossmargper", excelData[i].GM);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Desiredbp", excelData[i].DesiredBP);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Sbremark", excelData[i].Remarks);
-              that.getView().getModel("ProductModel").setProperty(sPath + "Zprodh4", excelData[i].ManufacturingPlant);
-              // oRow.Grossmargper = excelData[i].GM;
-              // oRow.Desiredbp = excelData[i].DesiredBP;
-              // oRow.Sbremark = excelData[i].Remarks;
-              // oRow.Zprodh4 = excelData[i].ManufacturingPlant;
-
-              // aTableData.push(oRow)
+              }
+              // New
+            } else {
+              MessageBox.error("Mismatch in excel items, Please correct and reupload");
             }
 
             // that.getView().setModel(new JSONModel(aTableData), "ProductModel");
@@ -1262,9 +1274,34 @@ sap.ui.define(
             )
           );
         }
-
+        // Start: Excel002
+        var pafNo = this.getView().getModel("oRequestModel").getProperty("/Pafno").replace(/^0+/, ""),
+          disChannel = this.getView().getModel("oRequestModel").getProperty("/Vtweg"),
+          paymentTerm = this.getView().getModel("oRequestModel").getProperty("/Zterm");
+        // End: Excel002
         oTable = this._oTable;
-        oRowBinding = oTable.getBinding("rows");
+
+        // Start: Excel002
+        // Old
+        // oRowBinding = oTable.getBinding("rows");
+        // New
+        oRowBinding = this.getView().getModel("ProductModel").getData();
+        for (let index = 0; index < oRowBinding.length; index++) {
+          const element = oRowBinding[index];
+          element.pafNo = pafNo;
+          element.disChannel = disChannel;
+          element.paymentTerm = paymentTerm;
+
+          if (element.disChannel === "19") {
+            element.ORC = element.Commboxp;
+            element.Discount = element.Discount;
+          } else {
+            element.ORC = element.Commbox;
+            element.Discount = element.Discountb;
+          }
+
+        }
+        // End: Excel002
         aCols = this.createColumnConfig();
 
         oSettings = {
@@ -1275,6 +1312,7 @@ sap.ui.define(
             wrap: true,
             context: {
               sheetName: "Product Details",
+              version: '${version}',
             },
           },
           dataSource: oRowBinding,
@@ -1291,6 +1329,24 @@ sap.ui.define(
       createColumnConfig: function () {
         var aCols = [];
         aCols.push({
+          property: "pafNo",
+          label: "PAF No",
+          type: EdmType.String,
+          editable: false
+        });
+        aCols.push({
+          property: "disChannel",
+          label: "DistributionChannel",
+          type: EdmType.String,
+          editable: false
+        });
+        aCols.push({
+          property: "paymentTerm",
+          label: "PaymentTerm",
+          type: EdmType.String,
+          editable: false
+        });
+        aCols.push({
           property: "Sname",
           label: "Vendor",
           type: EdmType.String,
@@ -1305,6 +1361,13 @@ sap.ui.define(
           label: "MFG",
           type: EdmType.String,
         });
+        // Start: NewCols001 
+        aCols.push({
+          property: "Prdgrp",
+          label: "Product",
+          type: EdmType.String,
+        });
+        // End: NewCols001
         aCols.push({
           property: "Szcm",
           label: "Size",
@@ -1325,14 +1388,20 @@ sap.ui.define(
           label: "ExDepot",
           type: EdmType.String,
         });
+        // aCols.push({
+        //   property: "Commbox",
+        //   label: "ORC(Box)",
+        //   type: EdmType.String,
+        // });
+        // aCols.push({
+        //   property: "Commboxp",
+        //   label: "ORC(%)",
+        //   type: EdmType.String,
+        // });
+
         aCols.push({
-          property: "Discountb",
-          label: "Discount_Box",
-          type: EdmType.String,
-        });
-        aCols.push({
-          property: "Commboxp",
-          label: "Discount_Percentage",
+          property: "ORC",
+          label: "ORC",
           type: EdmType.String,
         });
 
@@ -1341,19 +1410,41 @@ sap.ui.define(
           label: "Quality",
           type: EdmType.String,
         });
+        // Start: NewCols001 
+        aCols.push({
+          property: "Mvgr5",
+          label: "Part",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "Totalvolume",
+          label: "TotalVolunme",
+          type: EdmType.String,
+        });
+        aCols.push({
+          property: "CurVolFt",
+          label: "CurrentVolume",
+          type: EdmType.String,
+        });
+        // End: NewCols001 
         aCols.push({
           property: "Frghtsqft",
           label: "Freight",
           type: EdmType.String,
         });
+        // aCols.push({
+        //   property: "Discount",
+        //   label: "Discount(BOX)",
+        //   type: EdmType.String,
+        // });
+        // aCols.push({
+        //   property: "Discountb",
+        //   label: "Discount(%)",
+        //   type: EdmType.String,
+        // });
         aCols.push({
           property: "Discount",
-          label: "Discount_BOX",
-          type: EdmType.String,
-        });
-        aCols.push({
-          property: "Discountb",
-          label: "Discount_PERCENTAGE",
+          label: "Discount",
           type: EdmType.String,
         });
         aCols.push({
@@ -1393,6 +1484,12 @@ sap.ui.define(
         aCols.push({
           property: "Zprodh4",
           label: "ManufacturingPlant",
+          type: EdmType.String,
+        });
+
+        aCols.push({
+          property: "PREMARK",
+          label: "PGPRemarks",
           type: EdmType.String,
         });
         return aCols;

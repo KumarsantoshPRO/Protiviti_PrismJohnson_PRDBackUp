@@ -29,6 +29,10 @@ sap.ui.define(
         this.getView().setModel(oModelVisibleFlag, "modelVisibleFlag");
         var dataModelValueHelp = this.getOwnerComponent().getModel("valueHelp").getData();
         this.getView().setModel(new JSONModel(dataModelValueHelp), "LocalJSONModels");
+        // Start: Date001
+        // New
+        this.getView().setModel(new JSONModel({ start: "", end: "" }), "dateRange");
+        // End: Date001   
       },
       // Start: Sales Office
       onSalesOfficeHelp: function () {
@@ -136,7 +140,7 @@ sap.ui.define(
         });
       },
       onValueHelpConfirm: function (evt) {
-        // debugger;
+
         var oSelectedItem = evt.getParameter("selectedItem");
         var sSelectedValue = oSelectedItem.getProperty("title");
         this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.SalesOffice.Input")).setValue(sSelectedValue);
@@ -181,7 +185,7 @@ sap.ui.define(
             .read(sPath, {
               filters: aFilters,
               success: function (Data) {
-                // debugger;
+
                 if (Data.results.length > 0) {
                   var JSONModelForSuggest = new JSONModel(Data.results);
                   this.getView().setModel(JSONModelForSuggest, "JSONModelForSuggest");
@@ -193,7 +197,7 @@ sap.ui.define(
                 this.getView().setBusy(false);
                 MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
                   actions: [sap.m.MessageBox.Action.OK],
-                  onClose: function (oAction) {},
+                  onClose: function (oAction) { },
                 });
               }.bind(this),
             });
@@ -212,8 +216,11 @@ sap.ui.define(
           vPAFNo = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.PafNo.Input")).getValue(),
           vMessage = "Enter 'Sales Office' to proceed",
           vCustomerCode = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "idV1InpCustCode")).getValue(),
-          vVertical =  this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "idV1SLVertical")).getSelectedKey();
-        this.sDate = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.Date.DatePicker")).getValue();
+          vVertical = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "idV1SLVertical")).getSelectedKey();
+        // Start: Date001
+        //  Old
+        // this.sDate = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.Date.DatePicker")).getValue();
+        // End: Date001
 
         if (!vSalesOffice) {
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.SalesOffice.Input")).setValueState("Error");
@@ -269,7 +276,7 @@ sap.ui.define(
                 this.getView().setBusy(false);
                 MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
                   actions: [sap.m.MessageBox.Action.OK],
-                  onClose: function (oAction) {},
+                  onClose: function (oAction) { },
                 });
               }.bind(this),
             });
@@ -312,20 +319,44 @@ sap.ui.define(
           .read(sPath, {
             filters: aFilter,
             success: function (Data) {
-              if (that.sDate) {
+
+              // Start: Date001
+              // old
+              // if (that.sDate) {
+
+              //   var aItems = [];
+              //   var nTemp = 0;
+
+              //   var sDateFromFE =
+              //     new Date(that.sDate).getDate().toString() +
+              //     new Date(that.sDate).getMonth().toString() +
+              //     new Date(that.sDate).getFullYear().toString();
+              //   for (let index = 0; index < Data.results.length; index++) {
+              //     var sDateFromBE =
+              //       new Date(Data.results[index].Erdat).getDate().toString() +
+              //       new Date(Data.results[index].Erdat).getMonth().toString() +
+              //       new Date(Data.results[index].Erdat).getFullYear().toString();
+              //     if (sDateFromBE === sDateFromFE) {
+              //       aItems.push(Data.results[index]);
+              //       nTemp = 1;
+              //     }
+              //   }
+
+              //   if (nTemp === 1) {
+              //     Data.results = aItems;
+              //   } else {
+              //     Data.results = [];
+              //   }
+              // }
+              // New
+              var startDate = that.getView().getModel("dateRange").getProperty("/start"),
+                endDate = that.getView().getModel("dateRange").getProperty("/end");
+
+              if (startDate && endDate) {
                 var aItems = [];
                 var nTemp = 0;
-
-                var sDateFromFE =
-                  new Date(that.sDate).getDate().toString() +
-                  new Date(that.sDate).getMonth().toString() +
-                  new Date(that.sDate).getFullYear().toString();
                 for (let index = 0; index < Data.results.length; index++) {
-                  var sDateFromBE =
-                    new Date(Data.results[index].Erdat).getDate().toString() +
-                    new Date(Data.results[index].Erdat).getMonth().toString() +
-                    new Date(Data.results[index].Erdat).getFullYear().toString();
-                  if (sDateFromBE === sDateFromFE) {
+                  if (Data.results[index].Erdat >= startDate && Data.results[index].Erdat <= endDate) {
                     aItems.push(Data.results[index]);
                     nTemp = 1;
                   }
@@ -337,6 +368,8 @@ sap.ui.define(
                   Data.results = [];
                 }
               }
+              // End: Date001
+
               // else {
               //     if (that.sDate) {
               //         MessageToast.show("Please check the date");
@@ -416,7 +449,7 @@ sap.ui.define(
               that.getView().setBusy(false);
               MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
                 actions: [sap.m.MessageBox.Action.OK],
-                onClose: function (oAction) {},
+                onClose: function (oAction) { },
               });
             },
           });
@@ -459,7 +492,7 @@ sap.ui.define(
         var vPAFNo = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.PafNo.Input")).getValue();
         var vSalesOffice = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.SalesOffice.Input")).getValue();
         var vCustomerCode = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "idV1InpCustCode")).getValue();
-        var vVertical =  this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "idV1SLVertical")).getSelectedKey();
+        var vVertical = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "idV1SLVertical")).getSelectedKey();
         var oFilterSalOffice = new sap.ui.model.Filter([new sap.ui.model.Filter("Vkbur", sap.ui.model.FilterOperator.EQ, vSalesOffice)], false);
         var oFilterPafNo = new sap.ui.model.Filter([new sap.ui.model.Filter("Pafno", sap.ui.model.FilterOperator.EQ, vPAFNo)], false);
         var oFilterCustCode = new sap.ui.model.Filter([new sap.ui.model.Filter("Kunnr", sap.ui.model.FilterOperator.EQ, vCustomerCode)], false);
@@ -470,22 +503,22 @@ sap.ui.define(
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", true);
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
         } else if (sKey === "Delay") {
-          this._getRequestData("D", "tableData", oFilterSalOffice, oFilterPafNo,  oFilterCustCode, oFilterVertical);
+          this._getRequestData("D", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", true);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(true);
         } else if (sKey === "OnGoing") {
-          this._getRequestData("P", "tableData", oFilterSalOffice, oFilterPafNo,  oFilterCustCode, oFilterVertical);
+          this._getRequestData("P", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", true);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(true);
         } else if (sKey === "Approved") {
-          this._getRequestData("A", "tableData", oFilterSalOffice, oFilterPafNo,  oFilterCustCode, oFilterVertical);
+          this._getRequestData("A", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", false);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
         } else if (sKey === "Rejected") {
-          this._getRequestData("R", "tableData", oFilterSalOffice, oFilterPafNo,  oFilterCustCode, oFilterVertical);
+          this._getRequestData("R", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", false);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
@@ -525,7 +558,7 @@ sap.ui.define(
                       that.getView().setBusy(false);
                       MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
                         actions: [sap.m.MessageBox.Action.OK],
-                        onClose: function (oAction) {},
+                        onClose: function (oAction) { },
                       });
                     },
                   });

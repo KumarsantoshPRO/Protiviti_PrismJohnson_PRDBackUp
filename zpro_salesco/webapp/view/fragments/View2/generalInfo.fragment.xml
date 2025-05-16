@@ -124,6 +124,7 @@
                     text="{LocalJSONModels>text}"
                 />
             </Select> -->
+            <!-- editable="{GlobalModel>/Editable}" -->
             <Select
                 id="idV2SLPaymentTerm"
                 forceSelection="false"
@@ -136,7 +137,7 @@
         ]}"
                 selectedKey="{JSONModelPayload>/Zterm}"
                 valueStateText="Select {i18nV2>view2.simpleForm.label.payTerm}"
-                editable="{GlobalModel>/Editable}"
+                editable="{GlobalEditableModel>/Editable}"
                 change="onPaymentTermsSelectChange"
             >
                 <core:Item
@@ -160,13 +161,16 @@
                 editable="{GlobalModel>/Editable}"
                 liveChange="onValidityNumber"
             />
-            <!--Start: Divya's changes -->
-            <Label text="{i18nV2>view2.simpleForm.label.projectnameaddress}" />
-            <TextArea
-                value="{JSONModelPayload>/Proj}"
+
+            <!-- Start: Newfields001 -->
+            <Label text="{i18nV2>view2.simpleForm.label.Oppurtunity}"  required="{GlobalModel>/Required}"/>
+            <Input
+                value="{JSONModelPayload>/Oppu}"
+                maxLength="10"
                 editable="{GlobalModel>/Editable}"
             />
-            <!--End: Divya's changes -->
+            <!-- End: Newfields001 -->
+
             <!-- <Label
                 id="idV2LblValidDay"
                 text="{i18nV2>view2.simpleForm.label.validDays}"
@@ -182,6 +186,7 @@
             <Label
                 id="idV2LblOrdNo"
                 text="{i18nV2>view2.simpleForm.label.ordNo}"
+                required="{GlobalModel>/Required}"
             />
             <Input
                 id="idV2InpOrderNo"
@@ -190,7 +195,8 @@
                 value="{JSONModelPayload>/Aufnr}"
                 editable="{GlobalModel>/Editable}"
                 liveChange="onLiveChange"
-            />
+            />  
+
             <Label
                 id="idV2LblSalOffice"
                 text="{i18nV2>view2.simpleForm.label.salOffice}"
@@ -262,6 +268,25 @@
                 text="{i18nV2>view2.simpleForm.label.ex}"
                 required="true"
             />
+            <!--Start: Divya's changes -->
+            <!--Start: Newfields001 -->
+            <Label text="{i18nV2>view2.simpleForm.label.projectnameaddress}" />
+            <TextArea
+                value="{JSONModelPayload>/Proj}"
+                editable="{GlobalModel>/Editable}"
+            />
+            <!--End: Newfields001 -->
+            <!--End: Divya's changes -->
+
+            <!-- Start: Newfields001 -->
+            <Label text="{i18nV2>view2.simpleForm.label.ProjectSpecifier}" />
+            <TextArea
+                value="{JSONModelPayload>/Spec}"
+                editable="{GlobalModel>/Editable}"
+            />
+
+            <!-- End: Newfields001 -->
+
             <!-- <RadioButtonGroup
                 id="idV2RBG"
                 columns="2"

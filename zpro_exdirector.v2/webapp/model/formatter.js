@@ -74,6 +74,11 @@ sap.ui.define([], function () {
           case "17":
             return "National Project - 17";
             break;
+          // Start: Distchanel15
+          case "15":
+            return "Specifier Sale - 15";
+            break;
+          // End: Distchanel15
           case "19":
             return "Dealer - 19";
             break;

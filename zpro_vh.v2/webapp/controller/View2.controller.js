@@ -9,12 +9,15 @@ sap.ui.define([
     "sap/m/TextArea",
     "zpj/pro/sd/sk/zprovertihead/model/formatter",
     "sap/m/MessageBox",
+    "sap/m/PDFViewer",
+    "sap/ui/core/Fragment",
 
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel, Core, Dialog, Button, Label, mobileLibrary, TextArea, formatter, MessageBox) {
+    function (Controller, JSONModel, Core, Dialog, Button, Label, mobileLibrary, TextArea, formatter, MessageBox, PDFViewer,
+        Fragment) {
         "use strict";
         var ButtonType = mobileLibrary.ButtonType;
         var DialogType = mobileLibrary.DialogType;
@@ -33,6 +36,9 @@ sap.ui.define([
                 this.pafNoTemp;
                 this._Posnr;
                 this._rowIndex;
+                // Start: Attach001
+                this._mViewSettingsDialogs = {};
+                // End: Attach001
             },
 
             // Attach route matched method
@@ -62,7 +68,7 @@ sap.ui.define([
                     },
                     success: function (oData) {
                         var oModel = this.getView().getModel("oRequestModel");
-                        
+
                         if (oData.Status === 'A' || oData.Status === 'R') {
 
                             this.getView().byId("id.Approve.Button").setVisible(false);
@@ -95,6 +101,9 @@ sap.ui.define([
                         var oPrdModel = this.getView().getModel("ProductModel");
                         oPrdModel.setData(oData.NAV_VH_ITEM_PRODUCT.results);
                         this.getView().setModel(oPrdModel, "ProductModel");
+                        // Start: Attach001
+                        this.getAttachments(pafID);
+                        // End: Attach001
                         this.getView().setBusy(false);
 
                     }.bind(this),
@@ -346,7 +355,7 @@ sap.ui.define([
             // onNavBack: function () {
             //     var oHistory = History.getInstance();
             //     var sPreviousHash = oHistory.getPreviousHash();
-              
+
             //     if (sPreviousHash !== undefined) {
             //       window.history.go(-1);
             //     } else {
@@ -447,7 +456,7 @@ sap.ui.define([
                 // this.oRejectDialog.open();
                 var payload = {
                     "Pafno": "",
-                    "Action": "ACCEPT" 
+                    "Action": "ACCEPT"
                 }
 
                 this._sendPayload(payload, "Approved");
@@ -511,6 +520,85 @@ sap.ui.define([
                 //     MessageBox.error("Please select Source(vendor)");
                 //     this.oRejectDialog.close();
                 // }
+            },
+            //Start: Attach001
+            onShowAttachmentsLinkPress: function () {
+                var that = this;
+                this.getViewSettingsDialog(
+                    "zpj.pro.sd.sk.zprovertihead.view.fragments.View2.attachmentPopUp"
+                ).then(function (oViewSettingsDialog) {
+                    oViewSettingsDialog.setModel(
+                        that.getView().getModel("LocalJSONModelForAttachment"),
+                        "LocalJSONModelForAttachment"
+                    );
+                    oViewSettingsDialog.open();
+                });
+            },
+            onAttachmentClosePress: function () {
+                this.getViewSettingsDialog(
+                    "zpj.pro.sd.sk.zprovertihead.view.fragments.View2.attachmentPopUp"
+                ).then(function (oViewSettingsDialog) {
+                    oViewSettingsDialog.close();
+                });
+            },
+            getViewSettingsDialog: function (sDialogFragmentName) {
+                var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
+
+                if (!pDialog) {
+                    pDialog = Fragment.load({
+                        id: this.getView().getId(),
+                        name: sDialogFragmentName,
+                        controller: this,
+                    }).then(function (oDialog) {
+                        return oDialog;
+                    });
+                    this._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+                }
+                return pDialog;
+            },
+            getAttachments: function (pafID) {
+                // Attachments
+                var sPathUpload = "/ETFILE_UPLOAD_HSet('" + pafID + "')";
+                this.getView().setBusy(true);
+                this.getOwnerComponent()
+                    .getModel("ZFILE_UPLOAD_SRV_01")
+                    .read(sPathUpload, {
+                        urlParameters: {
+                            $expand: "Nav_File_Upload",
+                        },
+                        async: false,
+                        success: function (Data) {
+                            this.getView().setBusy(false);
+                            if (Data.Nav_File_Upload.results.length > 0) {
+                                this.getView().byId("idV2OPSAttach").setVisible(false);
+                                this.getView().byId("idV2ITSAttachment").setVisible(false);
+                                this.getView().byId("idShowAttachments").setVisible(true);
+
+                                var attachments = Data;
+                                this.getView()
+                                    .getModel("LocalJSONModelForAttachment")
+                                    .setData({ attachments: attachments });
+                                this.getView()
+                                    .getModel("LocalJSONModelForAttachment")
+                                    .refresh(true);
+                            } else {
+
+                                this.getView().byId("idShowAttachments").setVisible(false);
+                            }
+                        }.bind(this),
+                        error: function (oError) {
+                            this.getView().setBusy(false);
+                            MessageBox.error(
+                                JSON.parse(oError.responseText).error.innererror
+                                    .errordetails[0].message,
+                                {
+                                    actions: [sap.m.MessageBox.Action.OK],
+                                    onClose: function (oAction) { },
+                                }
+                            );
+                        }.bind(this),
+                    });
             }
+            //Close: Attach001
         });
     });

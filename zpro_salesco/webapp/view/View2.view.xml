@@ -13,13 +13,24 @@
     >
         <uxap:headerTitle>
             <uxap:ObjectPageHeader id="idV2OPH">
+                <!-- Start: createCopy001 -->
+                <!-- <Button
+                    text="Create copy"
+                    press="onCreateCopy"
+                    type="Ghost"
+                    icon="sap-icon://copy"
+                    visible="{GlobalModel>/createCopy}"
+                /> -->
+                <!-- End: createCopy001 -->
                 <Button
                     id="idV2BtnEdit"
                     text="{i18nV2>view2.objectPageLayout.button.edit}"
                     type="Emphasized"
                     press="onEdit"
-                    visible="false"
+                    visible="{GlobalModel>/editButton}"
+                    icon="sap-icon://edit"
                 />
+
                 <!-- <Button
                     id="idV2BtnBack"
                     text="{i18nV2>view2.objectPageLayout.button.back}"

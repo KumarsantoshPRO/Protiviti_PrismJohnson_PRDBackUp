@@ -7,7 +7,7 @@
     <Table
         id="idTblProductDetails"
         rows="{ProductModel>/}"
-        fixedColumnCount="1"
+        fixedColumnCount="5"
         selectionMode="None"
     >
         <extension>
@@ -17,6 +17,8 @@
                     text="Products Details"
                 />
                 <m:Link
+                    id="idShowAttachments"
+                    visible="false"
                     text="Show Attachments"
                     press="onShowAttachmentsLinkPress"
                 />
@@ -52,30 +54,6 @@
         <columns>
             <Column
                 hAlign="Center"
-                width="12rem"
-            >
-                <m:Label
-                    design="Bold"
-                    wrapping="true"
-                    text="Vendor"
-                />
-                <template>
-                    <m:Input
-                        value="{parts: ['ProductModel>Sname','ProductModel>Source'], formatter:'.formatter.showSource'}"
-                        id="idSource.Input"
-                        valueStateText="Enter Vendor"
-                        showValueHelp="true"
-                        editable="{=${ProductModel>Isown} === 'X' ? false: true}"
-                        valueHelpRequest="onSourceHelp"
-                        class="sapUiSmallMarginEnd"
-                        placeholder="Vendor"
-                        textAlign="End"
-                        liveChange="onSourceInputLiveChange"
-                    />
-                </template>
-            </Column>
-            <Column
-                hAlign="Center"
                 width="8rem"
             >
                 <m:Label
@@ -87,6 +65,21 @@
                     <m:Text text="{ProductModel>Mfrgr}" />
                 </template>
             </Column>
+            <!-- Start: Product001 -->
+            <Column
+                hAlign="Center"
+                width="8rem"
+            >
+                <m:Label
+                    design="Bold"
+                    wrapping="true"
+                    text="Product"
+                />
+                <template>
+                    <m:Text text="{ProductModel>Prdgrp}" />
+                </template>
+            </Column>
+            <!-- End: Product001 -->
             <Column
                 hAlign="End"
                 width="4rem"
@@ -113,7 +106,30 @@
                     <m:Text text="{ProductModel>Design}" />
                 </template>
             </Column>
-
+            <Column
+                hAlign="Center"
+                width="12rem"
+            >
+                <m:Label
+                    design="Bold"
+                    wrapping="true"
+                    text="Vendor"
+                />
+                <template>
+                    <m:Input
+                        value="{parts: ['ProductModel>Sname','ProductModel>Source','ProductModel>Design'], formatter:'.formatter.showSource'}"
+                        id="idSource.Input"
+                        valueStateText="Enter Vendor"
+                        showValueHelp="true"
+                        editable="{=${ProductModel>Isown} === 'X' ? false: true}"
+                        valueHelpRequest="onSourceHelp"
+                        class="sapUiSmallMarginEnd"
+                        placeholder="Vendor"
+                        textAlign="End"
+                        liveChange="onSourceInputLiveChange"
+                    />
+                </template>
+            </Column>
             <Column
                 hAlign="Center"
                 width="6rem"
@@ -189,6 +205,47 @@
                     <m:Text text="{path:'ProductModel>Zzprodh4'}" />
                 </template>
             </Column>
+            <!-- Start: NewCols001 -->
+            <Column
+                hAlign="Center"
+                width="6rem"
+            >
+                <m:Label
+                    design="Bold"
+                    wrapping="true"
+                    text="Part A/B/L"
+                />
+                <template>
+                    <m:Text text="{path:'ProductModel>Mvgr5'}" />
+                </template>
+            </Column>
+            <Column
+                hAlign="Center"
+                width="6rem"
+            >
+                <m:Label
+                    design="Bold"
+                    wrapping="true"
+                    text="Total Volunme"
+                />
+                <template>
+                    <m:Text text="{path:'ProductModel>Totalvolume'}" />
+                </template>
+            </Column>
+            <Column
+                hAlign="Center"
+                width="6rem"
+            >
+                <m:Label
+                    design="Bold"
+                    wrapping="true"
+                    text="Current Volume"
+                />
+                <template>
+                    <m:Text text="{path:'ProductModel>CurVolFt'}" />
+                </template>
+            </Column>
+            <!-- End: NewCols001 -->
             <Column
                 hAlign="Center"
                 width="4rem"
@@ -386,6 +443,22 @@
                     <m:Text text="{path:'ProductModel>Zprodh4'}" />
                 </template>
             </Column>
+            <!-- Start: Remarkcol001 -->
+            <Column
+                hAlign="Center"
+                width="8rem"
+            >
+                <m:Label
+                    design="Bold"
+                    wrapping="true"
+                    text="PMG Remarks"
+                    tooltip="PMG Remarks"
+                />
+                <template>
+                    <m:Input value="{path:'ProductModel>PREMARK'}" />
+                </template>
+            </Column>
+            <!-- End: Remarkcol001 -->
         </columns>
     </Table>
 </core:FragmentDefinition>

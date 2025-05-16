@@ -9,13 +9,16 @@ sap.ui.define([
     "sap/m/TextArea",
     "zpj/pro/sd/sk/zpronatsaleshead/model/formatter",
     "sap/m/MessageBox",
+    "sap/m/PDFViewer",
+    "sap/ui/core/Fragment",
 
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, JSONModel, Core, Dialog, Button, Label, mobileLibrary, TextArea, formatter, MessageBox) {
-        "use strict";
+    function (Controller, JSONModel, Core, Dialog, Button, Label, mobileLibrary, TextArea, formatter, MessageBox, PDFViewer,
+        Fragment) {
+        "use strict"; 
         var ButtonType = mobileLibrary.ButtonType;
         var DialogType = mobileLibrary.DialogType;
 
@@ -33,6 +36,9 @@ sap.ui.define([
                 this.pafNoTemp;
                 this._Posnr;
                 this._rowIndex;
+                // Start: Attach001
+                this._mViewSettingsDialogs = {};
+                // End: Attach001
             },
 
             // Attach route matched method
@@ -94,6 +100,9 @@ sap.ui.define([
                         var oPrdModel = this.getView().getModel("ProductModel");
                         oPrdModel.setData(oData.NAV_NSH_ITEM_PRODUCT.results);
                         this.getView().setModel(oPrdModel, "ProductModel");
+                        // Start: Attach001
+                        this.getAttachments(pafID);
+                        // End: Attach001
                         this.getView().setBusy(false);
 
                     }.bind(this),
@@ -158,7 +167,7 @@ sap.ui.define([
             },
 
             onSourceHelp: function (oEvent) {
-             
+
                 var pathIndex = Number(oEvent.getSource().getParent().getBindingContextPath().split("/")[1]);
                 this._rowIndex = pathIndex;
                 this._Posnr = pathIndex + 1;
@@ -341,9 +350,9 @@ sap.ui.define([
                 this.oRouter.navTo("", {});
             },
 
-          
-          
-            
+
+
+
             reject: function () {
                 // this.oRejectDialog = new Dialog({
                 //     title: "Remarks",
@@ -439,7 +448,7 @@ sap.ui.define([
 
                 var payload = {
                     "Pafno": "",
-                    "Action": "ACCEPT" 
+                    "Action": "ACCEPT"
                 }
                 this._sendPayload(payload, "Approved");
             },
@@ -448,7 +457,7 @@ sap.ui.define([
 
                 payload.Pafno = this.getView().getModel("oRequestModel").getData().Pafno;
 
-                
+
                 this.getView().setBusy(true);
                 this.getOwnerComponent().getModel().create('/ZPAF_NSH_HEADERSet', payload, {
                     success: function (oData, response) {
@@ -472,6 +481,81 @@ sap.ui.define([
                     }.bind(this)
                 });
 
+            },
+            //Start: Attach001
+            onShowAttachmentsLinkPress: function () {
+                var that = this;
+                this.getViewSettingsDialog(
+                    "zpj.pro.sd.sk.zpronatsaleshead.view.fragments.View2.attachmentPopUp"
+                ).then(function (oViewSettingsDialog) {
+                    oViewSettingsDialog.setModel(
+                        that.getView().getModel("LocalJSONModelForAttachment"),
+                        "LocalJSONModelForAttachment"
+                    );
+                    oViewSettingsDialog.open();
+                });
+            },
+            onAttachmentClosePress: function () {
+                this.getViewSettingsDialog(
+                    "zpj.pro.sd.sk.zpronatsaleshead.view.fragments.View2.attachmentPopUp"
+                ).then(function (oViewSettingsDialog) {
+                    oViewSettingsDialog.close();
+                });
+            },
+            getViewSettingsDialog: function (sDialogFragmentName) {
+                var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
+
+                if (!pDialog) {
+                    pDialog = Fragment.load({
+                        id: this.getView().getId(),
+                        name: sDialogFragmentName,
+                        controller: this,
+                    }).then(function (oDialog) {
+                        return oDialog;
+                    });
+                    this._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+                }
+                return pDialog;
+            },
+            getAttachments: function (pafID) {
+                // Attachments
+                var sPathUpload = "/ETFILE_UPLOAD_HSet('" + pafID + "')";
+                this.getView().setBusy(true);
+                this.getOwnerComponent()
+                    .getModel("ZFILE_UPLOAD_SRV_01")
+                    .read(sPathUpload, {
+                        urlParameters: {
+                            $expand: "Nav_File_Upload",
+                        },
+                        async: false,
+                        success: function (Data) {
+                            this.getView().setBusy(false);
+                            if (Data.Nav_File_Upload.results.length > 0) {
+                                this.getView().byId("idV2OPSAttach").setVisible(false);
+                                this.getView().byId("idV2ITSAttachment").setVisible(false);
+
+                                var attachments = Data;
+                                this.getView()
+                                    .getModel("LocalJSONModelForAttachment")
+                                    .setData({ attachments: attachments });
+                                this.getView()
+                                    .getModel("LocalJSONModelForAttachment")
+                                    .refresh(true);
+                            }
+                        }.bind(this),
+                        error: function (oError) {
+                            this.getView().setBusy(false);
+                            MessageBox.error(
+                                JSON.parse(oError.responseText).error.innererror
+                                    .errordetails[0].message,
+                                {
+                                    actions: [sap.m.MessageBox.Action.OK],
+                                    onClose: function (oAction) { },
+                                }
+                            );
+                        }.bind(this),
+                    });
             }
+            //Close: Attach001
         });
     });

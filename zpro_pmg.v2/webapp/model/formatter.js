@@ -42,8 +42,20 @@ sap.ui.define([], function () {
           case "17":
             return "National Project - 17";
             break;
+          case "15":
+            return "Dealer KAM Project - 15";
+            break;
           case "19":
             return "Dealer - 19";
+            break;
+          case "25":
+            return "Dealer CBD Project - 25";
+            break;
+          case "27":
+            return "National CBD Project - 27";
+            break;
+          case "29":
+            return "Dealer Trade Project - 29";
             break;
           default:
             break;
@@ -169,7 +181,16 @@ sap.ui.define([], function () {
       }
     },
 
-    showSource: function (Sname, Source) {
+    showSource: function (Sname, Source, Design) {
+      // Start: Multiple001
+      if (!Sname) {
+        if (Design === "Multiple" || Design === "Multiple Designs") {
+          Sname = "Multiple"
+          Source = "Multiple"
+        }
+      }
+      // End: Multiple001
+
       if (Sname) {
         return Sname + "(" + Source + ")";
       } else {
