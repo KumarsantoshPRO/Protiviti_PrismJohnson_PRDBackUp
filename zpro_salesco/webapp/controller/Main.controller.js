@@ -33,6 +33,12 @@ sap.ui.define(
         // New
         this.getView().setModel(new JSONModel({ start: "", end: "" }), "dateRange");
         // End: Date001   
+
+        // Global model for properties
+        var oProperties = {
+          mode: "None"
+        }
+        this.getView().setModel(new JSONModel(oProperties), "oGlobleModel");
       },
       // Start: Sales Office
       onSalesOfficeHelp: function () {
@@ -501,26 +507,31 @@ sap.ui.define(
           this._getRequestData("", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", false);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", true);
+          this.getView().getModel("oGlobleModel").setProperty("/mode", "None");
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
         } else if (sKey === "Delay") {
           this._getRequestData("D", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", true);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
+          this.getView().getModel("oGlobleModel").setProperty("/mode", "SingleSelectLeft");
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(true);
         } else if (sKey === "OnGoing") {
           this._getRequestData("P", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", true);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
+          this.getView().getModel("oGlobleModel").setProperty("/mode", "SingleSelectLeft");
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(true);
         } else if (sKey === "Approved") {
           this._getRequestData("A", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", false);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
+          this.getView().getModel("oGlobleModel").setProperty("/mode", "None");
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
         } else if (sKey === "Rejected") {
           this._getRequestData("R", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", false);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
+          this.getView().getModel("oGlobleModel").setProperty("/mode", "None");
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
         }
       },

@@ -291,7 +291,7 @@
             <Table
                 id="id.main.Products.Table"
                 alternateRowColors="true"
-                mode="SingleSelectLeft"
+                mode="{oGlobleModel>/mode}"
                 growing="true"
                 headerText="{i18n.main>main.table.headerText}"
                 items="{ModelForTable>/}"
@@ -373,7 +373,7 @@
                         hAlign="Center"
                         minScreenWidth="Tablet"
                         demandPopin="true"
-                        width="15rem"
+                        width="14rem"
                     >
                         <Label
                             wrapping="true"
@@ -386,7 +386,7 @@
                         hAlign="Center"
                         minScreenWidth="Desktop"
                         demandPopin="true"
-                        width="5rem"
+                        width="5.5rem"
                     >
                         <Label
                             wrapping="true"
@@ -458,21 +458,22 @@
                             text="{i18n.main>main.table.column.text.requestedDate}"
                         />
                     </Column>
-                    <!-- <Column
+                    <Column
                         id="id.main.TblClmDiscount"
                         minScreenWidth="Desktop"
                         demandPopin="true"
                         hAlign="Center"
+                        width="5rem"
                     >
-                        <Text
-                            id="id.main.TblClmTxtDiscount"
-                            text="{i18n.main>main.table.column.text.discount}"
+                        <Label
+                            wrapping="true"
+                            text="{i18n.main>main.table.column.text.pending}"
                         />
-                    </Column> -->
+                    </Column>
                     <Column
                         id="id.main.TblClmStatus"
                         hAlign="Center"
-                        width="5rem"
+                        width="6rem"
                     >
                         <Label
                             wrapping="true"
@@ -526,10 +527,10 @@
                                 id="idV1TblCLITxtReqDate"
                                 text="{ parts: ['ModelForTable>Erdat'], formatter: 'sap.formatter.getFormattedDate' }"
                             />
-                            <!-- <Text
+                            <Text
                                 id="idV1TblCLITxtDisPer"
-                                text="{ModelForTable>Disc}"
-                            /> -->
+                                text="{ModelForTable>Pendingat}"
+                            />
                             <tnt:InfoLabel
                                 text="{ parts: ['ModelForTable>Status', 'ModelForTable>Erdat'], formatter: 'sap.formatter.getStatus' }"
                                 renderMode="Loose"

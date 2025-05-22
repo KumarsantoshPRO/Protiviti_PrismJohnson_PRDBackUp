@@ -380,6 +380,13 @@
                                 <Text text="GM%" />
                             </Column>
                             <Column
+                                hAlign="End"
+                                demandPopin="true"
+                                width="6rem"
+                            >
+                                <Text text="Pending At" />
+                            </Column>
+                            <Column
                                 hAlign="Center"
                                 demandPopin="true"
                                 width="6rem"
@@ -422,12 +429,16 @@
                                     <Text
                                         text="{path:'JSONModelForTable>Validity', formatter:'.formatter.removeLeadingZeros'}"
                                     />
+                                   
                                     <tnt:InfoLabel
                                         text="{JSONModelForTable>Wgrossmargper} %"
                                         renderMode="Loose"
                                         colorScheme="{ parts: [                                        
 													'JSONModelForTable>Wgrossmargper'], 
 													formatter: '.formatter.getGMColor' }"
+                                    />
+                                     <Text
+                                        text="{path:'JSONModelForTable>Pendingat'}"
                                     />
                                     <tnt:InfoLabel
                                         text="{ parts: ['JSONModelForTable>Status'], formatter: '.formatter.getStatus' }"
