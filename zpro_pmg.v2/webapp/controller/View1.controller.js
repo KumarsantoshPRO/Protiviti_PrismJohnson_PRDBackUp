@@ -5,87 +5,87 @@ sap.ui.define([
     'sap/m/MessageBox',
     "sap/ui/model/Sorter",
     "sap/ui/core/Element",
-    "sap/m/table/columnmenu/MenuBase",
-    "sap/m/table/columnmenu/Menu",
-    "sap/m/table/columnmenu/QuickSort",
-    "sap/m/table/columnmenu/QuickSortItem",
-    "sap/m/Menu",
-    "sap/m/MenuItem"
+    // "sap/m/table/columnmenu/MenuBase",
+    // "sap/m/table/columnmenu/Menu",
+    // "sap/m/table/columnmenu/QuickSort",
+    // "sap/m/table/columnmenu/QuickSortItem",
+    // "sap/m/Menu",
+    // "sap/m/MenuItem"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
     function (Controller, JSONModel, formatter, MessageBox, Sorter, Element, MenuBase, ColumnMenu, QuickSort, QuickSortItem, Menu, MenuItem) {
-        "use strict"; 
+        "use strict";
         // Start: Sort001
         /**
          * Constructor for a new Menu adapter that implements the IColumnHeaderMenu interface.
          */
-        var CustomMenuAdapter = MenuBase.extend("MenuToColumnMenuAdapter", {
-            metadata: {
-                aggregations: {
-                    menu: { type: "sap.m.Menu", multiple: false }
-                }
-            }
-        });
+        // var CustomMenuAdapter = MenuBase.extend("MenuToColumnMenuAdapter", {
+        //     metadata: {
+        //         aggregations: {
+        //             menu: { type: "sap.m.Menu", multiple: false }
+        //         }
+        //     }
+        // });
 
         /**
          * Opens the menu at the specific target element.
          *
          * @param {sap.ui.core.Control | HTMLElement} oAnchor This is the control or HTMLElement where the menu is placed.
          */
-        CustomMenuAdapter.prototype.openBy = function (oAnchor) {
-            const oMenu = this.getMenu();
-            const fnResetBlocked = () => {
-                if (this._blocked) {
-                    clearTimeout(this._blocked);
-                    this._blocked = null;
-                }
-            };
+        // CustomMenuAdapter.prototype.openBy = function (oAnchor) {
+        //     const oMenu = this.getMenu();
+        //     const fnResetBlocked = () => {
+        //         if (this._blocked) {
+        //             clearTimeout(this._blocked);
+        //             this._blocked = null;
+        //         }
+        //     };
 
-            if (!oMenu || ((this.isOpen() || this._blocked) && oAnchor === this._oIsOpenBy)) {
-                fnResetBlocked();
-                return;
-            }
+        //     if (!oMenu || ((this.isOpen() || this._blocked) && oAnchor === this._oIsOpenBy)) {
+        //         fnResetBlocked();
+        //         return;
+        //     }
 
-            fnResetBlocked();
+        //     fnResetBlocked();
 
-            var oControl = oAnchor;
-            if (!(oAnchor instanceof Element)) {
-                oControl = Element.closestTo(oAnchor, true);
-            }
+        //     var oControl = oAnchor;
+        //     if (!(oAnchor instanceof Element)) {
+        //         oControl = Element.closestTo(oAnchor, true);
+        //     }
 
-            if (!this.fireBeforeOpen({ openBy: oControl })) {
-                return;
-            }
+        //     if (!this.fireBeforeOpen({ openBy: oControl })) {
+        //         return;
+        //     }
 
-            // On click outside the menu, the sap.m.Menu closes automatically
-            // to prevent reopening on column header click, we need to block the openBy call for a short time (200ms)
-            oMenu.attachEventOnce("closed", () => {
-                fnResetBlocked();
-                this._blocked = setTimeout(fnResetBlocked, 200);
-                this.fireAfterClose();
-            });
+        //     // On click outside the menu, the sap.m.Menu closes automatically
+        //     // to prevent reopening on column header click, we need to block the openBy call for a short time (200ms)
+        //     oMenu.attachEventOnce("closed", () => {
+        //         fnResetBlocked();
+        //         this._blocked = setTimeout(fnResetBlocked, 200);
+        //         this.fireAfterClose();
+        //     });
 
-            oMenu.openBy(oAnchor);
-            this._oIsOpenBy = oAnchor;
-        };
+        //     oMenu.openBy(oAnchor);
+        //     this._oIsOpenBy = oAnchor;
+        // };
 
         /**
          * Determines whether the menu is open.
          *
          * @returns {boolean} Whether the menu is open.
          */
-        CustomMenuAdapter.prototype.isOpen = function () {
-            return this.getMenu()?.isOpen() || false;
-        };
+        // CustomMenuAdapter.prototype.isOpen = function () {
+        //     return this.getMenu()?.isOpen() || false;
+        // };
 
         /**
          * Closes the menu.
          */
-        CustomMenuAdapter.prototype.close = function () {
-            this.getMenu()?.close();
-        };
+        // CustomMenuAdapter.prototype.close = function () {
+        //     this.getMenu()?.close();
+        // };
 
         /**
          * Returns the type of the menu.
@@ -93,9 +93,9 @@ sap.ui.define([
          * @returns {sap.ui.core.aria.HasPopup} Type of the menu
          * @public
          */
-        CustomMenuAdapter.prototype.getAriaHasPopupType = function () {
-            return "Menu";
-        };
+        // CustomMenuAdapter.prototype.getAriaHasPopupType = function () {
+        //     return "Menu";
+        // };
         // End: Sort001
         return Controller.extend("pj.zpmg.controller.View1", {
             formatter: formatter,
@@ -106,8 +106,19 @@ sap.ui.define([
                 // End: Date001   
 
                 // Start: Sort001
-                this.createHeaderMenus();
+                // this.createHeaderMenus();
                 // End: Sort001
+
+                //Start tableSort001
+                // Global model for properties
+                var oProperties = {
+                    mode: "None",
+                    rowMode: "Single",
+                    selBehavior: "RowOnly",
+                    deleteButton: false
+                }
+                this.getView().setModel(new JSONModel(oProperties), "oGlobleModel");
+                //End tableSort001
             },
             _onRouteMatched: function (oEvent) {
 
@@ -344,19 +355,36 @@ sap.ui.define([
                     operator: sap.ui.model.FilterOperator.Contains,
                     value1: vValue
                 });
+
+                //Start tableSort001
+                // Old
                 var oTable = this.getView().byId("productsTable");
 
                 oTable.getBinding("items").filter(filter);
                 oTable.setShowOverlay(false);
+                // New
+                var oTable = this.getView().byId("table");
+                oTable.getBinding("rows").filter(filter);
+                oTable.setShowOverlay(false);
+                //End tableSort001
 
             },
             onClickofItem: function (oEvent) {
+
+                //Start tableSort001
+                // old
+                // this.oRouter = this.getOwnerComponent().getRouter();
+                // this.oRouter.navTo("page2",
+                //     {
+                //         pafID: oEvent.getSource().getCells()[0].getText()
+                //     });
+                // New
+                var pafNo = oEvent.getParameter("rowContext").getObject().Pafno;
                 this.oRouter = this.getOwnerComponent().getRouter();
-                this.oRouter.navTo("page2",
-                    {
-                        pafID: oEvent.getSource().getCells()[0].getText()
-                    });
-                //this.oRouter.navTo("page2");
+                this.oRouter.navTo("page2", {
+                    pafID: pafNo,
+                });
+                //End tableSort001
             },
 
             onSalesOfficeHelp: function () {

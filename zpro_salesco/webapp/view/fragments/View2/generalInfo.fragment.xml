@@ -162,14 +162,16 @@
                 liveChange="onValidityNumber"
             />
 
-            <!-- Start: Newfields001 -->
-            <Label text="{i18nV2>view2.simpleForm.label.Oppurtunity}"  required="{GlobalModel>/Required}"/>
+            <!-- Start: Newfields001, Mandatefields001 -->
+            <Label
+                text="{i18nV2>view2.simpleForm.label.Oppurtunity}"
+                required="{GlobalModel>/Required}"
+            />
             <Input
                 value="{JSONModelPayload>/Oppu}"
                 maxLength="10"
                 editable="{GlobalModel>/Editable}"
             />
-            <!-- End: Newfields001 -->
 
             <!-- <Label
                 id="idV2LblValidDay"
@@ -195,8 +197,8 @@
                 value="{JSONModelPayload>/Aufnr}"
                 editable="{GlobalModel>/Editable}"
                 liveChange="onLiveChange"
-            />  
-
+            />
+            <!-- End: Newfields001, Mandatefields001 -->
             <Label
                 id="idV2LblSalOffice"
                 text="{i18nV2>view2.simpleForm.label.salOffice}"
@@ -269,8 +271,11 @@
                 required="true"
             />
             <!--Start: Divya's changes -->
-            <!--Start: Newfields001 -->
-            <Label text="{i18nV2>view2.simpleForm.label.projectnameaddress}" />
+            <!--Start: Newfields001, Mandatefields001 -->
+            <Label
+                text="{i18nV2>view2.simpleForm.label.projectnameaddress}"
+                required="{GlobalModel>/Required}"
+            />
             <TextArea
                 value="{JSONModelPayload>/Proj}"
                 editable="{GlobalModel>/Editable}"
@@ -279,13 +284,16 @@
             <!--End: Divya's changes -->
 
             <!-- Start: Newfields001 -->
-            <Label text="{i18nV2>view2.simpleForm.label.ProjectSpecifier}" />
+            <Label
+                text="{i18nV2>view2.simpleForm.label.ProjectSpecifier}"
+                required="{GlobalModel>/Required}"
+            />
             <TextArea
                 value="{JSONModelPayload>/Spec}"
                 editable="{GlobalModel>/Editable}"
             />
 
-            <!-- End: Newfields001 -->
+            <!-- End: Newfields001, Mandatefields001 -->
 
             <!-- <RadioButtonGroup
                 id="idV2RBG"

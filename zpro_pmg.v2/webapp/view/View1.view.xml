@@ -6,9 +6,11 @@
     xmlns="sap.m"
     xmlns:tnt="sap.tnt"
     xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:Table="sap.ui.table"
 >
     <Page
         class="sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer sapUiResponsivePadding--floatingFooter"
+   enableScrolling="false"
     >
         <content>
             <IconTabBar
@@ -266,6 +268,8 @@
                             </fb:FilterGroupItem>
                         </fb:filterGroupItems>
                     </fb:FilterBar>
+                    <!-- Start: tableSort001 -->
+                    <!-- Old -->
                     <Table
                         id="productsTable"
                         alternateRowColors="true"
@@ -273,6 +277,7 @@
                         headerText="Products"
                         items="{JSONModelForTable>/}"
                         sticky="ColumnHeaders,HeaderToolbar"
+                        visible="false"
                     >
                         <headerToolbar>
                             <OverflowToolbar
@@ -429,7 +434,7 @@
                                     <Text
                                         text="{path:'JSONModelForTable>Validity', formatter:'.formatter.removeLeadingZeros'}"
                                     />
-                                   
+
                                     <tnt:InfoLabel
                                         text="{JSONModelForTable>Wgrossmargper} %"
                                         renderMode="Loose"
@@ -437,7 +442,7 @@
 													'JSONModelForTable>Wgrossmargper'], 
 													formatter: '.formatter.getGMColor' }"
                                     />
-                                     <Text
+                                    <Text
                                         text="{path:'JSONModelForTable>Pendingat'}"
                                     />
                                     <tnt:InfoLabel
@@ -449,6 +454,179 @@
                             </ColumnListItem>
                         </items>
                     </Table>
+                    <!-- New -->
+                    <Table:Table
+                        id="table"
+                        selectionMode="{oGlobleModel>/rowMode}"
+                        rows="{JSONModelForTable>/}"
+                        ariaLabelledBy="title"
+                        rowSelectionChange="onClickofItem"
+                        selectionBehavior="{oGlobleModel>/selBehavior}"
+                    >
+                        <Table:extension>
+                            <OverflowToolbar
+                                design="Transparent"
+                                width="100%"
+                            >
+                                <content>
+                                    <Title
+                                        text="Products"
+                                        level="H2"
+                                    />
+
+                                    <ToolbarSpacer />
+                                    <Input
+                                        placeholder="Search PAF No"
+                                        submit="onOrderNumber"
+                                        liveChange="onOrderNumber"
+                                        width="15%"
+                                    >
+                                        <layoutData>
+                                            <OverflowToolbarLayoutData
+                                                priority="NeverOverflow"
+                                            />
+                                        </layoutData>
+                                    </Input>
+                                </content>
+                            </OverflowToolbar>
+                        </Table:extension>
+                        <Table:columns>
+                            <Table:Column sortProperty="Pafno">
+                                <Label
+                                    text="PAF No"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <Text
+                                        text="{path:'JSONModelForTable>Pafno', formatter:'.formatter.removeLeadingZeros'}"
+                                    />
+                                </Table:template>
+                            </Table:Column>
+                            <Table:Column
+                                id="Soname"
+                                sortProperty="Soname"
+                                width="8rem"
+                            >
+                                <Label
+                                    text="Sales Office"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <Text
+                                        text="{path:'JSONModelForTable>Soname'}({path:'JSONModelForTable>Vkbur'})"
+                                    />
+                                </Table:template>
+                            </Table:Column>
+                            <Table:Column
+                                sortProperty="Name"
+                                width="16rem"
+                            >
+                                <Label
+                                    text="Customer"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <Text text="{JSONModelForTable>Name}" />
+                                </Table:template>
+                            </Table:Column>
+                            <Table:Column sortProperty="Kunnr">
+                                <Label
+                                    text="Customer ID"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <Text text="{JSONModelForTable>Kunnr}" />
+                                </Table:template>
+                            </Table:Column>
+
+                            <Table:Column
+                                id="Vtweg"
+                                sortProperty="Vtweg"
+                                width="10rem"
+                            >
+                                <Label
+                                    text="Type Of Order"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <Text
+                                        text="{ parts: ['JSONModelForTable>Vtweg'], formatter: '.formatter.getOrderType' }"
+                                    />
+                                </Table:template>
+                            </Table:Column>
+                            <Table:Column
+                                id="WtotalVol"
+                                sortProperty="WtotalVol"
+                            >
+                                <Label
+                                    text="Total Order"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <Text
+                                        text="{JSONModelForTable>WtotalVol}"
+                                    />
+                                </Table:template>
+                            </Table:Column>
+                            <Table:Column
+                                id="WcurVolFt"
+                                sortProperty="WcurVolFt"
+                            >
+                                <Label
+                                    text="Current Order"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <Text
+                                        text="{JSONModelForTable>WcurVolFt}"
+                                    />
+                                </Table:template>
+                            </Table:Column>
+                            <Table:Column sortProperty="Erdat">
+                                <Label
+                                    text="Request Date"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <Text
+                                        text="{ path: 'JSONModelForTable>Erdat', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy', strictParsing: true,UTC: true}}"
+                                    />
+                                </Table:template>
+                            </Table:Column>
+                            <Table:Column
+                                id="Pendingat"
+                                sortProperty="Pendingat"
+                            >
+                                <Label
+                                    text="Pending At"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <Text
+                                        text="{path:'JSONModelForTable>Pendingat'}"
+                                    />
+                                </Table:template>
+                            </Table:Column>
+                            <Table:Column
+                                id="Status"
+                                sortProperty="Status"
+                                width="6rem"
+                            >
+                                <Label
+                                    text="Status"
+                                    wrapping="true"
+                                />
+                                <Table:template>
+                                    <tnt:InfoLabel
+                                        text="{ parts: ['JSONModelForTable>Status'], formatter: '.formatter.getStatus' }"
+                                        renderMode="Loose"
+                                        colorScheme="{ parts: ['JSONModelForTable>Status'], formatter: '.formatter.getStatusColor' }"
+                                    />
+                                </Table:template>
+                            </Table:Column>
+                        </Table:columns>
+                    </Table:Table>
+                    <!-- End: tableSort001 -->
                 </content>
             </IconTabBar>
         </content>

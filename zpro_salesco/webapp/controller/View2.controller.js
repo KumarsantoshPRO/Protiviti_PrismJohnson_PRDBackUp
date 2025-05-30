@@ -403,7 +403,7 @@ sap.ui.define(
           this.getView().getModel("JSONModelPayload").setProperty("/Zterm", "");
           var vGetSelectedValue = oEvent.getSource().getSelectedKey();
           // Start: Mandatefields001
-          if (vGetSelectedValue === "15" || vGetSelectedValue === "17" || vGetSelectedValue === "25" || vGetSelectedValue === "27") {
+          if (vGetSelectedValue === "15" || vGetSelectedValue === "17" || vGetSelectedValue === "25" || vGetSelectedValue === "27" || vGetSelectedValue === "29") {
             this.getView()
               .getModel("GlobalModel")
               .setProperty("/Required", true);
@@ -1123,20 +1123,28 @@ sap.ui.define(
               var DistChannel = this.getView().getModel("JSONModelPayload").getProperty("/Vtweg");
               var PONo = this.getView().getModel("JSONModelPayload").getProperty("/Aufnr")
               var oppID = this.getView().getModel("JSONModelPayload").getProperty("/Oppu");
+              var projectInfo = this.getView().getModel("JSONModelPayload").getProperty("/Proj");
+              var specifierInfo = this.getView().getModel("JSONModelPayload").getProperty("/Spec");
               var aAttachmentsItems = this
                 .getView()
                 .getModel("LocalJSONModelForAttachment")
                 .getData().attachments.Nav_File_Upload.results;
               var bStatus = true;
-              if (DistChannel === "15" || DistChannel === "17" || DistChannel === "25" || DistChannel === "27") {
+              if (DistChannel === "15" || DistChannel === "17" || DistChannel === "25" || DistChannel === "27" || DistChannel === "29") {
                 if (!PONo) {
-                  MessageBox.error("Purchase Order No is mandatory selected distribution channel");
+                  MessageBox.error("'Purchase Order No' is mandatory for selected distribution channel");
                   bStatus = false;
                 } else if (!oppID) {
-                  MessageBox.error("Oppurtunity ID is mandatory selected distribution channel");
+                  MessageBox.error("'Oppurtunity ID' is mandatory for selected distribution channel");
+                  bStatus = false;
+                } else if (!projectInfo) {
+                  MessageBox.error("'Project Name and Address' is mandatory for selected distribution channel");
+                  bStatus = false;
+                } else if (!specifierInfo) {
+                  MessageBox.error("'Project Specifier name and Address' is mandatory for selected distribution channel");
                   bStatus = false;
                 } else if (aAttachmentsItems.length < 1) {
-                  MessageBox.error("Attachment is mandatory for selected distribution channel");
+                  MessageBox.error("'Attachment' is mandatory for selected distribution channel");
                   bStatus = false;
                 }
                 else {
@@ -1175,7 +1183,7 @@ sap.ui.define(
                         this.getView()
                           .getModel("JSONModelPayload")
                           .setData(oData);
-                         
+
                         this.getView().getModel("JSONModelPayload").refresh(true);
 
                         this.getView()
@@ -1222,7 +1230,7 @@ sap.ui.define(
                     }
                   );
               }
-              //Start: Mandatefields001
+              //End: Mandatefields001
             }
           }
         },

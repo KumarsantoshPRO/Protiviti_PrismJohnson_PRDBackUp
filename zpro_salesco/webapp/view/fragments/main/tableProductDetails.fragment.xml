@@ -3,6 +3,7 @@
     xmlns:core="sap.ui.core"
     xmlns:tnt="sap.tnt"
     xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:Table="sap.ui.table"
 >
     <IconTabBar
         id="id.main.IconTabBar"
@@ -288,6 +289,9 @@
              </fb:filterGroupItems>
               -->
             </fb:FilterBar>
+
+            <!-- Start: tableSort001 -->
+            <!-- Old -->
             <Table
                 id="id.main.Products.Table"
                 alternateRowColors="true"
@@ -296,6 +300,7 @@
                 headerText="{i18n.main>main.table.headerText}"
                 items="{ModelForTable>/}"
                 sticky="ColumnHeaders,HeaderToolbar"
+                visible="false"
             >
                 <headerToolbar>
                     <OverflowToolbar
@@ -342,7 +347,6 @@
                         </content>
                     </OverflowToolbar>
                 </headerToolbar>
-
                 <columns>
                     <Column
                         id="id.main.TblClmOrderNo"
@@ -540,6 +544,213 @@
                     </ColumnListItem>
                 </items>
             </Table>
+            <!-- New -->
+            <Table:Table
+                id="table"
+                selectionMode="{oGlobleModel>/rowMode}"
+                rows="{ModelForTable>/}"
+                ariaLabelledBy="title"
+                rowSelectionChange="onClickofItem"
+                selectionBehavior="{oGlobleModel>/selBehavior}"
+            >
+                <Table:extension>
+                    <OverflowToolbar
+                        design="Transparent"
+                        width="100%"
+                    >
+                        <content>
+                            <Title
+                                text="{i18n.main>main.table.title}"
+                                level="H2"
+                            />
+
+                            <ToolbarSpacer />
+                            <Input
+                                placeholder="Search PAF No"
+                                submit="onOrderNumber"
+                                liveChange="onOrderNumber"
+                                width="15%"
+                            >
+                                <layoutData>
+                                    <OverflowToolbarLayoutData
+                                        priority="NeverOverflow"
+                                    />
+                                </layoutData>
+                            </Input>
+                            <Button
+                                text="Add New"
+                                icon="sap-icon://add"
+                                type="Accept"
+                                press="onNewPress"
+                            />
+                            <Button
+                                text="Delete"
+                                icon="sap-icon://delete"
+                                press="_onDelete"
+                                type="Reject"
+                                visible="{oGlobleModel>/deleteButton}"
+                            />
+                        </content>
+                    </OverflowToolbar>
+                </Table:extension>
+                <Table:columns>
+                    <Table:Column
+                        id="Pafno"
+                        sortProperty="Pafno"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.ordNo}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text
+                                text="{path:'ModelForTable>Pafno',  formatter:'sap.formatter.removeLeadingZeros'}"
+                                wrapping="false"
+                            />
+                        </Table:template>
+                    </Table:Column>
+                    <Table:Column
+                        id="Soname"
+                        sortProperty="Soname"
+                         width="8rem"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.region}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text
+                                text="{ModelForTable>Soname}({ModelForTable>Vkbur})"
+                                 
+                            />
+                        </Table:template>
+                    </Table:Column>
+                    <Table:Column
+                        id="Name"
+                        sortProperty="Name"
+                        width="16rem"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.customer}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text
+                                text="{ModelForTable>Name}"
+                                wrapping="true"
+                            />
+                        </Table:template>
+                    </Table:Column>
+                    <!--  -->
+                    <Table:Column
+                        id="Kunnr"
+                        sortProperty="Kunnr"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.custNo}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text text="{ModelForTable>Kunnr}" />
+                        </Table:template>
+                    </Table:Column>
+                    <Table:Column
+                        id="Spart"
+                        sortProperty="Spart"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.vertical}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text
+                                text="{path:'ModelForTable>Spart',  formatter:'sap.formatter.showVerticalText'}"
+                            />
+                        </Table:template>
+                    </Table:Column>
+                    <Table:Column
+                        id="Vtweg"
+                        sortProperty="Vtweg"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.typeOfOrder}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text
+                                text="{path:'ModelForTable>Vtweg',  formatter:'sap.formatter.showOrderType'}"
+                            />
+                        </Table:template>
+                    </Table:Column>
+                    <Table:Column
+                        id="WtotalVol"
+                        sortProperty="WtotalVol"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.totalOrder}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text text="{ModelForTable>WtotalVol}" />
+                        </Table:template>
+                    </Table:Column>
+                    <Table:Column
+                        id="WcurVolFt"
+                        sortProperty="WcurVolFt"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.currentOrder}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text text="{ModelForTable>WcurVolFt}" />
+                        </Table:template>
+                    </Table:Column>
+                    <Table:Column
+                        id="Erdat"
+                        sortProperty="Erdat"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.requestedDate}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text
+                                text="{ parts: ['ModelForTable>Erdat'], formatter: 'sap.formatter.getFormattedDate' }"
+                            />
+                        </Table:template>
+                    </Table:Column>
+                    <Table:Column
+                        id="Pendingat"
+                        sortProperty="Pendingat"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.pending}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <Text text="{ModelForTable>Pendingat}" />
+                        </Table:template>
+                    </Table:Column>
+                    <Table:Column
+                        id="Status"
+                        sortProperty="Status"
+                        width="6rem"
+                    >
+                        <Label
+                            text="{i18n.main>main.table.column.text.status}"
+                            wrapping="true"
+                        />
+                        <Table:template>
+                            <tnt:InfoLabel
+                                text="{ parts: ['ModelForTable>Status', 'ModelForTable>Erdat'], formatter: 'sap.formatter.getStatus' }"
+                                colorScheme="{ parts: ['ModelForTable>Status'], formatter: 'sap.formatter.getStatusColor' }"
+                            />
+                        </Table:template>
+                    </Table:Column>
+                </Table:columns>
+            </Table:Table>
+            <!-- End: tableSort001 --> 
         </content>
     </IconTabBar>
 </core:FragmentDefinition>

@@ -36,7 +36,10 @@ sap.ui.define(
 
         // Global model for properties
         var oProperties = {
-          mode: "None"
+          mode: "None",
+          rowMode: "Single",
+          selBehavior: "RowOnly",
+          deleteButton: false
         }
         this.getView().setModel(new JSONModel(oProperties), "oGlobleModel");
       },
@@ -217,7 +220,9 @@ sap.ui.define(
         this.getView().getModel("modelEditFlag").setProperty("/Editable", false);
         this.getView().getModel("modelEditFlag").refresh(true);
         this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
-
+        //Start tableSort001
+        this.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+        //End tableSort001
         var vSalesOffice = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.SalesOffice.Input")).getValue(),
           vPAFNo = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.PafNo.Input")).getValue(),
           vMessage = "Enter 'Sales Office' to proceed",
@@ -411,27 +416,42 @@ sap.ui.define(
                   case "P":
                     that.getView().getModel("modelEditFlag").setProperty("/Editable", true);
                     that.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(true);
+                    //Start tableSort001
+                    that.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+                    //End tableSort001
                     that.getView().getModel("count").getData().onGoing = that.aPendingData.length;
                     that.getView().getModel("count").getData().Delayed = that.aDelayedData.length;
                     break;
                   case "A":
                     that.getView().getModel("modelEditFlag").setProperty("/Editable", false);
                     that.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
+                    //Start tableSort001
+                    that.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+                    //End tableSort001
                     that.getView().getModel("count").getData().Approved = Data.results.length;
                     break;
                   case "R":
                     that.getView().getModel("modelEditFlag").setProperty("/Editable", false);
                     that.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
+                    //Start tableSort001
+                    that.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+                    //End tableSort001
                     that.getView().getModel("count").getData().Rejected = Data.results.length;
                     break;
                   case "D":
                     that.getView().getModel("modelEditFlag").setProperty("/Editable", true);
                     that.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(true);
+                    //Start tableSort001
+                    that.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+                    //End tableSort001
                     that.getView().getModel("count").getData().Delayed = that.aDelayedData.length;
                     break;
                   case "":
                     that.getView().getModel("modelEditFlag").setProperty("/Editable", false);
                     that.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
+                    //Start tableSort001
+                    that.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+                    //End tableSort001
                     that.getView().getModel("count").getData().Total = Data.results.length;
                     break;
                   default:
@@ -468,10 +488,16 @@ sap.ui.define(
           operator: sap.ui.model.FilterOperator.Contains,
           value1: vValue,
         });
+        //Start tableSort001
+        // Old
         var oTable = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.Products.Table"));
-
         oTable.getBinding("items").filter(filter);
         oTable.setShowOverlay(false);
+        // New
+        var oTable = this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "table"));
+        oTable.getBinding("rows").filter(filter);
+        oTable.setShowOverlay(false);
+        //End tableSort001
       },
 
       onNewPress: function () {
@@ -486,10 +512,16 @@ sap.ui.define(
       },
 
       onClickofItem: function (oEvent) {
+        //Start tableSort001
+        // old
+        // var pafNo = oEvent.getSource().getCells()[0].getText();
+        // New
+        var pafNo = oEvent.getParameter("rowContext").getObject().Pafno;
         this.oRouter = this.getOwnerComponent().getRouter();
         this.oRouter.navTo("page2", {
-          ID: oEvent.getSource().getCells()[0].getText(),
+          ID: pafNo,
         });
+        //End tableSort001
       },
 
       onFilterSelect: function (oEvent) {
@@ -508,30 +540,51 @@ sap.ui.define(
           this.getView().getModel("modelEditFlag").setProperty("/Editable", false);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", true);
           this.getView().getModel("oGlobleModel").setProperty("/mode", "None");
+          //Start tableSort001
+          // this.getView().getModel("oGlobleModel").setProperty("/rowMode", "Single");
+          this.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+          //End tableSort001
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
         } else if (sKey === "Delay") {
           this._getRequestData("D", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", true);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
           this.getView().getModel("oGlobleModel").setProperty("/mode", "SingleSelectLeft");
+          //Start tableSort001
+          // this.getView().getModel("oGlobleModel").setProperty("/rowMode", "Single");
+          // this.getView().getModel("oGlobleModel").setProperty("/selBehavior", "RowSelector");
+          this.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+          //End tableSort001
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(true);
         } else if (sKey === "OnGoing") {
           this._getRequestData("P", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", true);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
           this.getView().getModel("oGlobleModel").setProperty("/mode", "SingleSelectLeft");
+          //Start tableSort001
+          // this.getView().getModel("oGlobleModel").setProperty("/rowMode", "MultiToggle");
+          this.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+          //End tableSort001
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(true);
         } else if (sKey === "Approved") {
           this._getRequestData("A", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", false);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
           this.getView().getModel("oGlobleModel").setProperty("/mode", "None");
+          //Start tableSort001
+          // this.getView().getModel("oGlobleModel").setProperty("/rowMode", "None");
+          this.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+          //End tableSort001
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
         } else if (sKey === "Rejected") {
           this._getRequestData("R", "tableData", oFilterSalOffice, oFilterPafNo, oFilterCustCode, oFilterVertical);
           this.getView().getModel("modelEditFlag").setProperty("/Editable", false);
           this.getView().getModel("modelVisibleFlag").setProperty("/Visible", false);
           this.getView().getModel("oGlobleModel").setProperty("/mode", "None");
+          //Start tableSort001
+          // this.getView().getModel("oGlobleModel").setProperty("/rowMode", "None");
+          this.getView().getModel("oGlobleModel").setProperty("/deleteButton", false);
+          //End tableSort001
           this.byId(sap.ui.core.Fragment.createId("id.tableProductDetails.Fragment", "id.main.TblBtnDelet")).setVisible(false);
         }
       },

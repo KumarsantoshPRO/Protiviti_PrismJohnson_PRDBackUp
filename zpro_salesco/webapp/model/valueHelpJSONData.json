@@ -146,32 +146,32 @@
   "distributonChannel": [
     {
       "key": "11",
-      "text": "Project - 11"
+      "text": "Projects Direct - 11"
     },
 
     {
       "key": "15",
-      "text": "Dealer KAM Project - 15"
-    },
+      "text": "KAM via Dealer - 15"
+    }, 
     {
       "key": "17",
-      "text": "National Project - 17"
+      "text": "KAM Direct - 17"
     },
     {
       "key": "19",
-      "text": "Dealer - 19"
+      "text": "Dealer on inv deals- 19"
     },
     {
       "key": "25",
-      "text": "Dealer CBD Project - 25"
+      "text": "CBD via Dealer - 25"
     },
     {
       "key": "27",
-      "text": "National CBD Project - 27"
+      "text": "CBD Direct - 27"
     },
     {
       "key": "29",
-      "text": "Dealer Trade Project - 29"
+      "text": "Project via Dealer- 29"
     }
   ],
   "vertical": [

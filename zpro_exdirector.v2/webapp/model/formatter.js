@@ -30,7 +30,6 @@ sap.ui.define([], function () {
       }
     },
     makeItPositive: function (sString) {
-      debugger;
       if (sString) {
         if (Number(sString) < 0) {
           return (Number(sString) * -1).toString();
@@ -69,18 +68,25 @@ sap.ui.define([], function () {
       if (sString) {
         switch (sString) {
           case "11":
-            return "Project - 11";
+            return "Projects Direct - 11";
+            break;
+          case "15":
+            return "KAM via Dealer - 15";
             break;
           case "17":
-            return "National Project - 17";
+            return "KAM Direct - 17";
             break;
-          // Start: Distchanel15
-          case "15":
-            return "Specifier Sale - 15";
-            break;
-          // End: Distchanel15
           case "19":
-            return "Dealer - 19";
+            return "Dealer on inv deals- 19";
+            break;
+          case "25":
+            return "CBD via Dealer - 25";
+            break;
+          case "27":
+            return "CBD Direct - 27";
+            break;
+          case "29":
+            return "Project via Dealer- 29";
             break;
           default:
             break;

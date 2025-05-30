@@ -37,26 +37,26 @@ sap.ui.define([], function () {
       if (sString) {
         switch (sString) {
           case "11":
-            return "Project - 11";
-            break;
-          case "17":
-            return "National Project - 17";
+            return "Projects Direct - 11";
             break;
           case "15":
-            return "Dealer KAM Project - 15";
+            return "KAM via Dealer - 15";
+            break;
+          case "17":
+            return "KAM Direct - 17";
             break;
           case "19":
-            return "Dealer - 19";
+            return "Dealer on inv deals- 19";
             break;
           case "25":
-            return "Dealer CBD Project - 25";
+            return "CBD via Dealer - 25";
             break;
           case "27":
-            return "National CBD Project - 27";
+            return "CBD Direct - 27";
             break;
           case "29":
-            return "Dealer Trade Project - 29";
-            break;
+            return "Project via Dealer- 29";
+            break; 
           default:
             break;
         }
