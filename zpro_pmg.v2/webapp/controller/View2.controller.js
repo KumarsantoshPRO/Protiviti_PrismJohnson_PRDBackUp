@@ -778,7 +778,10 @@ sap.ui.define(
                   // [index].getAggregation("cells")[3]
                   //   .setValueState("Error");
                   // New
-                  oTable.getRows()[index].getAggregation("cells")[0].setValueState("Error");
+                  oTable.getRows()[index].getAggregation("cells")[4].setValueState("Error");
+                  var line = Number(index) + 1;
+                  MessageBox.error("Choose the vendor from line:" + line);
+                  return;
                   //End: Freeze001
                 } else {
                   vValidation = 1;
@@ -791,7 +794,7 @@ sap.ui.define(
                   // [index].getAggregation("cells")[0]
                   //   .setValueState("Error");
                   // New
-                  oTable.getRows()[index].getAggregation("cells")[0].setValueState("None");
+                  oTable.getRows()[index].getAggregation("cells")[4].setValueState("None");
                   //End: Freeze001
                 }
               }

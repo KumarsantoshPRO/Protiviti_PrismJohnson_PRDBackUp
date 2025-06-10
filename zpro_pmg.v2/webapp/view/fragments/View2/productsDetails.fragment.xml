@@ -9,6 +9,8 @@
         rows="{ProductModel>/}"
         fixedColumnCount="5"
         selectionMode="None"
+        
+        visibleRowCount='5'
     >
         <extension>
             <m:OverflowToolbar style="Clear">

@@ -172,7 +172,18 @@
                 maxLength="10"
                 editable="{GlobalModel>/Editable}"
             />
-
+            <!-- Start: pending001 -->
+            <Label
+                text="{i18nV2>view2.simpleForm.label.Pending}"
+                visible="{GlobalModel>/Pending}"
+            />
+            <Input
+                value="{JSONModelPayload>/Role}"
+                maxLength="10"
+                editable="{GlobalModel>/Editable}"
+                visible="{GlobalModel>/Pending}"
+            />
+            <!-- End: pending001 -->
             <!-- <Label
                 id="idV2LblValidDay"
                 text="{i18nV2>view2.simpleForm.label.validDays}"

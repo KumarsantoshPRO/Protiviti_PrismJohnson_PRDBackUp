@@ -160,86 +160,87 @@ sap.ui.define([
 
 
                 this.getView().setBusy(true);
+                var success = function (Data) {
+                    // Start: Date001
+                    // Old
+                    // if (this.sDate) {
+                    //     var aItems = [];
+                    //     var nTemp = 0;
+
+                    //     var sDateFromFE = new Date(this.sDate).getDate().toString() + new Date(this.sDate).getMonth().toString() + new Date(this.sDate).getFullYear().toString();
+                    //     for (let index = 0; index < Data.results.length; index++) {
+                    //         var sDateFromBE = new Date(Data.results[index].Erdat).getDate().toString() + new Date(Data.results[index].Erdat).getMonth().toString() + new Date(Data.results[index].Erdat).getFullYear().toString();
+                    //         if (sDateFromBE === sDateFromFE) {
+                    //             aItems.push(Data.results[index]);
+                    //             nTemp = 1
+                    //         }
+                    //     }
+
+                    //     if (nTemp === 1) {
+                    //         Data.results = aItems;
+                    //     } else {
+                    //         Data.results = [];
+                    //     }
+                    // }
+
+                    // New
+
+                    var startDate = this.getView().getModel("dateRange").getProperty("/start"),
+                        endDate = this.getView().getModel("dateRange").getProperty("/end");
+
+                    if (startDate && endDate) {
+                        var aItems = [];
+                        var nTemp = 0;
+                        for (let index = 0; index < Data.results.length; index++) {
+                            if (Data.results[index].Erdat >= startDate && Data.results[index].Erdat <= endDate) {
+                                aItems.push(Data.results[index]);
+                                nTemp = 1;
+                            }
+                        }
+
+                        if (nTemp === 1) {
+                            Data.results = aItems;
+                        } else {
+                            Data.results = [];
+                        }
+                    }
+                    // End: Date001                     
+                    this.getView().setBusy(false);
+                    if (sForWhat === "count") {
+                        switch (sStatusText) {
+                            case "":
+                                this.getView().getModel("count").getData().Total = Data.results.length;
+                                break;
+                            case "P":
+                                this.getView().getModel("count").getData().Pending = Data.results.length;
+                                break;
+                            case "D":
+                                this.getView().getModel("count").getData().Delayed = Data.results.length;
+                                break;
+                            case "A":
+                                this.getView().getModel("count").getData().Approved = Data.results.length;
+                                break;
+                            case "R":
+                                this.getView().getModel("count").getData().Rejected = Data.results.length;
+                                break;
+                            case "DL":
+                                this.getView().getModel("count").getData().Deleted = Data.results.length;
+                                break;
+                            default:
+
+                                break;
+                        }
+                    } else {
+                        var dataTableModel = Data.results;
+                        this.getView().setModel(new JSONModel(dataTableModel), "JSONModelForTable");
+                    }
+                    this.getView().getModel("count").refresh(true);
+
+
+                }.bind(this)
                 this.getView().getModel().read(sPath, {
                     filters: aFilter,
-                    success: function (Data) {
-                        // Start: Date001
-                        // Old
-                        // if (this.sDate) {
-                        //     var aItems = [];
-                        //     var nTemp = 0;
-
-                        //     var sDateFromFE = new Date(this.sDate).getDate().toString() + new Date(this.sDate).getMonth().toString() + new Date(this.sDate).getFullYear().toString();
-                        //     for (let index = 0; index < Data.results.length; index++) {
-                        //         var sDateFromBE = new Date(Data.results[index].Erdat).getDate().toString() + new Date(Data.results[index].Erdat).getMonth().toString() + new Date(Data.results[index].Erdat).getFullYear().toString();
-                        //         if (sDateFromBE === sDateFromFE) {
-                        //             aItems.push(Data.results[index]);
-                        //             nTemp = 1
-                        //         }
-                        //     }
-
-                        //     if (nTemp === 1) {
-                        //         Data.results = aItems;
-                        //     } else {
-                        //         Data.results = [];
-                        //     }
-                        // }
-
-                        // New
-
-                        var startDate = this.getView().getModel("dateRange").getProperty("/start"),
-                            endDate = this.getView().getModel("dateRange").getProperty("/end");
-
-                        if (startDate && endDate) {
-                            var aItems = [];
-                            var nTemp = 0;
-                            for (let index = 0; index < Data.results.length; index++) {
-                                if (Data.results[index].Erdat >= startDate && Data.results[index].Erdat <= endDate) {
-                                    aItems.push(Data.results[index]);
-                                    nTemp = 1;
-                                }
-                            }
-
-                            if (nTemp === 1) {
-                                Data.results = aItems;
-                            } else {
-                                Data.results = [];
-                            }
-                        }
-                        // End: Date001                     
-                        this.getView().setBusy(false);
-                        if (sForWhat === "count") {
-                            switch (sStatusText) {
-                                case "":
-                                    this.getView().getModel("count").getData().Total = Data.results.length;
-                                    break;
-                                case "P":
-                                    this.getView().getModel("count").getData().Pending = Data.results.length;
-                                    break;
-                                case "D":
-                                    this.getView().getModel("count").getData().Delayed = Data.results.length;
-                                    break;
-                                case "A":
-                                    this.getView().getModel("count").getData().Approved = Data.results.length;
-                                    break;
-                                case "R":
-                                    this.getView().getModel("count").getData().Rejected = Data.results.length;
-                                    break;
-                                case "DL":
-                                    this.getView().getModel("count").getData().Deleted = Data.results.length;
-                                    break;
-                                default:
-
-                                    break;
-                            }
-                        } else {
-                            var dataTableModel = Data.results;
-                            this.getView().setModel(new JSONModel(dataTableModel), "JSONModelForTable");
-                        }
-                        this.getView().getModel("count").refresh(true);
-
-
-                    }.bind(this),
+                    success: success,
                     error: function (sError) {
                         this.getView().setBusy(false);
                         MessageBox.error(JSON.parse(sError.responseText).error.message.value, {

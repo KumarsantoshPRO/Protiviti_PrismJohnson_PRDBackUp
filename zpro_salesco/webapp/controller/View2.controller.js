@@ -122,7 +122,8 @@ sap.ui.define(
             Editable: false,
             Required: false,
             createCopy: false,
-            editButton: false
+            editButton: false,
+            Pending: false
           };
           var oEditableFields = {
             Editable: false,
@@ -145,6 +146,11 @@ sap.ui.define(
             this.getView()
               .getModel("GlobalEditableModel")
               .setProperty("/Editable", true);
+            // Start: pending001
+            this.getView()
+              .getModel("GlobalModel")
+              .setProperty("/Pending", false);
+            // End: pending001
             // Start: createCopy001
             this.getView()
               .getModel("GlobalModel")
@@ -185,6 +191,11 @@ sap.ui.define(
             this.getView()
               .getModel("GlobalEditableModel")
               .setProperty("/Editable", false);
+            // Start: pending001
+            this.getView()
+              .getModel("GlobalModel")
+              .setProperty("/Pending", true);
+            // End: pending001
             // Start: createCopy001
             this.getView()
               .getModel("GlobalModel")
