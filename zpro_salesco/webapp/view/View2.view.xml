@@ -118,11 +118,23 @@
                         titleUppercase="true"
                     >
                         <uxap:blocks>
+                        <u:FileUploader
+                                id="fileUploader"
+                                name="myFileUpload"
+                                uploadUrl="upload/"
+                                tooltip="Upload your file to the local server"
+                                uploadComplete="handleUploadComplete"
+                            />
+                            <Button
+                                text="Upload File"
+                                press="handleUploadPress"
+                            /> 
                             <core:Fragment
                                 id="idV2FragAttach"
                                 fragmentName="zpj.pro.sk.sd.salescoordinator.zprosalesco.view.fragments.View2.attachments"
                                 type="XML"
                             />
+                            
                         </uxap:blocks>
                     </uxap:ObjectPageSubSection>
                 </uxap:subSections>

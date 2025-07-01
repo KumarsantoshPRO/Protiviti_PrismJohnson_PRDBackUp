@@ -137,6 +137,10 @@ sap.ui.define(
           this.sID = oEvent.getParameter("arguments").ID;
 
           if (sID === "null" || sID === undefined) {
+            this
+              .getView()
+              .getModel("LocalJSONModelForAttachment")
+              .setData({ attachments: { Nav_File_Upload: { results: [] } } });
             this.clearSummary();
             this.getView().byId("FileUploaderId").setVisible(true);
             // this.getView().byId("id.excelExport.Link").setVisible(true);
@@ -163,7 +167,7 @@ sap.ui.define(
                 "idV2FragGenInfo",
                 "idV2SLPaymentTerm"
               )
-            ).setEnabled(false);
+            ).setEnabled(true);
             this.getView().byId("idV2OPSubAttach").setVisible(true);
             // payload for OData service
             var dataModelPayload = this.getOwnerComponent()
@@ -257,7 +261,7 @@ sap.ui.define(
                     }
                   }
                   // Disc and Discb  conversion
-                  if (Data.Vtweg === "19") {
+                  if (Data.Vtweg === "15" || Data.Vtweg === "19" || Data.Vtweg === "25" || Data.Vtweg === "29") {
                   } else {
                     for (var i = 0; i < nLen; i++) {
                       aTableItems[i].Disc = aTableItems[i].Discb;
@@ -424,7 +428,7 @@ sap.ui.define(
               .setProperty("/Required", false);
           }
           // End: Mandatefields001
-          if (vGetSelectedValue === "11" || vGetSelectedValue === "17") {
+          if (vGetSelectedValue === "27" || vGetSelectedValue === "17") {
             this.byId(
               sap.ui.core.Fragment.createId(
                 "idV2FragGenInfo",
@@ -542,7 +546,7 @@ sap.ui.define(
             actions: ["Yes", "No"],
             onClose: function (oAction) {
               if (oAction === "Yes") {
-                var oRouter = this.getOwnerComponent().getRouter();
+                var oRouter = that.getOwnerComponent().getRouter();
                 oRouter.navTo("RouteMain", {});
               }
             }.bind(this),
@@ -625,11 +629,8 @@ sap.ui.define(
             MessageBox.error("Only numeric values allowed");
             oEvent.getSource().setValue("");
           }
-          if (
-            this.getView()
-              .getModel("JSONModelPayload")
-              .getProperty("/Vtweg") === "19"
-          ) {
+          var Vtweg = this.getView().getModel("JSONModelPayload").getProperty("/Vtweg");
+          if (Vtweg === "15" || Vtweg === "19" || Vtweg === "25" || Vtweg === "29") {
             if (value > 100) {
               MessageBox.error("Percentage value not correct");
               oEvent.getSource().setValue("");
@@ -652,11 +653,8 @@ sap.ui.define(
             MessageBox.error("Only numeric values allowed");
             oEvent.getSource().setValue("");
           }
-          if (
-            this.getView()
-              .getModel("JSONModelPayload")
-              .getProperty("/Vtweg") === "19"
-          ) {
+          var Vtweg = this.getView().getModel("JSONModelPayload").getProperty("/Vtweg");
+          if (Vtweg === "15" || Vtweg === "19" || Vtweg === "25" || Vtweg === "29") {
             if (value > 100) {
               MessageBox.error("Percentage value not correct");
               oEvent.getSource().setValue("");
@@ -946,7 +944,41 @@ sap.ui.define(
 
         // on Value Help(F4)
         onDesignsHelp: function (oEvent) {
-          Designs.onDesignsHelp(oEvent, this);
+
+          // Designs.onDesignsHelp(oEvent, this);
+          var that = this;
+          var sPath = oEvent.getSource().getParent().getBindingContextPath();
+          var Mfrgr = that.getView().getModel("JSONModelPayload").getContext(sPath).getProperty("Mfrgr");
+          that.Mfrgr = oEvent.getSource().getParent().getBindingContextPath() + "/Mfrgr";
+          that.bindingContextPath = oEvent.getSource().getParent().getBindingContextPath() + "/Mvgr2";
+          if (Mfrgr) {
+
+            var oResourceModel = that.getView().getModel("i18nV2").getResourceBundle();
+            if (!that.oFragmentDesign) {
+              that.oFragmentDesign = sap.ui.xmlfragment("zpj.pro.sk.sd.salescoordinator.zprosalesco.view.fragments.View2.F4s.designsF4", that);
+              that.oFragmentDesign.setTitle(oResourceModel.getText("view2.F4.title.designs"));
+              that.getView().addDependent(that.SalesOfficerag);
+              that._DesignsTemp = sap.ui.getCore().byId("idSLDesignsValueHelp").clone();
+              that._oTempDesign = sap.ui.getCore().byId("idSLDesignsValueHelp").clone();
+            }
+            var aFilter = [];
+            var oFilterDomname = new sap.ui.model.Filter([new sap.ui.model.Filter("Domname", sap.ui.model.FilterOperator.EQ, "ZMATSOURCE")], false);
+            var oFilterDomname1 = new sap.ui.model.Filter([new sap.ui.model.Filter("Domname1", sap.ui.model.FilterOperator.EQ, "")], false);
+            var oFilterDomname2 = new sap.ui.model.Filter([new sap.ui.model.Filter("Domname2", sap.ui.model.FilterOperator.EQ, Mfrgr)], false);
+            aFilter.push(oFilterDomname);
+            aFilter.push(oFilterDomname1);
+            aFilter.push(oFilterDomname2);
+            that.oFragmentDesign.setModel(that.getView().getModel());
+            sap.ui.getCore().byId("idSDDesignsF4").bindAggregation("items", {
+              path: "/ET_VALUE_HELPSSet",
+              filters: aFilter,
+              template: that._DesignsTemp
+            });
+            that.oFragmentDesign.open();
+
+          } else {
+            MessageBox.error("Please select 'Material Freight Group' first");
+          }
         },
         // on F4 search/liveChange
         onValueHelpSearchDesing: function (oEvent) {
@@ -1117,10 +1149,8 @@ sap.ui.define(
                   aTableItems[j].Isexdep = " ";
                 }
               }
-              if (
-                this.getView().getModel("JSONModelPayload").getData().Vtweg ===
-                "19"
-              ) {
+              var Vtweg = this.getView().getModel("JSONModelPayload").getProperty("/Vtweg");
+              if (Vtweg === "15" || Vtweg === "19" || Vtweg === "25" || Vtweg === "29") {
 
               } else {
                 for (var i = 0; i < nLen; i++) {
@@ -1136,10 +1166,12 @@ sap.ui.define(
               var oppID = this.getView().getModel("JSONModelPayload").getProperty("/Oppu");
               var projectInfo = this.getView().getModel("JSONModelPayload").getProperty("/Proj");
               var specifierInfo = this.getView().getModel("JSONModelPayload").getProperty("/Spec");
+
               var aAttachmentsItems = this
                 .getView()
-                .getModel("LocalJSONModelForAttachment")
-                .getData().attachments.Nav_File_Upload.results;
+                .getModel("LocalJSONModelForAttachment").getProperty("/attachments/Nav_File_Upload/results");
+              // .getData().attachments.Nav_File_Upload.results;
+
               var bStatus = true;
               if (DistChannel === "15" || DistChannel === "17" || DistChannel === "25" || DistChannel === "27" || DistChannel === "29") {
                 if (!PONo) {
@@ -1151,10 +1183,12 @@ sap.ui.define(
                 } else if (!projectInfo) {
                   MessageBox.error("'Project Name and Address' is mandatory for selected distribution channel");
                   bStatus = false;
-                } else if (!specifierInfo) {
-                  MessageBox.error("'Project Specifier name and Address' is mandatory for selected distribution channel");
-                  bStatus = false;
-                } else if (aAttachmentsItems.length < 1) {
+                }
+                // else if (!specifierInfo) {
+                //   MessageBox.error("'Project Specifier name and Address' is mandatory for selected distribution channel");
+                //   bStatus = false;
+                // } 
+                else if (aAttachmentsItems.length < 1) {
                   MessageBox.error("'Attachment' is mandatory for selected distribution channel");
                   bStatus = false;
                 }
@@ -1181,7 +1215,7 @@ sap.ui.define(
                           }
                         }
                         // Disc and Discb  conversion
-                        if (oData.Vtweg === "19") {
+                        if (oData.Vtweg === "15" || oData.Vtweg === "19" || oData.Vtweg === "25" || oData.Vtweg === "29") {
                         } else {
                           var aTableItems = oData.ET_SALES_COORD_ISET.results;
                           var nLen = aTableItems.length;
@@ -1268,11 +1302,8 @@ sap.ui.define(
                   aTableItems[j].Isexdep = " ";
                 }
               }
-
-              if (
-                this.getView().getModel("JSONModelPayload").getData().Vtweg ===
-                "19"
-              ) {
+              var Vtweg = this.getView().getModel("JSONModelPayload").getProperty("/Vtweg");
+              if (Vtweg === "15" || Vtweg === "19" || Vtweg === "25" || Vtweg === "29") {
               } else {
                 for (var i = 0; i < nLen; i++) {
                   aTableItems[i].Discb = aTableItems[i].Disc;
@@ -1320,9 +1351,8 @@ sap.ui.define(
                                 {
                                   actions: [sap.m.MessageBox.Action.OK],
                                   onClose: function (oAction) {
-                                    var oRouter =
-                                      this.getOwnerComponent().getRouter();
-                                    oRouter.navTo("RouteMain", {});
+                                    // window.location.reload();
+                                    that.getOwnerComponent().getRouter().navTo("RouteMain", {});
                                   }.bind(this),
                                 }
                               );
@@ -1348,7 +1378,8 @@ sap.ui.define(
                               }
                             },
                           });
-                      } else {
+                      }
+                      else {
                         MessageBox.success(
                           "Request saved successfully with PAF Number:" +
                           oData.Pafno.replace(/^0+/, "") +
@@ -1357,9 +1388,7 @@ sap.ui.define(
                             actions: [sap.m.MessageBox.Action.OK],
                             onClose: function (oAction) {
                               // window.location.reload();
-                              that.getOwnerComponent().getRouter().navTo("page2", {
-                                ID: "null" // Parameters to be embedded in the hash
-                              });
+                              that.getOwnerComponent().getRouter().navTo("RouteMain", {});
                             },
                           }
                         );
@@ -1448,13 +1477,14 @@ sap.ui.define(
                 var headerValidationStatus =
                   validation.headerPayloadValidation(this);
 
-                var paymentTerm = this.getView()
-                  .getModel("JSONModelPayload")
-                  .getProperty("/Zterm");
-                var distributorChannel = this.getView()
-                  .getModel("JSONModelPayload")
-                  .getProperty("/Vtweg");
-                if (distributorChannel === "19" && !paymentTerm) {
+
+                var paymentTerm = this.byId(
+                  sap.ui.core.Fragment.createId(
+                    "idV2FragGenInfo",
+                    "idV2SLPaymentTerm"
+                  )
+                ).setValueState("Error").getSelectedKey();
+                if (!paymentTerm) {
                   MessageBox.error("Please enter Payment Term");
                   this.byId(
                     sap.ui.core.Fragment.createId(
@@ -1514,11 +1544,8 @@ sap.ui.define(
                         }
                       }
                       // Disc and Discb convertion
-
-                      if (
-                        this.getView().getModel("JSONModelPayload").getData()
-                          .Vtweg === "19"
-                      ) {
+                      var Vtweg = this.getView().getModel("JSONModelPayload").getProperty("/Vtweg");
+                      if (Vtweg === "15" || Vtweg === "19" || Vtweg === "25" || Vtweg === "29") {
                       } else {
                         for (var i = 0; i < nLen; i++) {
                           aTableItems[i].Discb = aTableItems[i].Disc;
@@ -1546,7 +1573,7 @@ sap.ui.define(
                                 }
                               }
                               // Disc and Discb  conversion
-                              if (oData.Vtweg === "19") {
+                              if (oData.Vtweg === "15" || oData.Vtweg === "19" || oData.Vtweg === "25" || oData.Vtweg === "29") {
                               } else {
                                 for (var i = 0; i < nLen; i++) {
                                   aTableItems[i].Disc = aTableItems[i].Discb;
@@ -1710,11 +1737,10 @@ sap.ui.define(
             // Disc and Discb conversion
             var vInvoiceType;
             var vOrcType;
-            if (
-              this.getView()
-                .getModel("JSONModelPayload")
-                .getProperty("/Vtweg") !== "19"
-            ) {
+            var Vtweg = this.getView()
+              .getModel("JSONModelPayload")
+              .getProperty("/Vtweg")
+            if (Vtweg !== "15" || Vtweg !== "19" || Vtweg !== "25" || Vtweg !== "29") {
               vInvoiceDiscount =
                 vInvoiceDiscount +
                 Number(aItemsData[index].Disc) *
@@ -1729,12 +1755,8 @@ sap.ui.define(
 
               vInvoiceType = "%";
             }
-
-            if (
-              this.getView()
-                .getModel("JSONModelPayload")
-                .getProperty("/Vtweg") === "19"
-            ) {
+            var Vtweg = this.getView().getModel("JSONModelPayload").getProperty("/Vtweg");
+            if (Vtweg === "15" || Vtweg === "19" || Vtweg === "25" || Vtweg === "29") {
               vOrc =
                 vOrc +
                 (Number(aItemsData[index].Commboxp) *
@@ -1859,6 +1881,7 @@ sap.ui.define(
 
         //Start: Upload, View and Download Attachment
         onBeforeUploadStarts: function (oEvent) {
+          debugger;
           var that = this;
           this.fileName = oEvent.getParameters().item.getFileName();
           this.fileType = oEvent.getParameters().item.getMediaType();
@@ -1868,28 +1891,28 @@ sap.ui.define(
           var reader = new FileReader();
           reader.onload = function (e) {
             var vContent = e.currentTarget.result;
-
             that.updateFile(that.fileName, that.fileType, vContent);
           };
           reader.readAsDataURL(file);
         },
         updateFile: function (fileName, fileType, vContent) {
-          var decodedPdfContent,
+          debugger;
+          var decodedContent,
             blob,
             vStatus = 1;
 
           if (fileType === "image/jpeg") {
-            decodedPdfContent = atob(
+            decodedContent = atob(
               vContent.split("data:image/jpeg;base64,")[1]
             );
             vStatus = 1;
           } else if (fileType === "image/png") {
-            decodedPdfContent = atob(
+            decodedContent = atob(
               vContent.split("data:image/png;base64,")[1]
             );
             vStatus = 1;
           } else if (fileType === "application/pdf") {
-            decodedPdfContent = atob(
+            decodedContent = atob(
               vContent.split("data:application/pdf;base64,")[1]
             );
             vStatus = 1;
@@ -1897,37 +1920,47 @@ sap.ui.define(
             vStatus = 0;
           }
 
-          var byteArray = new Uint8Array(decodedPdfContent.length);
-          for (var i = 0; i < decodedPdfContent.length; i++) {
-            byteArray[i] = decodedPdfContent.charCodeAt(i);
-          }
-          if (fileType === "image/jpeg") {
-            blob = new Blob([byteArray.buffer], {
-              type: "image/jpeg",
-            });
-          } else if (fileType === "image/png") {
-            blob = new Blob([byteArray.buffer], {
-              type: "image/png",
-            });
-          } else if (fileType === "application/pdf") {
-            blob = new Blob([byteArray.buffer], {
-              type: "application/pdf",
-            });
-          }
+          // var byteArray = new Uint8Array(decodedContent.length);
+          // for (var i = 0; i < decodedContent.length; i++) {
+          //   byteArray[i] = decodedContent.charCodeAt(i);
+          // }
+          // if (fileType === "image/jpeg") {
+          //   blob = new Blob([byteArray.buffer], {
+          //     type: "image/jpeg",
+          //   });
+          // } else if (fileType === "image/png") {
+          //   blob = new Blob([byteArray.buffer], {
+          //     type: "image/png",
+          //   });
+          // } else if (fileType === "application/pdf") {
+          //   blob = new Blob([byteArray.buffer], {
+          //     type: "application/pdf",
+          //   });
+          // }
 
-          var _url = URL.createObjectURL(blob);
-          jQuery.sap.addUrlWhitelist("blob");
-
-          this._fileDetail = {
+          // var _url = URL.createObjectURL(blob);
+          // jQuery.sap.addUrlWhitelist("blob");
+          var fileDetails = {
             Filename: fileName,
             Attachment: vContent,
             Pafno: "",
           };
+          // this._fileDetail = fileDetails;
 
-          this.getView()
-            .getModel("LocalJSONModelForAttachment")
-            .getData()
-            .attachments.Nav_File_Upload.results.push(this._fileDetail);
+          // this.getView()
+          //   .getModel("LocalJSONModelForAttachment")
+          //   .getData()
+          //   .attachments.Nav_File_Upload.results.push(this._fileDetail);
+          // this.getView()
+          //   .getModel("LocalJSONModelForAttachment").refresh();
+
+          this.getView().getModel("LocalJSONModelForAttachment").setProperty("/attachments/Nav_File_Upload/results", fileDetails);
+
+        },
+        onUploadComplete: function (oEvent) {
+
+          var oFileUploader = oEvent.getSource();
+          oFileUploader.getDefaultFileUploader().setValue("")
         },
         onViewAttachmentObjectStatusPress: function (oEvent) {
           var sFile = oEvent
@@ -1944,12 +1977,12 @@ sap.ui.define(
           if (sFile.includes("PDF") || sFile.includes("pdf")) {
             var fileName = sFileName;
 
-            var decodedPdfContent = atob(
+            var decodedContent = atob(
               sFile.split("data:application/pdf;base64,")[1]
             );
-            var byteArray = new Uint8Array(decodedPdfContent.length);
-            for (var i = 0; i < decodedPdfContent.length; i++) {
-              byteArray[i] = decodedPdfContent.charCodeAt(i);
+            var byteArray = new Uint8Array(decodedContent.length);
+            for (var i = 0; i < decodedContent.length; i++) {
+              byteArray[i] = decodedContent.charCodeAt(i);
             }
             var blob = new Blob([byteArray.buffer], {
               type: "application/pdf",
@@ -1969,7 +2002,7 @@ sap.ui.define(
             if (!this._pPopover) {
               this._pPopover = Fragment.load({
                 id: this.getView().getId(),
-                name: "pj.zpmg.view.fragments.imagePopover",
+                name: "zpj.pro.sk.sd.salescoordinator.zprosalesco.view.fragments.View2.imagePopover",
                 controller: this,
               }).then(function (oPopover) {
                 return oPopover;
@@ -2051,6 +2084,10 @@ sap.ui.define(
                 Vtweg: excelData[0].Distribution_Channel,
                 Vkbur: excelData[0].Sales_Office,
                 Spart: excelData[0].Vertical,
+                Oppu: excelData[0].Oppurtunity_ID,
+                Specid: excelData[0].Specifier_ID,
+                Proj: excelData[0].Project_NameNAddress,
+                Spec: excelData[0].Specifier_NameNAddress,
                 ET_SALES_COORD_ISET: {
                   results: [],
                 },
@@ -2064,6 +2101,10 @@ sap.ui.define(
                 "Distribution_Channel",
                 "Sales_Office",
                 "Vertical",
+                "Oppurtunity_ID",
+                "Specifier_ID",
+                "Project_NameNAddress",
+                "Specifier_NameNAddress",
                 "Material_Freight_Group",
                 "Design",
                 "Supplying_Plant",
@@ -2116,7 +2157,7 @@ sap.ui.define(
                     }
 
                     oTab.Disc = excelData[i].On_Invoice_Discount;
-                    if (excelData[0].Distribution_Channel === "19") {
+                    if (excelData[0].Distribution_Channel === "15" || excelData[0].Distribution_Channel === "19" || excelData[0].Distribution_Channel === "25" || excelData[0].Distribution_Channel === "29") {
                       oTab.Commboxp = excelData[i].ORC;
                     } else {
                       oTab.Commbox = excelData[i].ORC;
@@ -2136,7 +2177,7 @@ sap.ui.define(
                 that.fireCalls();
               } else {
                 MessageBox.error(
-                  "Uploaded excel has wrong header, Please correct and re-  upload"
+                  "Uploaded excel has wrong header, Please correct and re-upload"
                 );
               }
             };
@@ -2286,11 +2327,10 @@ sap.ui.define(
           // this.byId(sap.ui.core.Fragment.createId("idV2FragGenInfo", "idV2SLDistChannel")).fireChange();
           // this.byId(sap.ui.core.Fragment.createId("idV2FragGenInfo", "idV2InpSalesOffice")).fireSubmit();
           // var aTableItems = this.byId(sap.ui.core.Fragment.createId("idV2FragGenInfo", "idV2TblProducts")).getBinding('items');
-          if (
-            this.getView()
-              .getModel("JSONModelPayload")
-              .getProperty("/Vtweg") === "19"
-          ) {
+          var Vtweg = this.getView()
+            .getModel("JSONModelPayload")
+            .getProperty("/Vtweg");
+          if (Vtweg === "15" || Vtweg === "19" || Vtweg === "25" || Vtweg === "29") {
             this.byId(
               sap.ui.core.Fragment.createId("idV2FragGenInfo", "idV2LblPayTerm")
             ).setRequired(true);
@@ -2380,7 +2420,35 @@ sap.ui.define(
               });
           }
         },
+
+       
         // End: Upload Excel
+
+         //Start: Upload Excel - File Uploader
+	handleUploadComplete: function(oEvent) {
+			// Please note that the event response should be taken from the event parameters but for our test example, it is hardcoded.
+
+			var sResponse = "File upload complete. Status: 200",
+				iHttpStatusCode = parseInt(/\d{3}/.exec(sResponse)[0]),
+				sMessage;
+
+			if (sResponse) {
+				sMessage = iHttpStatusCode === 200 ? sResponse + " (Upload Success)" : sResponse + " (Upload Error)";
+				MessageToast.show(sMessage);
+			}
+		},
+
+		handleUploadPress: function() {
+			var oFileUploader = this.byId("fileUploader");
+			oFileUploader.checkFileReadable().then(function() {
+				oFileUploader.upload();
+			}, function(error) {
+				MessageToast.show("The file cannot be read. It may have changed.");
+			}).then(function() {
+				oFileUploader.clear();
+			});
+		}	
+         //End: Upload Excel - File Uploader
 
         // Start: Download Excel
         //Excel export using Spreadsheet

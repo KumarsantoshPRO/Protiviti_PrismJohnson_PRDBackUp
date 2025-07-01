@@ -396,7 +396,7 @@
                                 demandPopin="true"
                                 width="6rem"
                             >
-                                <Text text="Status" />
+                                <Text text="{JSONModelForTable>Role}" />
                             </Column>
                         </columns>
 

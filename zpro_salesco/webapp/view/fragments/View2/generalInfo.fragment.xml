@@ -172,6 +172,13 @@
                 maxLength="10"
                 editable="{GlobalModel>/Editable}"
             />
+
+            <Label text="{i18nV2>view2.simpleForm.label.Specifier}" />
+            <Input
+                value="{JSONModelPayload>/Specid}"
+                maxLength="10"
+                editable="{GlobalModel>/Editable}"
+            />
             <!-- Start: pending001 -->
             <Label
                 text="{i18nV2>view2.simpleForm.label.Pending}"
@@ -295,10 +302,8 @@
             <!--End: Divya's changes -->
 
             <!-- Start: Newfields001 -->
-            <Label
-                text="{i18nV2>view2.simpleForm.label.ProjectSpecifier}"
-                required="{GlobalModel>/Required}"
-            />
+            <Label text="{i18nV2>view2.simpleForm.label.ProjectSpecifier}" />
+            <!-- required="{GlobalModel>/Required}" -->
             <TextArea
                 value="{JSONModelPayload>/Spec}"
                 editable="{GlobalModel>/Editable}"

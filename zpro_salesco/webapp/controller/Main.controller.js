@@ -475,7 +475,9 @@ sap.ui.define(
               that.getView().setBusy(false);
               MessageBox.error(JSON.parse(oError.responseText).error.innererror.errordetails[0].message, {
                 actions: [sap.m.MessageBox.Action.OK],
-                onClose: function (oAction) { },
+                onClose: function (oAction) {
+
+                },
               });
             },
           });

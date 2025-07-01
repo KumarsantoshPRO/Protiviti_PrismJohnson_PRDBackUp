@@ -9,7 +9,6 @@
         rows="{ProductModel>/}"
         fixedColumnCount="5"
         selectionMode="None"
-        
         visibleRowCount='5'
     >
         <extension>
@@ -161,7 +160,7 @@
             <Column
                 hAlign="End"
                 width="5rem"
-                visible="{=${oRequestModel>/Vtweg} === '19'? false: true}"
+                visible="{=${oRequestModel>/Vtweg} === '15' || ${oRequestModel>/Vtweg} === '19' || ${oRequestModel>/Vtweg} === '25' || ${oRequestModel>/Vtweg} === '29'  ? false: true}"
             >
                 <m:Label
                     design="Bold"
@@ -179,7 +178,7 @@
             <Column
                 hAlign="End"
                 width="7rem"
-                visible="{=${oRequestModel>/Vtweg} === '19'? true: false}"
+                visible="{=${oRequestModel>/Vtweg} === '15' || ${oRequestModel>/Vtweg} === '19' || ${oRequestModel>/Vtweg} === '25' || ${oRequestModel>/Vtweg} === '29'  ? true: false}"
             >
                 <m:Label
                     design="Bold"
@@ -228,7 +227,7 @@
                 <m:Label
                     design="Bold"
                     wrapping="true"
-                    text="Total Volunme"
+                    text="Total Volume"
                 />
                 <template>
                     <m:Text text="{path:'ProductModel>Totalvolume'}" />
@@ -292,14 +291,14 @@
                     <m:VBox>
                         <m:Input
                             value="{path:'ProductModel>Discount' }"
-                            visible="{=${ProductModel>Discount}==='0.00'?false:true}"
+                            visible="{=${oRequestModel>/Vtweg} === '15' || ${oRequestModel>/Vtweg} === '19' || ${oRequestModel>/Vtweg} === '25' || ${oRequestModel>/Vtweg} === '29'  ?true:false}"
                             textAlign="End"
                             liveChange="onDiscountInputLiveChange"
                         />
 
                         <m:Input
                             value="{path:'ProductModel>Discountb' }"
-                            visible="{=${ProductModel>Discountb}==='0.00'?false:true}"
+                            visible="{=${oRequestModel>/Vtweg} === '15' || ${oRequestModel>/Vtweg} === '19' || ${oRequestModel>/Vtweg} === '25' || ${oRequestModel>/Vtweg} === '29'  ?false:true}"
                             textAlign="End"
                             liveChange="onDiscountInputLiveChange"
                         />
@@ -457,7 +456,7 @@
                     tooltip="PMG Remarks"
                 />
                 <template>
-                    <m:Input value="{path:'ProductModel>PREMARK'}" />
+                    <m:Input value="{path:'ProductModel>Premark'}" />
                 </template>
             </Column>
             <!-- End: Remarkcol001 -->

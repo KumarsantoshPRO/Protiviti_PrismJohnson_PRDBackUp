@@ -171,6 +171,16 @@ sap.ui.define(
                 );
                 // oData.Wgmper = Number(oData.Wgmper) + nGrossMargin;
                 // oData.Wbuyingprice = Number(oData.Wbuyingprice) + nBuyingpricesqft;
+                // Start: Multiple001
+                var Sname = oData.NAV_PMG_ITEM_PRODUCT.results[index].Sname;
+                var Design = oData.NAV_PMG_ITEM_PRODUCT.results[index].Design;
+                if (!Sname) {
+                  if (Design === "Multiple" || Design === "Multiple Designs") {
+                    oData.NAV_PMG_ITEM_PRODUCT.results[index].Sname = "Multiple"
+                    oData.NAV_PMG_ITEM_PRODUCT.results[index].Source = "Multiple"
+                  }
+                }
+                // End: Multiple001
               }
               // oData.Wgmper = (oData.Wgmper / len).toFixed(2);
               // oData.Wbuyingprice = (oData.Wbuyingprice / len).toFixed(2);
@@ -188,7 +198,7 @@ sap.ui.define(
               var oPrdModel = this.getView().getModel("ProductModel");
 
               oPrdModel.setData(oData.NAV_PMG_ITEM_PRODUCT.results);
-              if (oData.Vtweg === "19") {
+              if (oData.Vtweg === "15" || oData.Vtweg === "19" || oData.Vtweg === "25" || oData.Vtweg === "29") {
                 this.byId(
                   sap.ui.core.Fragment.createId(
                     "idFragProductsDetails",
@@ -288,7 +298,8 @@ sap.ui.define(
 
         // );
         // new
-        var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+        // var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+        var sPath = oEvent.getSource().getParent().getBindingContext("ProductModel").getPath()
         var pathIndex = parseInt(sPath.split("/").pop(), 10);
         this._rowIndex = pathIndex;
         // Old
@@ -778,7 +789,7 @@ sap.ui.define(
                   // [index].getAggregation("cells")[3]
                   //   .setValueState("Error");
                   // New
-                  oTable.getRows()[index].getAggregation("cells")[4].setValueState("Error");
+                  // oTable.getRows()[index].getAggregation("cells")[4].setValueState("Error");
                   var line = Number(index) + 1;
                   MessageBox.error("Choose the vendor from line:" + line);
                   return;
@@ -794,7 +805,7 @@ sap.ui.define(
                   // [index].getAggregation("cells")[0]
                   //   .setValueState("Error");
                   // New
-                  oTable.getRows()[index].getAggregation("cells")[4].setValueState("None");
+                  // oTable.getRows()[index].getAggregation("cells")[4].setValueState("None");
                   //End: Freeze001
                 }
               }
@@ -803,6 +814,7 @@ sap.ui.define(
         }
         if (vValidation === 1) {
           this.getView().setBusy(true);
+
           this.getOwnerComponent()
             .getModel()
             .create("/ET_PMG_REQUEST_ITEMSet", payload, {
@@ -1082,10 +1094,8 @@ sap.ui.define(
         // var wGrossMargin = 0;
 
         for (let index = 0; index < noItems; index++) {
-          if (
-            this.getView().getModel("oRequestModel").getProperty("/Vtweg") ===
-            "19"
-          ) {
+          var Vtweg = this.getView().getModel("oRequestModel").getProperty("/Vtweg")
+          if (Vtweg === "15" || Vtweg === "19" || Vtweg === "25" || Vtweg === "29") {
             wDiscount =
               wDiscount +
               (Number(tableData[index].Discount) / 100) *
@@ -1205,13 +1215,10 @@ sap.ui.define(
               // Old
 
               var distributorChannel = that.getView().getModel("oRequestModel").getProperty("/Vtweg");
-
               for (var i = 0; i < excelData.length; i++) {
-
                 var sPath = "/" + i.toString() + "/";
                 // Editable columns
-
-                if (distributorChannel === "19") {
+                if (distributorChannel === "15" || distributorChannel === "19" || distributorChannel === "25" || distributorChannel === "29") {
                   that.getView().getModel("ProductModel").setProperty(sPath + "Commboxp", excelData[i].ORC);
                   that.getView().getModel("ProductModel").setProperty(sPath + "Discount", excelData[i].Discount);
                 } else {
@@ -1221,7 +1228,7 @@ sap.ui.define(
                 that.getView().getModel("ProductModel").setProperty(sPath + "Buyingpricesqft", excelData[i].BP);
                 that.getView().getModel("ProductModel").setProperty(sPath + "Remark", excelData[i].BPRemarks);
                 that.getView().getModel("ProductModel").setProperty(sPath + "Desiredbp", excelData[i].DesiredBP);
-                that.getView().getModel("ProductModel").setProperty(sPath + "PREMARK", excelData[i].PGPRemarks);
+                that.getView().getModel("ProductModel").setProperty(sPath + "Premark", excelData[i].PGPRemarks);
 
                 // Non editable columns
                 // that.getView().getModel("ProductModel").setProperty(sPath + "Sname", excelData[i].Vendor);
@@ -1243,8 +1250,23 @@ sap.ui.define(
                 // that.getView().getModel("ProductModel").setProperty(sPath + "Totalvolume", excelData[i].TotalVolunme);
                 // that.getView().getModel("ProductModel").setProperty(sPath + "CurVolFt", excelData[i].CurrentVolume);
                 // End: NewCols001
-
+                if (that.getView().getModel("ProductModel").getData()[i]['disChannel']) {
+                  delete that.getView().getModel("ProductModel").getData()[i]['disChannel'];
+                }
+                if (that.getView().getModel("ProductModel").getData()[i]['paymentTerm']) {
+                  delete that.getView().getModel("ProductModel").getData()[i]['paymentTerm'];
+                }
+                if (that.getView().getModel("ProductModel").getData()[i]['vkbur']) {
+                  delete that.getView().getModel("ProductModel").getData()[i]['vkbur'];
+                }
+                if (that.getView().getModel("ProductModel").getData()[i]['ORC']) {
+                  delete that.getView().getModel("ProductModel").getData()[i]['ORC'];
+                }
               }
+
+
+              that.getView().getModel("ProductModel").refresh();
+              MessageBox.success("Excel upload completed");
               // New
             } else {
               MessageBox.error("Mismatch in excel items, Please correct and reupload");
@@ -1281,6 +1303,7 @@ sap.ui.define(
         var pafNo = this.getView().getModel("oRequestModel").getProperty("/Pafno").replace(/^0+/, ""),
           disChannel = this.getView().getModel("oRequestModel").getProperty("/Vtweg"),
           paymentTerm = this.getView().getModel("oRequestModel").getProperty("/Zterm");
+        fileName = "paf no-" + pafNo + " details";
         // End: Excel002
         oTable = this._oTable;
 
@@ -1291,11 +1314,11 @@ sap.ui.define(
         oRowBinding = this.getView().getModel("ProductModel").getData();
         for (let index = 0; index < oRowBinding.length; index++) {
           const element = oRowBinding[index];
-          element.pafNo = pafNo;
+          element.Pafno = pafNo;
           element.disChannel = disChannel;
           element.paymentTerm = paymentTerm;
 
-          if (element.disChannel === "19") {
+          if (disChannel === "15" || disChannel === "19" || disChannel === "25" || disChannel === "29") {
             element.ORC = element.Commboxp;
             element.Discount = element.Discount;
           } else {
@@ -1332,8 +1355,8 @@ sap.ui.define(
       createColumnConfig: function () {
         var aCols = [];
         aCols.push({
-          property: "pafNo",
-          label: "PAF No",
+          property: "Pafno",
+          label: "PAFNo",
           type: EdmType.String,
           editable: false
         });
@@ -1491,7 +1514,7 @@ sap.ui.define(
         });
 
         aCols.push({
-          property: "PREMARK",
+          property: "Premark",
           label: "PGPRemarks",
           type: EdmType.String,
         });

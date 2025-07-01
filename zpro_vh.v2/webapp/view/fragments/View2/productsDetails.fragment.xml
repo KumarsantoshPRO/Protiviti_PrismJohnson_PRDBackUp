@@ -37,6 +37,14 @@
                         text="Material Freight Groups"
                     />
                 </Column>
+
+                <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true"
+                    hAlign="Center"
+                >
+                    <Text text="Product" />
+                </Column>
                 <Column
                     minScreenWidth="Tablet"
                     demandPopin="true"
@@ -156,6 +164,7 @@
                 <ColumnListItem vAlign="Middle">
                     <cells>
                         <Text text="{ProductModel>Mfrgr}" />
+                        <Text text="{ProductModel>Prdgrp}" />
                         <Text text="{ProductModel>Szcm}" />
                         <Text text="{ProductModel>Design}" />
 
@@ -188,7 +197,7 @@
                         <Text text="{path:'ProductModel>Grossmargper'}" />
                         <Text text="{path:'ProductModel>Sbremark'}" />
                         <!-- Start: Remarkcol001 -->
-                        <Text text="{path:'ProductModel>PREMARK'}" />
+                        <Text text="{path:'ProductModel>Premark'}" />
                         <!-- End: Remarkcol001 -->
                     </cells>
                 </ColumnListItem>

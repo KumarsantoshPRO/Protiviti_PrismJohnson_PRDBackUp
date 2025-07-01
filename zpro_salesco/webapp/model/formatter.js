@@ -72,11 +72,23 @@ sap.formatter = {
                 case '11':
                     return 'Project - 11';
                     break;
+                case '15':
+                    return "KAM via Dealer - 15";
+                    break;
                 case '17':
-                    return 'National Project - 17';
+                    return 'KAM Direct - 17';
                     break;
                 case '19':
-                    return 'Dealer - 19';
+                    return 'Dealer on inv deals- 19';
+                    break;
+                case '25':
+                    return 'CBD via Dealer - 25';
+                    break;
+                case '27':
+                    return 'CBD Direct - 27';
+                    break;
+                case '29':
+                    return 'Project via Dealer- 29';
                     break;
                 default:
                     break;
@@ -98,24 +110,24 @@ sap.formatter = {
     },
 
     exFactoryorDepot: function (sString) {
-        if(sString === "X" || sString === "x"){
+        if (sString === "X" || sString === "x") {
             return "X";
-        }else{
+        } else {
             return null;
         }
 
-       
+
     },
 
-    showVerticalText: function(sValue){
-        if(sValue === "10"){
-return "Johnson";
-        }else if(sValue === "20"){
-return "Porselano"
-        }else if(sValue === "30"){
-return "Marbonite"
-        }else if(sValue === "40"){
-return "Endura"
+    showVerticalText: function (sValue) {
+        if (sValue === "10") {
+            return "Johnson";
+        } else if (sValue === "20") {
+            return "Porselano"
+        } else if (sValue === "30") {
+            return "Marbonite"
+        } else if (sValue === "40") {
+            return "Endura"
         }
     }
     // nonVisible: function (sVal) {

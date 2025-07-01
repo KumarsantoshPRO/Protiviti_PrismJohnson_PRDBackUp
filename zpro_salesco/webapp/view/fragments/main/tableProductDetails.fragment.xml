@@ -533,7 +533,7 @@
                             />
                             <Text
                                 id="idV1TblCLITxtDisPer"
-                                text="{ModelForTable>Pendingat}"
+                                text="{ModelForTable>Role}"
                             />
                             <tnt:InfoLabel
                                 text="{ parts: ['ModelForTable>Status', 'ModelForTable>Erdat'], formatter: 'sap.formatter.getStatus' }"
@@ -729,7 +729,7 @@
                             wrapping="true"
                         />
                         <Table:template>
-                            <Text text="{ModelForTable>Pendingat}" />
+                            <Text text="{ModelForTable>Role}" />
                         </Table:template>
                     </Table:Column>
                     <Table:Column

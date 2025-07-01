@@ -8,14 +8,16 @@
         id="idV2UploadSet"
         instantUpload="true"
         showIcons="true"
-        uploadEnabled="{GlobalEditableModel>/Editable}"
         terminationEnabled="true"
         maxFileNameLength="30"
         maxFileSize="200"
         uploadUrl="../../../../upload"
-        items="{path: 'LocalJSONModelForAttachment>/attachments/Nav_File_Upload/results', templateShareable: false}"
+        mode="None"
+        uploadEnabled="{GlobalEditableModel>/Editable}"
+        items="{path: 'LocalJSONModelForAttachment>/attachments/Nav_File_Upload/results', templateShareable: true}"
         selectionChanged="onUploadSelectionChange"
         beforeUploadStarts="onBeforeUploadStarts"
+        afterItemAdded="onUploadComplete"
     >
         <upload:toolbar>
             <OverflowToolbar id="idV2OFT">
@@ -43,8 +45,8 @@
                     />
                 </upload:markers> -->
                 <upload:statuses>
+                 <!-- id="idV2OS" -->
                     <ObjectStatus
-                        id="idV2OS"
                         title="PAF NO - {path:'LocalJSONModelForAttachment>Pafno',  formatter:'sap.formatter.removeLeadingZeros'}"
                         text="View attachment"
                         press="onViewAttachmentObjectStatusPress"

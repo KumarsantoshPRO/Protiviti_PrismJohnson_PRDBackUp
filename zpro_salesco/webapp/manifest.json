@@ -174,7 +174,7 @@
         },
         {
           "name": "page2",
-          "pattern": "Page2/{ID}",
+          "pattern": "page2/{ID}",
           "target": [
             "page2"
           ]
