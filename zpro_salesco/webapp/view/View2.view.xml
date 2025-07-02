@@ -118,23 +118,57 @@
                         titleUppercase="true"
                     >
                         <uxap:blocks>
-                        <u:FileUploader
-                                id="fileUploader"
-                                name="myFileUpload"
-                                uploadUrl="upload/"
-                                tooltip="Upload your file to the local server"
-                                uploadComplete="handleUploadComplete"
-                            />
-                            <Button
-                                text="Upload File"
-                                press="handleUploadPress"
-                            /> 
-                            <core:Fragment
+                            <!-- <core:Fragment
                                 id="idV2FragAttach"
                                 fragmentName="zpj.pro.sk.sd.salescoordinator.zprosalesco.view.fragments.View2.attachments"
                                 type="XML"
-                            />
-                            
+                            /> -->
+                            <!-- Start: newUploader001 -->
+                            <VBox>
+                                <u:FileUploader
+                                    width="50%"
+                                    name="myFileUpload"
+                                    uploadUrl="upload/"
+                                    tooltip="Upload your file to the server"
+                                    visible="{oInitModel>/enabled}"
+                                    change="handleUploadChange"
+                                    multiple="true"
+                                /> 
+                                <List
+                                    width="50%"
+                                    items="{oDOAAAttachmentModel>/}"
+                                >
+                                    <CustomListItem>
+                                        <HBox justifyContent="SpaceBetween">
+                                            <HBox>
+                                                <core:Icon
+                                                    size="2rem"
+                                                    src="sap-icon://attachment-photo"
+                                                    class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"
+                                                />
+                                                <VBox
+                                                    class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"
+                                                    justifyContent="SpaceBetween"
+                                                >
+                                                    <Text
+                                                        text="{oDOAAAttachmentModel>Filename}"
+                                                    />
+                                                    <Link
+                                                        text="Download"
+                                                        press="handleDownloadPress"
+                                                    />
+                                                </VBox>
+                                            </HBox>
+                                            <Button
+                                                icon="sap-icon://decline"
+                                                press="removeAttachment"
+                                                visible="{= ${oDOAAAttachmentModel>IsNew} }"
+                                            />
+                                        </HBox>
+                                    </CustomListItem>
+                                </List>
+                            </VBox>
+                            <!-- End: newUploader001 -->
                         </uxap:blocks>
                     </uxap:ObjectPageSubSection>
                 </uxap:subSections>

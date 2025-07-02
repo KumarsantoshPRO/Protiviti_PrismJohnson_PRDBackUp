@@ -29,6 +29,7 @@ sap.ui.define(
     "sap/ui/core/util/ExportTypeCSV",
     "sap/ui/export/library",
     "sap/ui/export/Spreadsheet",
+    "sap/ui/unified/FileUploader"
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -62,7 +63,8 @@ sap.ui.define(
     MessageToast,
     ExportTypeCSV,
     exportLibrary,
-    Spreadsheet
+    Spreadsheet,
+    FileUploader
   ) {
     "use strict";
     var EdmType = exportLibrary.EdmType;
@@ -98,15 +100,29 @@ sap.ui.define(
             new JSONModel(dataModelForAttachments),
             "LocalJSONModelForAttachment"
           );
-          var oUploadSet = this.byId(
-            sap.ui.core.Fragment.createId("idV2FragAttach", "idV2UploadSet")
-          );
+          // Start: newUploader001
+          // old
+          // var oUploadSet = this.byId(
+          //   sap.ui.core.Fragment.createId("idV2FragAttach", "idV2UploadSet")
+          // );
 
-          // Modify "add file" button
-          oUploadSet.getDefaultFileUploader().setButtonOnly(false);
-          oUploadSet.getDefaultFileUploader().setTooltip("");
-          oUploadSet.getDefaultFileUploader().setIconOnly(true);
-          oUploadSet.getDefaultFileUploader().setIcon("sap-icon://attachment");
+          // // Modify "add file" button
+          // oUploadSet.getDefaultFileUploader().setButtonOnly(false);
+          // oUploadSet.getDefaultFileUploader().setTooltip("");
+          // oUploadSet.getDefaultFileUploader().setIconOnly(true);
+          // oUploadSet.getDefaultFileUploader().setIcon("sap-icon://attachment");
+
+          // new
+          // Initialize a JSON Model to hold file data for the table
+          var oModel = new JSONModel([]);
+          this.getView().setModel(oModel, "oDOAAAttachmentModel");
+
+
+          // Keep track of files to be uploaded (File API File objects)
+          this._filesToUpload = {}; // { <fileName>: <FileObject> }
+          this._uploadQueue = []; // Array of file names to process upload for
+
+          // End: newUploader001
 
           this.opdfViewer = new PDFViewer();
           this.getView().addDependent(this.opdfViewer);
@@ -334,6 +350,12 @@ sap.ui.define(
                     .getView()
                     .getModel("LocalJSONModelForAttachment")
                     .setData({ attachments: attachments });
+                  debugger;
+                  that
+                    .getView()
+                    .getModel("oDOAAAttachmentModel")
+                    .setData(attachments.Nav_File_Upload.results);
+
                   that
                     .getView()
                     .getModel("LocalJSONModelForAttachment")
@@ -1320,7 +1342,9 @@ sap.ui.define(
                   {
                     async: false,
                     success: function (oData) {
-                      var aAttachmentsItems = that.getView().getModel("LocalJSONModelForAttachment").getData().attachments.Nav_File_Upload.results;
+                      // var aAttachmentsItems = that.getView().getModel("LocalJSONModelForAttachment").getData().attachments.Nav_File_Upload.results;
+                      debugger;
+                      var aAttachmentsItems = that.getView().getModel("oDOAAAttachmentModel").getData();
                       if (aAttachmentsItems.length > 0) {
                         that
                           .getView()
@@ -1329,10 +1353,13 @@ sap.ui.define(
                         for (var i = 0; i < aAttachmentsItems.length; i++) {
                           aAttachmentsItems[i].Pafno = oData.Pafno;
                         }
-                        var _attachmentPayload = that
-                          .getView()
-                          .getModel("LocalJSONModelForAttachment")
-                          .getData().attachments;
+
+                        var _attachmentPayload = { Nav_File_Upload: { results: aAttachmentsItems } };
+
+                        // that
+                        //   .getView()
+                        //   .getModel("LocalJSONModelForAttachment")
+                        //   .getData().attachments;
 
                         var sPathUpload = "/ETFILE_UPLOAD_HSet";
                         that.getView().setBusy(true);
@@ -2421,34 +2448,34 @@ sap.ui.define(
           }
         },
 
-       
+
         // End: Upload Excel
 
-         //Start: Upload Excel - File Uploader
-	handleUploadComplete: function(oEvent) {
-			// Please note that the event response should be taken from the event parameters but for our test example, it is hardcoded.
+        //Start: Upload Excel - File Uploader
+        handleUploadComplete: function (oEvent) {
+          // Please note that the event response should be taken from the event parameters but for our test example, it is hardcoded.
 
-			var sResponse = "File upload complete. Status: 200",
-				iHttpStatusCode = parseInt(/\d{3}/.exec(sResponse)[0]),
-				sMessage;
+          var sResponse = "File upload complete. Status: 200",
+            iHttpStatusCode = parseInt(/\d{3}/.exec(sResponse)[0]),
+            sMessage;
 
-			if (sResponse) {
-				sMessage = iHttpStatusCode === 200 ? sResponse + " (Upload Success)" : sResponse + " (Upload Error)";
-				MessageToast.show(sMessage);
-			}
-		},
+          if (sResponse) {
+            sMessage = iHttpStatusCode === 200 ? sResponse + " (Upload Success)" : sResponse + " (Upload Error)";
+            MessageToast.show(sMessage);
+          }
+        },
 
-		handleUploadPress: function() {
-			var oFileUploader = this.byId("fileUploader");
-			oFileUploader.checkFileReadable().then(function() {
-				oFileUploader.upload();
-			}, function(error) {
-				MessageToast.show("The file cannot be read. It may have changed.");
-			}).then(function() {
-				oFileUploader.clear();
-			});
-		}	
-         //End: Upload Excel - File Uploader
+        handleUploadPress: function () {
+          var oFileUploader = this.getView().byId("fileUploader");;
+          oFileUploader.checkFileReadable().then(function () {
+            oFileUploader.upload();
+          }, function (error) {
+            MessageToast.show("The file cannot be read. It may have changed.");
+          }).then(function () {
+            oFileUploader.clear();
+          });
+        },
+        //End: Upload Excel - File Uploader
 
         // Start: Download Excel
         //Excel export using Spreadsheet
@@ -2594,6 +2621,80 @@ sap.ui.define(
           return aCols;
         },
         // End: Download Excel
+
+
+
+
+        // Start: newUploader001 
+
+        // Attachment
+        handleUploadChange: function (e) {
+          var aFiles = e.getParameter("files");
+          for (var i = 0; i < aFiles.length; i++) {
+            this._import(aFiles[i]);
+          }
+          e.getSource().setValue("");
+        },
+
+        // Attachment
+        handleDownloadPress: function (oEvent) {
+          var iIndex = oEvent.getSource().getId().split("-")[2],
+            fContent = atob(this.getView().getModel("oDOAAAttachmentModel").getData()[iIndex].Attachment),
+            byteNumbers = new Array(fContent.length),
+            fileName = this.getView().getModel("oDOAAAttachmentModel").getData()[iIndex].Filename,
+            fileType = this.getView().getModel("oDOAAAttachmentModel").getData()[iIndex].Mimetype;
+          for (var i = 0; i < fContent.length; i++) {
+            byteNumbers[i] = fContent.charCodeAt(i);
+          }
+          var fileExtension = fileName.split('.').pop();
+          var fileNameExtract = fileName.split(".")[0];
+          var byteArray = new Uint8Array(byteNumbers),
+            blob = new Blob([byteArray], { type: fileType });
+          if (blob) {
+            File.save(blob, fileNameExtract, fileExtension, fileType);
+          } else {
+            console.error("File type not supported:", fileExtension);
+          }
+        },
+        removeAttachment: function (oEvent) {
+          var oAttachmentModel = this.getView().getModel("oDOAAAttachmentModel");
+          var sFileName = oEvent.getSource().getBindingContext("oDOAAAttachmentModel").getProperty("Filename");
+          var arrFile = oAttachmentModel.getData();
+          var updatedArrFile = arrFile.filter(function (attachment) {
+            return attachment.Filename !== sFileName;
+          });
+          oAttachmentModel.setData(updatedArrFile);
+          oAttachmentModel.refresh();
+        },
+
+
+        // Attachment
+        _import: function (file) {
+          var that = this;
+          if (file && window.FileReader) {
+            var reader = new FileReader();
+            var fileName = file.name;
+            // var Mimetype = file.type;
+            reader.onload = function (e) {
+              var arrFile = this.getView().getModel("oDOAAAttachmentModel").getData();
+              const data = e.target.result;
+              var newAttachObj = {
+                Attachment: btoa(data),
+                Filename: fileName
+              };
+              arrFile.push(newAttachObj);
+              that.getView().getModel("oDOAAAttachmentModel").setData(arrFile);
+              that.getView().getModel("oDOAAAttachmentModel").refresh();
+              // that.onSaveDraftAttachment(arrFile[0].DoaNum);
+            }.bind(this);
+            reader.onerror = function (ex) {
+              console.log(ex);
+              that.getView().setBusy(false);
+            };
+            reader.readAsBinaryString(file);
+          }
+        },
+        // End: newUploader001
       }
     );
   }

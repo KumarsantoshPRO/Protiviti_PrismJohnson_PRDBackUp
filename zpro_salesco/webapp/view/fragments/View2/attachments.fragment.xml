@@ -32,7 +32,6 @@
         </upload:toolbar>
         <upload:items>
             <upload:UploadSetItem
-                id="idV2USI"
                 fileName="{LocalJSONModelForAttachment>Filename}"
                 mediaType="{LocalJSONModelForAttachment>mediaType}"
                 url="{LocalJSONModelForAttachment>Url}"
@@ -45,7 +44,7 @@
                     />
                 </upload:markers> -->
                 <upload:statuses>
-                 <!-- id="idV2OS" -->
+                    <!-- id="idV2OS" -->
                     <ObjectStatus
                         title="PAF NO - {path:'LocalJSONModelForAttachment>Pafno',  formatter:'sap.formatter.removeLeadingZeros'}"
                         text="View attachment"
